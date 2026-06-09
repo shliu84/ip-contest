@@ -1,0 +1,119 @@
+@media (max-width: 992px) {
+  header {
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 10px 14px 12px;
+  }
+
+  .logo {
+    order: 0;
+    flex: 1 1 0;
+    max-width: calc(100% - 125px);
+    min-width: 0;
+    font-size: 18px;
+    gap: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .logo span {
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .header-actions {
+    display: contents;
+  }
+
+  .lang-switcher {
+    order: 1;
+    flex: 0 0 auto;
+    gap: 3px;
+    padding: 3px;
+  }
+
+  .lang-btn {
+    font-size: 11px;
+    min-width: 32px;
+    padding: 6px 8px;
+  }
+
+  nav {
+    order: 2;
+    flex: 1 0 100%;
+    margin-inline: -14px;
+    overflow-x: auto;
+    padding: 1px 14px 3px;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  nav ul {
+    gap: 8px;
+    width: max-content;
+  }
+
+  nav a {
+    display: block;
+    padding: 7px 11px;
+    border: 1px solid rgba(237, 21, 102, 0.12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  nav a::after {
+    display: none;
+  }
+
+  .hero {
+    padding-top: 150px;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+  }
+
+  .about-card h2 {
+    font-size: 2rem;
+  }
+
+  .news-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .timeline-wrapper {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .timeline-wrapper::before {
+    display: none;
+  }
+
+  .tracks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prize-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .prize-card {
+    width: 100%;
+  }
+
+  .prize-card.gold {
+    transform: scale(1);
+  }
+}
