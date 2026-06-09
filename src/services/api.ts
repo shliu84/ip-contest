@@ -1,11 +1,13 @@
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const headers = new Headers(init.headers)
+  if (!headers.has('content-type')) {
+    headers.set('content-type', 'application/json')
+  }
+
   const response = await fetch(path, {
-    credentials: 'include',
-    headers: {
-      'content-type': 'application/json',
-      ...(init.headers || {}),
-    },
     ...init,
+    credentials: 'include',
+    headers,
   })
 
   if (!response.ok) {
