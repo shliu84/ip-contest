@@ -2,7 +2,7 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
-  email TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL COLLATE NOCASE UNIQUE,
   password_hash TEXT NOT NULL,
   role TEXT NOT NULL DEFAULT 'applicant' CHECK (role IN ('applicant', 'committee', 'judge', 'super_admin')),
   email_verified_at TEXT,
@@ -72,8 +72,8 @@ CREATE TABLE IF NOT EXISTS submission_works (
   theme_and_setting TEXT NOT NULL DEFAULT '',
   exhibition_info TEXT NOT NULL DEFAULT '',
   payer_name TEXT NOT NULL DEFAULT '',
-  usage_permission INTEGER NOT NULL DEFAULT 0,
-  terms_accepted INTEGER NOT NULL DEFAULT 0,
+  usage_permission INTEGER NOT NULL DEFAULT 0 CHECK (usage_permission IN (0, 1)),
+  terms_accepted INTEGER NOT NULL DEFAULT 0 CHECK (terms_accepted IN (0, 1)),
   FOREIGN KEY (submission_id) REFERENCES submissions(id) ON DELETE CASCADE
 );
 
@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS judge_assignments (
   judge_user_id TEXT NOT NULL,
   assigned_by TEXT NOT NULL,
   assigned_at TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (submission_id, judge_user_id),
   FOREIGN KEY (submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
   FOREIGN KEY (judge_user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (assigned_by) REFERENCES users(id) ON DELETE CASCADE
@@ -113,7 +114,7 @@ CREATE TABLE IF NOT EXISTS judge_assignments (
 
 CREATE TABLE IF NOT EXISTS reviews (
   id TEXT PRIMARY KEY,
-  assignment_id TEXT NOT NULL,
+  assignment_id TEXT NOT NULL UNIQUE,
   status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'submitted')),
   comments TEXT NOT NULL DEFAULT '',
   submitted_at TEXT,
@@ -126,11 +127,18 @@ CREATE TABLE IF NOT EXISTS review_scores (
   id TEXT PRIMARY KEY,
   review_id TEXT NOT NULL,
   criterion_key TEXT NOT NULL,
-  score INTEGER NOT NULL,
+  score INTEGER NOT NULL CHECK (score >= 0),
+  UNIQUE (review_id, criterion_key),
   FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE
 );
 
+CREATE INDEX IF NOT EXISTS idx_email_verification_tokens_user_id ON email_verification_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_password_reset_tokens_user_id ON password_reset_tokens(user_id);
 CREATE INDEX IF NOT EXISTS idx_submissions_user_id ON submissions(user_id);
 CREATE INDEX IF NOT EXISTS idx_submissions_status ON submissions(status);
 CREATE INDEX IF NOT EXISTS idx_submission_files_submission_id ON submission_files(submission_id);
 CREATE INDEX IF NOT EXISTS idx_export_jobs_requested_by ON export_jobs(requested_by);
+CREATE INDEX IF NOT EXISTS idx_judge_assignments_submission_id ON judge_assignments(submission_id);
+CREATE INDEX IF NOT EXISTS idx_judge_assignments_judge_user_id ON judge_assignments(judge_user_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_assignment_id ON reviews(assignment_id);
+CREATE INDEX IF NOT EXISTS idx_review_scores_review_id ON review_scores(review_id);
