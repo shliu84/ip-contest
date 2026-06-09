@@ -7,8 +7,11 @@
     :t="t"
   />
 
-  <RouterView v-slot="{ Component }">
-    <component :is="Component" :t="t" />
+  <RouterView v-slot="{ Component, route }">
+    <component
+      :is="Component"
+      v-bind="route.name === 'home' ? { t } : {}"
+    />
   </RouterView>
 
   <SiteFooter :t="t" />
