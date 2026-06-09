@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS review_scores (
   id TEXT PRIMARY KEY,
   review_id TEXT NOT NULL,
   criterion_key TEXT NOT NULL,
-  score INTEGER NOT NULL CHECK (score >= 0),
+  score INTEGER NOT NULL CHECK (score >= 0 AND typeof(score) = 'integer'),
   UNIQUE (review_id, criterion_key),
   FOREIGN KEY (review_id) REFERENCES reviews(id) ON DELETE CASCADE
 );
