@@ -35,6 +35,12 @@ npm run build
 
 The build checks the Vue app, typechecks Cloudflare Functions with `tsconfig.functions.json`, and then creates the Vite production build.
 
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
 ## Cloudflare Setup
 
 Copy the example config files, then fill in your D1, R2, Stripe, Resend, and session values.
@@ -72,3 +78,13 @@ npx wrangler d1 execute asia-ip-contest-2026 --file schema.sql
 ```
 
 The remote command mutates the Cloudflare-bound database configured in `wrangler.toml`.
+
+## Production Configuration
+
+Before deploying production, confirm:
+
+- `wrangler.toml` points to the production D1 database and R2 bucket.
+- Cloudflare Pages has the same D1 and R2 bindings as `wrangler.toml`.
+- Cloudflare Pages environment variables contain production values for `SESSION_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`, and `APP_BASE_URL`.
+- Stripe webhook delivery is configured for the deployed `/api/stripe/webhook` endpoint.
+- Resend is configured with the verified sending domain for production email.
