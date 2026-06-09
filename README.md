@@ -27,6 +27,15 @@ npm run dev
 
 This starts the frontend only. Pages Functions, D1, and R2 need the Cloudflare local workflow after `wrangler.toml` and `.dev.vars` are configured.
 
+Run the Cloudflare Pages local workflow after building:
+
+```bash
+npm run build
+npx wrangler pages dev dist
+```
+
+Use this when you need Pages Functions, D1 bindings, or R2 bindings locally.
+
 Build and typecheck the app:
 
 ```bash
