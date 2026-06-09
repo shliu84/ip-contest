@@ -1,12 +1,18 @@
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers)
-  if (!headers.has('content-type')) {
+  const hasBody = init.body !== undefined && init.body !== null
+  const shouldDefaultJson =
+    hasBody &&
+    typeof init.body === 'string' &&
+    !headers.has('content-type')
+
+  if (shouldDefaultJson) {
     headers.set('content-type', 'application/json')
   }
 
   const response = await fetch(path, {
-    ...init,
     credentials: 'include',
+    ...init,
     headers,
   })
 
@@ -15,5 +21,14 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
     throw new Error(message || `Request failed with ${response.status}`)
   }
 
-  return response.json() as Promise<T>
+  if (response.status === 204) {
+    return undefined as T
+  }
+
+  const text = await response.text()
+  if (!text) {
+    return undefined as T
+  }
+
+  return JSON.parse(text) as T
 }

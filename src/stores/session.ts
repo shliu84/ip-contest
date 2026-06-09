@@ -4,15 +4,22 @@ import type { CurrentUser, MeResponse } from '../types/api'
 
 const currentUser = ref<CurrentUser | null>(null)
 const isLoadingSession = ref(false)
+let activeSessionRequest = 0
 
 export function useSession() {
   async function loadSession() {
+    const requestId = activeSessionRequest + 1
+    activeSessionRequest = requestId
     isLoadingSession.value = true
     try {
       const data = await apiFetch<MeResponse>('/api/me')
-      currentUser.value = data.user
+      if (requestId === activeSessionRequest) {
+        currentUser.value = data.user
+      }
     } finally {
-      isLoadingSession.value = false
+      if (requestId === activeSessionRequest) {
+        isLoadingSession.value = false
+      }
     }
   }
 
