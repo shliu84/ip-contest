@@ -36,5 +36,6 @@ export const router = createRouter({
     { path: '/admin/submissions/:id', name: 'admin-submission-detail', component: AdminSubmissionDetailPage },
     { path: '/admin/exports', name: 'admin-exports', component: AdminExportsPage },
     { path: '/admin/users', name: 'admin-users', component: AdminUsersPage },
+    { path: '/:pathMatch(.*)*', name: 'not-found', redirect: { name: 'home' } },
   ],
 })

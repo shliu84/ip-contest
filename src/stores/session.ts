@@ -16,6 +16,11 @@ export function useSession() {
       if (requestId === activeSessionRequest) {
         currentUser.value = data.user
       }
+    } catch (error) {
+      if (requestId === activeSessionRequest) {
+        currentUser.value = null
+      }
+      throw error
     } finally {
       if (requestId === activeSessionRequest) {
         isLoadingSession.value = false
