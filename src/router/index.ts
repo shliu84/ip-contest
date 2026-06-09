@@ -16,27 +16,25 @@ import PaymentPage from '../views/applicant/PaymentPage.vue'
 import PaymentSuccessPage from '../views/applicant/PaymentSuccessPage.vue'
 import SubmissionEditorPage from '../views/applicant/SubmissionEditorPage.vue'
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: HomePage },
-    { path: '/register', component: RegisterPage },
-    { path: '/login', component: LoginPage },
-    { path: '/verify-email', component: VerifyEmailPage },
-    { path: '/forgot-password', component: ForgotPasswordPage },
-    { path: '/reset-password', component: ResetPasswordPage },
-    { path: '/dashboard', component: DashboardPage },
-    { path: '/submissions/new', component: SubmissionEditorPage },
-    { path: '/submissions/:id', component: SubmissionEditorPage },
-    { path: '/submissions/:id/payment', component: PaymentPage },
-    { path: '/payment/success', component: PaymentSuccessPage },
-    { path: '/payment/cancel', component: PaymentCancelPage },
-    { path: '/admin', component: AdminHomePage },
-    { path: '/admin/submissions', component: AdminSubmissionsPage },
-    { path: '/admin/submissions/:id', component: AdminSubmissionDetailPage },
-    { path: '/admin/exports', component: AdminExportsPage },
-    { path: '/admin/users', component: AdminUsersPage },
+    { path: '/', name: 'home', component: HomePage },
+    { path: '/register', name: 'register', component: RegisterPage },
+    { path: '/login', name: 'login', component: LoginPage },
+    { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage },
+    { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage },
+    { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage },
+    { path: '/dashboard', name: 'dashboard', component: DashboardPage },
+    { path: '/submissions/new', name: 'submission-new', component: SubmissionEditorPage },
+    { path: '/submissions/:id', name: 'submission-edit', component: SubmissionEditorPage },
+    { path: '/submissions/:id/payment', name: 'submission-payment', component: PaymentPage },
+    { path: '/payment/success', name: 'payment-success', component: PaymentSuccessPage },
+    { path: '/payment/cancel', name: 'payment-cancel', component: PaymentCancelPage },
+    { path: '/admin', name: 'admin', component: AdminHomePage },
+    { path: '/admin/submissions', name: 'admin-submissions', component: AdminSubmissionsPage },
+    { path: '/admin/submissions/:id', name: 'admin-submission-detail', component: AdminSubmissionDetailPage },
+    { path: '/admin/exports', name: 'admin-exports', component: AdminExportsPage },
+    { path: '/admin/users', name: 'admin-users', component: AdminUsersPage },
   ],
 })
-
-export default router
