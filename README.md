@@ -1,5 +1,36 @@
-# Vue 3 + TypeScript + Vite
+# ASIA IP CONTEST in TOKYO 2026
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Cloudflare Pages + Vue + D1 + R2 submission platform for the fourth ASIA IP CONTEST in TOKYO.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Stack
+
+- Vue 3 + Vite + TypeScript
+- Cloudflare Pages Functions
+- Cloudflare D1
+- Cloudflare R2
+- Stripe Checkout and webhooks
+- Resend email API
+
+## Development
+
+```bash
+npm install
+npm run dev
+npm run build
+```
+
+## Cloudflare Setup
+
+Copy the example config files, then fill in your D1, R2, Stripe, Resend, and session values.
+
+```powershell
+Copy-Item wrangler.toml.example wrangler.toml
+Copy-Item .dev.vars.example .dev.vars
+```
+
+## D1 Schema
+
+```bash
+npx wrangler d1 execute asia-ip-contest-2026 --file schema.sql
+npx wrangler d1 execute asia-ip-contest-2026 --local --file schema.sql
+```
