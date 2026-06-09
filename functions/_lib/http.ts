@@ -35,5 +35,10 @@ export async function readJson<T>(request: Request): Promise<T> {
   if (!contentType.includes('application/json')) {
     throw new ApiRequestError('bad_request', 'Expected application/json', 400)
   }
-  return request.json() as Promise<T>
+
+  try {
+    return await request.json() as T
+  } catch {
+    throw new ApiRequestError('bad_request', 'Malformed JSON body', 400)
+  }
 }
