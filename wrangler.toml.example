@@ -1,0 +1,12 @@
+name = "ip-contest-2026"
+compatibility_date = "2026-06-10"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "asia-ip-contest-2026"
+database_id = "replace-with-cloudflare-d1-id"
+
+[[r2_buckets]]
+binding = "SUBMISSION_BUCKET"
+bucket_name = "asia-ip-contest-2026-submissions"
