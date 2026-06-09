@@ -7,6 +7,7 @@ export type TranslationKey =
   | 'navNews'
   | 'navTimeline'
   | 'navTracks'
+  | 'navJudges'
   | 'navPrizes'
   | 'heroBadge'
   | 'heroTitle'
@@ -35,6 +36,10 @@ export type TranslationKey =
   | 'track2Text'
   | 'track3Title'
   | 'track3Text'
+  | 'judgesTitle'
+  | 'judgeNamePlaceholder'
+  | 'judgeRolePlaceholder'
+  | 'judgeBioPlaceholder'
   | 'prizesTitle'
   | 'silverTitle'
   | 'silverText'
@@ -59,6 +64,7 @@ export const translations: Record<LanguageCode, Translation> = {
     navNews: '通知',
     navTimeline: '赛事日程',
     navTracks: '征集赛道',
+    navJudges: '审查员',
     navPrizes: '奖项设置',
     heroBadge: 'FOR ASIA CHARACTER CREATORS',
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
@@ -87,6 +93,10 @@ export const translations: Record<LanguageCode, Translation> = {
     track2Text: '潮玩、手办、周边商品、包装和展示方案等，可提交3D渲染图或多角度资料。',
     track3Title: '插画与世界观',
     track3Text: '基于原创角色IP的场景插画、绘本故事、漫画分镜和世界观设定。',
+    judgesTitle: '审查员',
+    judgeNamePlaceholder: '审查员姓名',
+    judgeRolePlaceholder: '所属机构 / 职务',
+    judgeBioPlaceholder: '审查员简介将在确认后更新。',
     prizesTitle: '奖项设置',
     silverTitle: '银奖',
     silverText: '2名 / 颁发证书与定制奖杯',
@@ -105,6 +115,7 @@ export const translations: Record<LanguageCode, Translation> = {
     navNews: 'お知らせ',
     navTimeline: 'スケジュール',
     navTracks: '募集部門',
+    navJudges: '審査員',
     navPrizes: '賞について',
     heroBadge: 'FOR ASIA CHARACTER CREATORS',
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
@@ -133,6 +144,10 @@ export const translations: Record<LanguageCode, Translation> = {
     track2Text: 'デザイナーズトイ、フィギュア、グッズ、パッケージ、展示企画など。3Dレンダリングまたは多角度資料を提出できます。',
     track3Title: 'イラスト・世界観',
     track3Text: 'オリジナルキャラクターIPをもとにした背景イラスト、絵本、漫画ネーム、世界観設定など。',
+    judgesTitle: '審査員',
+    judgeNamePlaceholder: '審査員名',
+    judgeRolePlaceholder: '所属 / 役職',
+    judgeBioPlaceholder: '審査員プロフィールは決定次第更新します。',
     prizesTitle: '賞について',
     silverTitle: '銀賞',
     silverText: '2名 / 証書と特製トロフィーを授与',
@@ -151,6 +166,7 @@ export const translations: Record<LanguageCode, Translation> = {
     navNews: 'News',
     navTimeline: 'Timeline',
     navTracks: 'Categories',
+    navJudges: 'Judges',
     navPrizes: 'Prizes',
     heroBadge: 'FOR ASIA CHARACTER CREATORS',
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
@@ -179,6 +195,10 @@ export const translations: Record<LanguageCode, Translation> = {
     track2Text: 'Designer toys, figures, merchandise, packaging, and exhibition concepts. 3D renders or multi-angle materials may be submitted.',
     track3Title: 'Illustration & Worldbuilding',
     track3Text: 'Scene illustrations, picture books, comic storyboards, and worldbuilding based on original character IP concepts.',
+    judgesTitle: 'Judge Board',
+    judgeNamePlaceholder: 'Judge Name',
+    judgeRolePlaceholder: 'Organization / Title',
+    judgeBioPlaceholder: 'Judge profile will be updated once confirmed.',
     prizesTitle: 'Prizes',
     silverTitle: 'Silver Award',
     silverText: '2 winners / Certificate and custom trophy',

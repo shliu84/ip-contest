@@ -11,6 +11,7 @@
           <li><a href="#news">{{ t('navNews') }}</a></li>
           <li><a href="#timeline">{{ t('navTimeline') }}</a></li>
           <li><a href="#tracks">{{ t('navTracks') }}</a></li>
+          <li><a href="#judges">{{ t('navJudges') }}</a></li>
           <li><a href="#prizes">{{ t('navPrizes') }}</a></li>
         </ul>
       </nav>
