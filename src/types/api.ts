@@ -144,3 +144,7 @@ export type UploadSubmissionFileRequest = {
   contentType: string
   dataBase64: string
 }
+
+export type MockConfirmPaymentRequest = {
+  submissionId: string
+}

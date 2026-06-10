@@ -4,6 +4,7 @@ import type {
   ForgotPasswordRequest,
   LoginRequest,
   LoginResponse,
+  MockConfirmPaymentRequest,
   RegisterRequest,
   ResetPasswordRequest,
   SubmissionListResponse,
@@ -167,4 +168,17 @@ export function deleteSubmissionFile(id: string, fileId: string) {
     `/api/submissions/${encodeURIComponent(id)}/files/${encodeURIComponent(fileId)}`,
     { method: 'DELETE' },
   )
+}
+
+export function submitSubmission(id: string) {
+  return apiFetch<SubmissionResponse>(`/api/submissions/${encodeURIComponent(id)}/submit`, {
+    method: 'POST',
+  })
+}
+
+export function mockConfirmPayment(body: MockConfirmPaymentRequest) {
+  return apiFetch<SubmissionResponse>('/api/payments/mock-confirm', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
 }
