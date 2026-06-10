@@ -26,7 +26,7 @@
 
 .hero h1 {
   font-size: 4.5rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 4px;
   line-height: 1.2;
   margin-bottom: 10px;
@@ -43,7 +43,7 @@
 .hero-subtitle {
   color: var(--primary);
   font-size: 2rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 3px;
   line-height: 1.2;
   margin-bottom: 22px;
@@ -72,7 +72,7 @@
 .subpage-kicker {
   color: var(--primary);
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 3px;
   line-height: 1;
   margin-bottom: 10px;
@@ -81,7 +81,7 @@
 .subpage-hero h1 {
   color: var(--text-main);
   font-size: 2rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 1.2;
   margin-bottom: 10px;
@@ -116,7 +116,7 @@
   display: block;
   color: var(--primary);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 4px;
   line-height: 1;
   margin-bottom: 16px;
@@ -126,7 +126,7 @@
 .foreword-heading h2 {
   color: var(--text-main);
   font-size: 2rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.08em;
   line-height: 1.25;
 }
@@ -152,14 +152,14 @@
 .foreword-photo-placeholder span {
   color: rgba(237, 21, 102, 0.48);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 4px;
 }
 
 .foreword-signature h3 {
   color: var(--text-main);
   font-size: 1.35rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.35;
   margin-bottom: 8px;
 }
@@ -204,7 +204,7 @@
 
 .foreword-list strong {
   color: var(--text-main);
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .purpose-section {
@@ -249,7 +249,7 @@
 .purpose-card h3 {
   color: var(--text-main);
   font-size: 1.24rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.45;
 }
 
@@ -297,7 +297,7 @@
 .organizer-card h3 {
   color: var(--text-main);
   font-size: 1.3rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.4;
   margin-bottom: 14px;
 }
@@ -415,7 +415,7 @@
 .event-page-nav-title {
   color: var(--primary);
   font-size: 0.68rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 2px;
   line-height: 1.3;
   margin-bottom: 8px;
@@ -495,7 +495,7 @@
 .event-info-label {
   color: var(--primary);
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.22em;
   line-height: 1;
   margin-bottom: 14px;
@@ -505,7 +505,7 @@
 .event-overview-card h2 {
   color: var(--text-main);
   font-size: 1.38rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.35;
   margin-bottom: 18px;
 }
@@ -534,7 +534,7 @@
 .event-info-list dt {
   color: var(--primary);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.04em;
 }
 
@@ -559,7 +559,7 @@
 .event-category-list h3 {
   color: var(--text-main);
   font-size: 1.05rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.45;
   margin-bottom: 8px;
 }
@@ -611,7 +611,7 @@
   color: var(--primary);
   display: flex;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 800;
   height: 42px;
   justify-content: center;
   letter-spacing: 0.08em;
@@ -629,7 +629,7 @@
   color: var(--primary);
   display: block;
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.22em;
   line-height: 1;
   margin-bottom: 12px;
@@ -639,7 +639,7 @@
 .event-schedule-card h3 {
   color: var(--text-main);
   font-size: 1.05rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.45;
   margin-bottom: 10px;
 }
@@ -680,7 +680,7 @@
 .event-detail-card h3 {
   color: var(--text-main);
   font-size: 1.1rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.45;
   margin-bottom: 12px;
 }
@@ -786,7 +786,7 @@
 .guideline-faq-group h3 {
   color: var(--text-main);
   font-size: 1.12rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.45;
   margin-bottom: 12px;
 }
@@ -825,7 +825,7 @@
   color: #fff;
   display: inline-flex;
   font-size: 0.86rem;
-  font-weight: 900;
+  font-weight: 800;
   justify-content: center;
   letter-spacing: 0.06em;
   line-height: 1;
@@ -894,7 +894,7 @@
 .guideline-award-box span {
   color: var(--primary);
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.2em;
   line-height: 1;
   text-transform: uppercase;
@@ -903,14 +903,14 @@
 .guideline-award-box strong {
   color: var(--text-main);
   font-size: 1.25rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.25;
 }
 
 .guideline-award-box p {
   color: var(--primary);
   font-size: 0.92rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.55;
 }
 
@@ -930,7 +930,7 @@
 .guideline-meta-list dt {
   color: var(--primary);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.04em;
 }
 
@@ -964,7 +964,7 @@
   padding-top: 0;
   color: var(--primary);
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.12em;
   line-height: 1.3;
   text-transform: uppercase;
@@ -979,7 +979,7 @@
 
 .guideline-file-table-row span:first-child {
   color: var(--text-main);
-  font-weight: 900;
+  font-weight: 800;
 }
 
 .guideline-file-table-note {
@@ -1003,7 +1003,7 @@
 .guideline-requirements h3 {
   color: var(--text-main);
   font-size: 1.06rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.45;
   margin: 0;
   grid-column: 1 / -1;
@@ -1037,7 +1037,7 @@
 .guideline-requirements li strong {
   color: var(--text-main);
   font-size: 0.9rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.45;
 }
 
@@ -1053,7 +1053,7 @@
   content: counter(list-item);
   display: flex;
   font-size: 0.72rem;
-  font-weight: 900;
+  font-weight: 800;
   height: 20px;
   justify-content: center;
   left: 0;
@@ -1094,7 +1094,7 @@
   border: 1px solid rgba(237, 21, 102, 0.16);
   border-radius: 6px;
   font-size: 0.62rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 0.12em;
   line-height: 1.35;
   padding: 8px;
@@ -1130,7 +1130,7 @@
 .guideline-question {
   color: var(--text-main);
   font-size: 0.95rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.65;
 }
 
@@ -1139,6 +1139,115 @@
   font-size: 0.94rem;
   font-weight: 500;
   line-height: 1.75;
+}
+
+@media (min-width: 993px) {
+  .guidelines-page-layout .sec-title,
+  .guideline-category-card,
+  .guideline-faq-list {
+    max-width: 880px;
+  }
+
+  .guidelines-page-layout .glass-card {
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(30, 30, 34, 0.1);
+  }
+
+  .guideline-category-stack {
+    gap: 44px;
+  }
+
+  .guideline-category-card {
+    gap: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .guideline-category-main {
+    gap: 0;
+    grid-template-columns: 210px minmax(0, 1fr);
+  }
+
+  .guideline-award-box {
+    background: rgba(237, 21, 102, 0.045);
+    border: 0;
+    border-radius: 0;
+    border-right: 1px solid rgba(30, 30, 34, 0.08);
+    padding: 22px 24px;
+  }
+
+  .guideline-award-box strong {
+    font-size: 1.34rem;
+  }
+
+  .guideline-meta-list {
+    border-top: 0;
+  }
+
+  .guideline-meta-list div {
+    align-content: center;
+    border-bottom: 0;
+    gap: 22px;
+    grid-template-columns: 116px minmax(0, 1fr);
+    min-height: 100%;
+    padding: 22px 24px;
+  }
+
+  .guideline-requirements {
+    border-top: 1px solid rgba(30, 30, 34, 0.08);
+    gap: 18px 28px;
+    grid-template-columns: minmax(0, 1fr) 118px;
+    padding: 24px;
+  }
+
+  .guideline-requirements ol {
+    gap: 12px;
+  }
+
+  .guideline-requirements li::before {
+    background: rgba(237, 21, 102, 0.1);
+    border: 1px solid rgba(237, 21, 102, 0.16);
+  }
+
+  .guideline-sample-placeholder {
+    width: 118px;
+  }
+
+  .guideline-file-table {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .guideline-file-table-head,
+  .guideline-file-table-row {
+    gap: 22px;
+    grid-template-columns: minmax(210px, 0.78fr) minmax(0, 1.22fr);
+    padding: 12px 24px;
+  }
+
+  .guideline-file-table-head {
+    background: rgba(237, 21, 102, 0.055);
+    border-top-color: rgba(30, 30, 34, 0.08);
+  }
+
+  .guideline-file-table-row {
+    border-top-color: rgba(30, 30, 34, 0.07);
+  }
+
+  .guideline-file-table-note {
+    padding: 12px 24px 0;
+  }
+
+  .guideline-card-action {
+    display: flex;
+    justify-content: flex-end;
+    padding: 18px 24px 24px;
+  }
+
+  .guideline-card-action .guideline-apply-link {
+    margin-top: 0;
+  }
 }
 
 .event-judge-index {
@@ -1202,7 +1311,7 @@
   color: var(--primary);
   display: flex;
   font-size: 1.7rem;
-  font-weight: 900;
+  font-weight: 800;
   justify-content: center;
   margin-bottom: 12px;
   width: 100%;
@@ -1211,7 +1320,7 @@
 .event-judge-profile-side h3 {
   color: var(--text-main);
   font-size: 1.08rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.35;
   margin-bottom: 4px;
   overflow-wrap: anywhere;
@@ -1220,7 +1329,7 @@
 .event-judge-reading {
   color: var(--primary);
   font-size: 0.78rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 1px;
   line-height: 1.45;
   overflow-wrap: anywhere;
@@ -1229,7 +1338,7 @@
 .event-judge-role {
   color: var(--text-main) !important;
   font-size: 0.92rem !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
   line-height: 1.55 !important;
   margin-bottom: 10px;
 }
@@ -1259,7 +1368,7 @@
 .about-kicker {
   color: var(--primary);
   font-size: 1rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 2px;
   margin-bottom: 16px;
   text-transform: uppercase;
@@ -1267,7 +1376,7 @@
 
 .about-card h2 {
   font-size: 2.6rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 1px;
   line-height: 1.25;
   margin-bottom: 24px;
@@ -1393,7 +1502,7 @@
   cursor: pointer;
   display: flex;
   font-size: 1.2rem;
-  font-weight: 900;
+  font-weight: 800;
   height: 46px;
   justify-content: center;
   opacity: 0;
@@ -1439,7 +1548,7 @@
 .news-date {
   color: var(--primary);
   font-size: 0.95rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 1px;
 }
 
@@ -1580,7 +1689,7 @@
 .benefit-group {
   color: var(--primary) !important;
   font-size: 0.74rem !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
   letter-spacing: 2px;
   line-height: 1.2 !important;
   margin-bottom: 10px;
@@ -1590,7 +1699,7 @@
 .benefit-card h3 {
   color: var(--text-main);
   font-size: 1.35rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.35;
   margin-bottom: 16px;
 }
@@ -1643,14 +1752,14 @@
   border-radius: 999px;
   padding: 10px 18px;
   font-size: 0.9rem;
-  font-weight: 900;
+  font-weight: 800;
   text-decoration: none;
   box-shadow: 4px 4px 0 rgba(237, 21, 102, 0.14);
 }
 
 .benefit-note {
   color: var(--primary) !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
   margin-top: 14px;
 }
 
@@ -1667,7 +1776,7 @@
 .past-event-year {
   color: var(--primary);
   font-size: 0.86rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 3px;
   margin-bottom: 16px;
 }
@@ -1675,7 +1784,7 @@
 .past-event-card h2 {
   color: var(--text-main);
   font-size: 1.35rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.35;
   margin-bottom: 12px;
 }
@@ -1711,13 +1820,13 @@
   background: rgba(255, 255, 255, 0.72);
   color: var(--primary);
   font-size: 1.4rem;
-  font-weight: 900;
+  font-weight: 800;
   box-shadow: 5px 5px 0 rgba(237, 21, 102, 0.08);
 }
 
 .judge-card h3 {
   font-size: 1.2rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.35;
   margin-bottom: 6px;
   overflow-wrap: anywhere;
@@ -1780,7 +1889,7 @@
 
 .prize-amount {
   font-size: 3rem;
-  font-weight: 900;
+  font-weight: 800;
   font-style: italic;
   color: var(--text-main);
   margin-bottom: 15px;

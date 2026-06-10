@@ -62,7 +62,7 @@
     color: var(--text-sub);
     display: flex;
     font-size: 11px;
-    font-weight: 900;
+    font-weight: 800;
     justify-content: center;
     min-height: 28px;
     padding: 5px 4px;
@@ -107,7 +107,7 @@
     color: var(--text-main);
     cursor: pointer;
     font-size: 10px;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.04em;
     line-height: 1;
     min-width: 36px;
@@ -204,7 +204,7 @@
     color: var(--primary);
     display: block;
     font-size: 7px;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.08em;
     line-height: 1;
     overflow: hidden;
@@ -322,7 +322,7 @@
   .mobile-section-nav-title {
     color: var(--primary);
     font-size: 0.68rem;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.18em;
     line-height: 1;
     padding: 4px 4px 12px;
@@ -332,7 +332,7 @@
     border-top: 1px solid rgba(30, 30, 34, 0.08);
     color: var(--text-main);
     font-size: 0.9rem;
-    font-weight: 900;
+    font-weight: 800;
     line-height: 1.35;
     padding: 12px 4px;
     text-decoration: none;
@@ -657,7 +657,7 @@
   }
 
   .guidelines-page-layout .sec-title span {
-    color: #e4002b;
+    color: var(--primary);
     font-size: 0.68rem;
     font-style: normal;
     letter-spacing: 0.16em;
@@ -674,11 +674,12 @@
   .guideline-note-card,
   .guideline-faq-group,
   .guideline-category-card {
-    background: #fff;
-    border-color: rgba(22, 22, 22, 0.12);
-    border-radius: 0;
+    background: rgba(255, 255, 255, 0.78);
+    border-color: rgba(30, 30, 34, 0.1);
+    border-radius: 8px;
     box-shadow: none;
     padding: 0;
+    overflow: hidden;
   }
 
   .guideline-category-main {
@@ -687,9 +688,9 @@
   }
 
   .guideline-award-box {
-    background: #f7f7f8;
+    background: rgba(237, 21, 102, 0.045);
     border: 0;
-    border-bottom: 1px solid rgba(22, 22, 22, 0.12);
+    border-bottom: 1px solid rgba(30, 30, 34, 0.08);
     border-radius: 0;
     gap: 8px;
     padding: 18px;
@@ -698,7 +699,7 @@
   .guideline-award-box span,
   .guideline-award-box p,
   .guideline-meta-list dt {
-    color: #e4002b;
+    color: var(--primary);
   }
 
   .guideline-award-box strong {
@@ -715,7 +716,7 @@
   }
 
   .guideline-meta-list div {
-    border-bottom: 1px solid rgba(22, 22, 22, 0.12);
+    border-bottom: 1px solid rgba(30, 30, 34, 0.08);
     grid-template-columns: 1fr;
     gap: 6px;
     padding: 16px 18px;
@@ -747,8 +748,8 @@
   }
 
   .guideline-file-table-row {
-    border-top: 1px solid rgba(22, 22, 22, 0.08);
-    color: rgba(22, 22, 22, 0.68);
+    border-top: 1px solid rgba(30, 30, 34, 0.08);
+    color: var(--text-sub);
     font-size: 0.86rem;
     line-height: 1.6;
     padding: 13px 18px;
@@ -760,22 +761,22 @@
   }
 
   .guideline-file-table-row span:first-child::before {
-    color: #e4002b;
+    color: var(--primary);
     content: 'FILE';
     display: block;
     font-size: 0.62rem;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.14em;
     line-height: 1;
     margin-bottom: 5px;
   }
 
   .guideline-file-table-row span:nth-child(2)::before {
-    color: #e4002b;
+    color: var(--primary);
     content: 'SPEC';
     display: block;
     font-size: 0.62rem;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.14em;
     line-height: 1;
     margin-bottom: 5px;
@@ -783,7 +784,7 @@
   }
 
   .guideline-file-table-note {
-    border-top: 1px solid rgba(22, 22, 22, 0.08);
+    border-top: 1px solid rgba(30, 30, 34, 0.08);
     font-size: 0.78rem;
     line-height: 1.65;
     padding: 12px 18px 0;
@@ -813,7 +814,7 @@
 
   .guideline-requirements {
     border-top: 0;
-    border-bottom: 1px solid rgba(22, 22, 22, 0.12);
+    border-bottom: 1px solid rgba(30, 30, 34, 0.08);
     gap: 16px;
     grid-template-columns: 1fr;
     padding: 18px;
@@ -834,9 +835,10 @@
   }
 
   .guideline-requirements li::before {
-    background: #161616;
-    border-radius: 0;
-    color: #fff;
+    background: rgba(237, 21, 102, 0.1);
+    border: 1px solid rgba(237, 21, 102, 0.16);
+    border-radius: 50%;
+    color: var(--primary);
     height: 20px;
     width: 20px;
   }
@@ -847,31 +849,31 @@
 
   .guideline-sample-placeholder {
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 247, 248, 0.94)),
-      repeating-linear-gradient(0deg, rgba(22, 22, 22, 0.07) 0 1px, transparent 1px 10px);
-    border-color: rgba(22, 22, 22, 0.16);
-    border-radius: 0;
+      linear-gradient(135deg, rgba(237, 21, 102, 0.08), rgba(255, 255, 255, 0.7)),
+      repeating-linear-gradient(135deg, rgba(237, 21, 102, 0.08) 0 1px, transparent 1px 12px);
+    border-color: rgba(237, 21, 102, 0.32);
+    border-radius: 8px;
     justify-self: start;
     width: 92px;
   }
 
   .guideline-sample-placeholder span {
-    background: #fff;
-    border-color: rgba(22, 22, 22, 0.12);
-    border-radius: 0;
-    color: #e4002b;
+    background: rgba(255, 255, 255, 0.86);
+    border-color: rgba(237, 21, 102, 0.16);
+    border-radius: 6px;
+    color: var(--primary);
     font-size: 0.58rem;
   }
 
   .guideline-card-action {
-    border-top: 1px solid rgba(22, 22, 22, 0.12);
+    border-top: 1px solid rgba(30, 30, 34, 0.08);
     padding: 16px 18px 18px;
   }
 
   .guideline-apply-link {
-    background: #e4002b;
-    border-color: #e4002b;
-    border-radius: 0;
+    background: var(--primary);
+    border-color: var(--primary);
+    border-radius: 999px;
     box-shadow: none;
     font-size: 0.82rem;
     margin-top: 14px;

@@ -4,19 +4,19 @@
   --bg-color: #ffffff;
   --text-main: #222;
   --text-sub: #666;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Noto Sans JP", "Noto Sans CJK JP", "Source Han Sans JP", "Helvetica Neue", Arial, sans-serif;
 }
 
 html:lang(ja) {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "Noto Sans CJK JP", "Source Han Sans JP", sans-serif;
+  --font-sans: "Noto Sans JP", "Noto Sans CJK JP", "Source Han Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
 html:lang(zh) {
-  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", Arial, sans-serif;
+  --font-sans: "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
 }
 
 html:lang(en) {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Helvetica Neue", Arial, sans-serif;
 }
 
 * {
@@ -28,6 +28,9 @@ html:lang(en) {
 
 html {
   font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -95,7 +98,7 @@ body {
 
 .sec-title h2 {
   font-size: 2.5rem;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: 2px;
   font-style: italic;
 }
