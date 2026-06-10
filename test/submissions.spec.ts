@@ -7,6 +7,8 @@ import {
 } from '../functions/api/submissions/[id]'
 import { onRequestPost as onRequestPostUploadUrl } from '../functions/api/submissions/[id]/upload-url'
 import { onRequestDelete as onRequestDeleteFile } from '../functions/api/submissions/[id]/files/[fileId]'
+import { onRequestPost as onRequestPostSubmit } from '../functions/api/submissions/[id]/submit'
+import { onRequestPost as onRequestPostMockConfirm } from '../functions/api/payments/mock-confirm'
 import { hashPassword } from '../functions/_lib/password'
 import { createSession } from '../functions/_lib/session'
 import {
@@ -23,6 +25,8 @@ type SubmissionResponseBody = {
     division: string
     feeAmount: number
     currency: string
+    paidAt: string | null
+    submittedAt: string | null
     profile: {
       lastName: string
       firstName: string
@@ -172,8 +176,75 @@ async function deleteSubmissionFile(
   )))
 }
 
+async function submitSubmission(submissionId: string, cookie: string | undefined) {
+  return await onRequestPostSubmit(pagesContext(new Request(
+    `https://contest.example.com/api/submissions/${submissionId}/submit`,
+    {
+      method: 'POST',
+      headers: cookie ? { cookie } : {},
+    },
+  )))
+}
+
+async function mockConfirmPayment(cookie: string | undefined, body: unknown) {
+  return await onRequestPostMockConfirm(pagesContext(new Request(
+    'https://contest.example.com/api/payments/mock-confirm',
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(cookie ? { cookie } : {}),
+      },
+      body: JSON.stringify(body),
+    },
+  )))
+}
+
 async function jsonBody<T>(response: Response): Promise<T> {
   return await response.json() as T
+}
+
+function completeSubmissionUpdate(email: string) {
+  return {
+    division: '2d',
+    profile: {
+      lastName: 'Yamada',
+      firstName: 'Aki',
+      penName: '',
+      email,
+      phone: '',
+      countryRegion: 'Japan',
+      city: '',
+      postalCode: '',
+      prefecture: '',
+      occupation: '',
+      school: '',
+      address: '',
+      wechatId: '',
+      certificateLanguage: 'ja',
+    },
+    work: {
+      characterName: 'Mira',
+      themeAndSetting: 'Near-future festival',
+      exhibitionInfo: '',
+      payerName: 'Aki Yamada',
+      usagePermission: true,
+      termsAccepted: true,
+    },
+  }
+}
+
+async function createCompleteDraft(cookie: string, email: string) {
+  const createResponse = await createSubmission(cookie, { division: '2d' })
+  const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+  await updateSubmission(createBody.submission.id, cookie, completeSubmissionUpdate(email))
+  await uploadSubmissionFile(createBody.submission.id, cookie, {
+    fileType: 'online_a4_image',
+    filename: 'entry.png',
+    contentType: 'image/png',
+    dataBase64: btoa('png-bytes'),
+  })
+  return createBody.submission.id
 }
 
 function validSubmissionUpdate(email: string) {
@@ -969,5 +1040,92 @@ describe('/api/submissions', () => {
        WHERE id = ?`,
     ).bind(fileId).first()).resolves.not.toBeNull()
     await expect(env.SUBMISSION_BUCKET.get(row!.r2_key)).resolves.not.toBeNull()
+  })
+
+  it('submits a complete draft for mock payment', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+
+    const response = await submitSubmission(submissionId, cookie)
+    const body = await jsonBody<SubmissionResponseBody>(response)
+
+    expect(response.status).toBe(200)
+    expect(body.submission).toMatchObject({
+      id: submissionId,
+      status: 'payment_pending',
+      paidAt: null,
+      submittedAt: null,
+    })
+  })
+
+  it('rejects incomplete drafts before payment', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+
+    const response = await submitSubmission(createBody.submission.id, cookie)
+    const body = await jsonBody<{ error: { code: string } }>(response)
+
+    expect(response.status).toBe(400)
+    expect(body.error.code).toBe('bad_request')
+  })
+
+  it('requires ownership and draft status when submitting for payment', async () => {
+    const owner = await insertUser()
+    const other = await insertUser()
+    const ownerCookie = await sessionCookie(owner.id)
+    const otherCookie = await sessionCookie(other.id)
+    const submissionId = await createCompleteDraft(ownerCookie, owner.email)
+
+    await expect(submitSubmission(submissionId, otherCookie))
+      .resolves.toMatchObject({ status: 404 })
+    await expect(submitSubmission(submissionId, ownerCookie))
+      .resolves.toMatchObject({ status: 200 })
+    await expect(submitSubmission(submissionId, ownerCookie))
+      .resolves.toMatchObject({ status: 409 })
+  })
+
+  it('mock-confirms a payment pending submission as submitted', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    await submitSubmission(submissionId, cookie)
+
+    const response = await mockConfirmPayment(cookie, { submissionId })
+    const body = await jsonBody<SubmissionResponseBody>(response)
+
+    expect(response.status).toBe(200)
+    expect(body.submission.status).toBe('submitted')
+    expect(body.submission.paidAt).toMatch(/^2026-|^20/)
+    expect(body.submission.submittedAt).toMatch(/^2026-|^20/)
+
+    await expect(updateSubmission(submissionId, cookie, completeSubmissionUpdate(user.email)))
+      .resolves.toMatchObject({ status: 409 })
+    await expect(uploadSubmissionFile(submissionId, cookie, {
+      fileType: 'online_a4_image',
+      filename: 'after-submit.png',
+      contentType: 'image/png',
+      dataBase64: btoa('png'),
+    })).resolves.toMatchObject({ status: 409 })
+  })
+
+  it('requires ownership and payment_pending status for mock confirmation', async () => {
+    const owner = await insertUser()
+    const other = await insertUser()
+    const ownerCookie = await sessionCookie(owner.id)
+    const otherCookie = await sessionCookie(other.id)
+    const submissionId = await createCompleteDraft(ownerCookie, owner.email)
+
+    await expect(mockConfirmPayment(ownerCookie, { submissionId }))
+      .resolves.toMatchObject({ status: 409 })
+    await submitSubmission(submissionId, ownerCookie)
+    await expect(mockConfirmPayment(otherCookie, { submissionId }))
+      .resolves.toMatchObject({ status: 404 })
+    await expect(mockConfirmPayment(ownerCookie, { submissionId }))
+      .resolves.toMatchObject({ status: 200 })
+    await expect(mockConfirmPayment(ownerCookie, { submissionId }))
+      .resolves.toMatchObject({ status: 409 })
   })
 })
