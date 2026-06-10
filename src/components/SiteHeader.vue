@@ -1,11 +1,11 @@
 <template>
   <header ref="headerRef">
-    <div class="logo">
+    <RouterLink class="logo" to="/" aria-label="ASIA IP CONTEST in Tokyo 2026 home" @click="scrollToTop">
       <span class="logo-sub">ASIA IP CONTEST in Tokyo 2026</span>
       <span class="logo-main">
         アジアIPコンテスト <em>~Art Festa~</em>
       </span>
-    </div>
+    </RouterLink>
     <div class="header-actions">
       <nav class="desktop-nav">
         <ul>

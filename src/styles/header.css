@@ -19,7 +19,13 @@ header {
   gap: 4px;
   flex: 0 0 clamp(255px, 20vw, 305px);
   font-family: var(--font-sans);
+  text-decoration: none;
   width: clamp(255px, 20vw, 305px);
+}
+
+.logo:hover .logo-main,
+.logo:hover .logo-sub {
+  color: var(--primary);
 }
 
 .logo-main {
