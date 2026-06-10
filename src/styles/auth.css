@@ -21,6 +21,10 @@
   width: min(100%, 980px);
 }
 
+.admin-dashboard-panel {
+  width: min(100%, 1180px);
+}
+
 .auth-title {
   margin-bottom: 28px;
 }
@@ -162,6 +166,35 @@
 
 .dashboard-summary {
   margin-bottom: 18px;
+}
+
+.admin-filter-form {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  margin-bottom: 22px;
+}
+
+.admin-filter-actions {
+  grid-column: 1 / -1;
+}
+
+.admin-detail-section {
+  display: grid;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.admin-muted-line {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-sub);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.admin-submissions-table,
+.admin-files-table {
+  min-width: 980px;
 }
 
 .dashboard-summary dl {
@@ -453,6 +486,10 @@
   }
 
   .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-filter-form {
     grid-template-columns: 1fr;
   }
 

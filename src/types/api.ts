@@ -128,6 +128,47 @@ export type SubmissionResponse = {
   submission: Submission
 }
 
+export type AdminSubmissionListItem = {
+  id: string
+  submissionNo: string
+  applicantEmail: string
+  status: SubmissionStatus
+  division: SubmissionDivision
+  feeAmount: number
+  currency: 'JPY'
+  characterName: string
+  fileCount: number
+  paidAt: string | null
+  submittedAt: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export type AdminSubmissionFile = SubmissionFile & {
+  r2Key: string
+}
+
+export type AdminSubmission = AdminSubmissionListItem & {
+  applicant: CurrentUser
+  profile: SubmissionProfile
+  work: SubmissionWork
+  files: AdminSubmissionFile[]
+}
+
+export type AdminSubmissionListFilters = {
+  status?: SubmissionStatus | ''
+  division?: SubmissionDivision | ''
+  q?: string
+}
+
+export type AdminSubmissionListResponse = {
+  submissions: AdminSubmissionListItem[]
+}
+
+export type AdminSubmissionResponse = {
+  submission: AdminSubmission
+}
+
 export type CreateSubmissionRequest = {
   division: SubmissionDivision
 }
@@ -147,4 +188,8 @@ export type UploadSubmissionFileRequest = {
 
 export type MockConfirmPaymentRequest = {
   submissionId: string
+}
+
+export type UpdateAdminSubmissionStatusRequest = {
+  status: SubmissionStatus
 }

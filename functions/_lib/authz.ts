@@ -16,3 +16,11 @@ export async function requireApplicant(db: D1Database, request: Request): Promis
   }
   return user
 }
+
+export async function requireCommittee(db: D1Database, request: Request): Promise<SessionUser> {
+  const user = await requireUser(db, request)
+  if (user.role !== 'committee' && user.role !== 'super_admin') {
+    throw new ApiRequestError('forbidden', 'Committee access required', 403)
+  }
+  return user
+}
