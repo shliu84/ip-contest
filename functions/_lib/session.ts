@@ -1,3 +1,4 @@
+import { SESSION_COOKIE, SESSION_SECONDS } from './auth-constants'
 import { createToken, hashToken } from './tokens'
 
 export type SessionUser = {
@@ -7,8 +8,6 @@ export type SessionUser = {
   emailVerifiedAt: string | null
 }
 
-const SESSION_COOKIE = 'aipc_session'
-const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7
 const LAST_SEEN_THROTTLE_MS = 15 * 60 * 1000
 
 type SessionRow = {
@@ -30,7 +29,7 @@ export async function createSession(
   const tokenHash = await hashToken(token)
   const now = Date.now()
   const nowIso = new Date(now).toISOString()
-  const expiresAt = new Date(now + SESSION_MAX_AGE_SECONDS * 1000).toISOString()
+  const expiresAt = new Date(now + SESSION_SECONDS * 1000).toISOString()
 
   await db.prepare(
     `INSERT INTO sessions (id, user_id, token_hash, expires_at, created_at, last_seen_at)
@@ -40,7 +39,7 @@ export async function createSession(
     .run()
 
   return {
-    cookie: sessionCookie(token, SESSION_MAX_AGE_SECONDS, appBaseUrl),
+    cookie: sessionCookie(token, SESSION_SECONDS, appBaseUrl),
     token,
   }
 }

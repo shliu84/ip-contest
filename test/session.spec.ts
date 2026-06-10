@@ -201,6 +201,7 @@ describe('/api/me', () => {
     const response = await onRequestGet(pagesContext(requestWithCookie()))
 
     expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-store')
     await expect(response.json()).resolves.toEqual({ user: null })
   })
 
@@ -215,6 +216,7 @@ describe('/api/me', () => {
     const response = await onRequestGet(pagesContext(requestWithCookie(cookie)))
 
     expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-store')
     await expect(response.json()).resolves.toEqual({
       user: {
         id: user.id,
