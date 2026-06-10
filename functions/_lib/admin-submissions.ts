@@ -15,6 +15,7 @@ export type AdminSubmissionRow = {
   applicant_id: string
   applicant_email: string
   applicant_role: SessionUser['role']
+  applicant_email_verified_at: string | null
   status: SubmissionStatus
   division: SubmissionDivision
   fee_amount: number
@@ -25,9 +26,24 @@ export type AdminSubmissionRow = {
   updated_at: string
   last_name: string
   first_name: string
+  pen_name: string
   profile_email: string
+  phone: string
+  country_region: string
+  city: string
+  postal_code: string
+  prefecture: string
+  occupation: string
+  school: string
+  address: string
+  wechat_id: string
+  certificate_language: string
   character_name: string
   theme_and_setting: string
+  exhibition_info: string
+  payer_name: string
+  usage_permission: number
+  terms_accepted: number
   file_count?: number | string | null
 }
 
@@ -91,7 +107,7 @@ export async function listAdminSubmissions(
   const { whereClause, params } = adminFilterWhere(filters)
   const rows = await db.prepare(adminSubmissionSelect(
     whereClause,
-    'ORDER BY s.created_at DESC, s.id DESC LIMIT ?',
+    'ORDER BY s.updated_at DESC, s.created_at DESC, s.id DESC LIMIT ?',
   ))
     .bind(...params, filters.limit)
     .all<AdminSubmissionRow>()
@@ -203,6 +219,7 @@ function adminSubmissionSelect(whereClause: string, orderClause = '') {
       u.id AS applicant_id,
       u.email AS applicant_email,
       u.role AS applicant_role,
+      u.email_verified_at AS applicant_email_verified_at,
       s.status,
       s.division,
       s.fee_amount,
@@ -213,9 +230,24 @@ function adminSubmissionSelect(whereClause: string, orderClause = '') {
       s.updated_at,
       p.last_name,
       p.first_name,
+      p.pen_name,
       p.email AS profile_email,
+      p.phone,
+      p.country_region,
+      p.city,
+      p.postal_code,
+      p.prefecture,
+      p.occupation,
+      p.school,
+      p.address,
+      p.wechat_id,
+      p.certificate_language,
       w.character_name,
       w.theme_and_setting,
+      w.exhibition_info,
+      w.payer_name,
+      w.usage_permission,
+      w.terms_accepted,
       (
         SELECT COUNT(*)
         FROM submission_files f
@@ -255,15 +287,31 @@ function mapAdminSubmissionDetail(row: AdminSubmissionRow, files: AdminSubmissio
       id: row.applicant_id,
       email: row.applicant_email,
       role: row.applicant_role,
+      emailVerifiedAt: row.applicant_email_verified_at,
     },
     profile: {
       lastName: row.last_name,
       firstName: row.first_name,
+      penName: row.pen_name,
       email: row.profile_email,
+      phone: row.phone,
+      countryRegion: row.country_region,
+      city: row.city,
+      postalCode: row.postal_code,
+      prefecture: row.prefecture,
+      occupation: row.occupation,
+      school: row.school,
+      address: row.address,
+      wechatId: row.wechat_id,
+      certificateLanguage: row.certificate_language,
     },
     work: {
       characterName: row.character_name,
       themeAndSetting: row.theme_and_setting,
+      exhibitionInfo: row.exhibition_info,
+      payerName: row.payer_name,
+      usagePermission: row.usage_permission === 1,
+      termsAccepted: row.terms_accepted === 1,
     },
     files: files.map((file) => ({
       id: file.id,

@@ -45,15 +45,31 @@ type AdminSubmissionDetailBody = {
       id: string
       email: string
       role: UserRole
+      emailVerifiedAt: string | null
     }
     profile: {
       lastName: string
       firstName: string
+      penName: string
       email: string
+      phone: string
+      countryRegion: string
+      city: string
+      postalCode: string
+      prefecture: string
+      occupation: string
+      school: string
+      address: string
+      wechatId: string
+      certificateLanguage: string
     }
     work: {
       characterName: string
       themeAndSetting: string
+      exhibitionInfo: string
+      payerName: string
+      usagePermission: boolean
+      termsAccepted: boolean
     }
     files: {
       id: string
@@ -101,6 +117,7 @@ async function insertSubmission(input: {
   themeAndSetting?: string
   r2Key?: string
   createdAt?: string
+  updatedAt?: string
 }) {
   const submission = {
     id: crypto.randomUUID(),
@@ -113,6 +130,7 @@ async function insertSubmission(input: {
     themeAndSetting: input.themeAndSetting ?? 'Near-future city',
     r2Key: input.r2Key ?? `submissions/${crypto.randomUUID()}/entry.png`,
     createdAt: input.createdAt ?? '2026-06-10T02:00:00.000Z',
+    updatedAt: input.updatedAt ?? input.createdAt ?? '2026-06-10T02:00:00.000Z',
   }
 
   await env.DB.batch([
@@ -133,7 +151,7 @@ async function insertSubmission(input: {
       '2026-06-10T01:30:00.000Z',
       '2026-06-10T01:45:00.000Z',
       submission.createdAt,
-      submission.createdAt,
+      submission.updatedAt,
     ),
     env.DB.prepare(
       `INSERT INTO submission_profiles (
@@ -371,6 +389,37 @@ describe('/api/admin/submissions list', () => {
       submittedAt: '2026-06-10T01:45:00.000Z',
     })
   })
+
+  it('orders submissions by most recently updated first', async () => {
+    const admin = await insertUser('committee', 'committee-order@example.com')
+    const firstApplicant = await insertUser('applicant', 'older-created@example.com')
+    const secondApplicant = await insertUser('applicant', 'newer-created@example.com')
+    const cookie = await sessionCookie(admin.id)
+
+    const recentlyUpdated = await insertSubmission({
+      userId: firstApplicant.id,
+      applicantEmail: firstApplicant.email,
+      submissionNo: 'AIPC2026-ORDER-UPDATED',
+      createdAt: '2026-06-10T02:00:00.000Z',
+      updatedAt: '2026-06-10T06:00:00.000Z',
+    })
+    const newerCreated = await insertSubmission({
+      userId: secondApplicant.id,
+      applicantEmail: secondApplicant.email,
+      submissionNo: 'AIPC2026-ORDER-CREATED',
+      createdAt: '2026-06-10T05:00:00.000Z',
+      updatedAt: '2026-06-10T05:00:00.000Z',
+    })
+
+    const body = await jsonBody<AdminSubmissionListBody>(
+      await listAdminSubmissions(cookie, '?q=AIPC2026-ORDER'),
+    )
+
+    expect(body.submissions.map((submission) => submission.id)).toEqual([
+      recentlyUpdated.id,
+      newerCreated.id,
+    ])
+  })
 })
 
 describe('/api/admin/submissions/:id detail', () => {
@@ -413,15 +462,31 @@ describe('/api/admin/submissions/:id detail', () => {
         id: applicant.id,
         email: applicant.email,
         role: 'applicant',
+        emailVerifiedAt: '2026-06-10T01:00:00.000Z',
       },
       profile: {
         lastName: 'Suzuki',
         firstName: 'Nao',
+        penName: 'Nao Suzuki',
         email: applicant.email,
+        phone: '+81-90-0000-0000',
+        countryRegion: 'Japan',
+        city: 'Tokyo',
+        postalCode: '100-0001',
+        prefecture: 'Tokyo',
+        occupation: 'Designer',
+        school: '',
+        address: '1-1 Chiyoda',
+        wechatId: 'aki-yamada',
+        certificateLanguage: 'ja',
       },
       work: {
         characterName: 'Archive Sentinel',
         themeAndSetting: 'A library orbiting the moon',
+        exhibitionInfo: 'First shown at a school festival',
+        payerName: 'Nao Suzuki',
+        usagePermission: true,
+        termsAccepted: true,
       },
     })
     expect(body.submission.files).toEqual([
