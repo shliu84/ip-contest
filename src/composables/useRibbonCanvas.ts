@@ -12,15 +12,31 @@ type RibbonNode = {
 export function useRibbonCanvas(canvasRef: Ref<HTMLCanvasElement | null>) {
   let width = 0
   let height = 0
+  let stableMobileHeight = 0
   let nodes: RibbonNode[] = []
   let animationFrameId = 0
+
+  const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches
+
+  const getCanvasHeight = () => {
+    if (!isMobileViewport()) return window.innerHeight
+
+    stableMobileHeight = Math.max(
+      stableMobileHeight,
+      window.innerHeight,
+      window.screen?.height || 0,
+      window.screen?.availHeight || 0,
+    )
+
+    return stableMobileHeight
+  }
 
   const init = () => {
     const canvas = canvasRef.value
     if (!canvas) return
 
     width = canvas.width = window.innerWidth
-    height = canvas.height = window.innerHeight
+    height = canvas.height = getCanvasHeight()
     nodes = []
 
     for (let i = 0; i < 12; i += 1) {
@@ -33,6 +49,20 @@ export function useRibbonCanvas(canvasRef: Ref<HTMLCanvasElement | null>) {
         angleSpeed: Math.random() * 0.01 + 0.005,
       })
     }
+  }
+
+  const handleResize = () => {
+    const nextWidth = window.innerWidth
+
+    if (isMobileViewport() && nextWidth === width) {
+      return
+    }
+
+    if (!isMobileViewport()) {
+      stableMobileHeight = 0
+    }
+
+    init()
   }
 
   const animate = () => {
@@ -89,11 +119,11 @@ export function useRibbonCanvas(canvasRef: Ref<HTMLCanvasElement | null>) {
   onMounted(() => {
     init()
     animationFrameId = requestAnimationFrame(animate)
-    window.addEventListener('resize', init)
+    window.addEventListener('resize', handleResize)
   })
 
   onBeforeUnmount(() => {
-    window.removeEventListener('resize', init)
+    window.removeEventListener('resize', handleResize)
     if (animationFrameId) cancelAnimationFrame(animationFrameId)
   })
 }

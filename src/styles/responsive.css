@@ -1,4 +1,8 @@
 @media (max-width: 992px) {
+  #lineCanvas {
+    height: 100lvh;
+  }
+
   body {
     padding-bottom: 82px;
   }
