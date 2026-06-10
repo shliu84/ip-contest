@@ -14,7 +14,7 @@
     />
   </RouterView>
 
-  <SiteFooter :t="t" />
+  <SiteFooter :current-language="currentLanguage" :t="t" />
   <BackToTopButton />
 </template>
 
