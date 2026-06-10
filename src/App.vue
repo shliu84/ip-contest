@@ -10,7 +10,7 @@
   <RouterView v-slot="{ Component, route }">
     <component
       :is="Component"
-      v-bind="route.name === 'home' || route.meta.usesTranslations ? { t } : {}"
+      v-bind="route.meta.usesLanguage ? { t, currentLanguage } : route.meta.usesTranslations ? { t } : {}"
     />
   </RouterView>
 

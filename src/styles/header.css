@@ -14,40 +14,78 @@ header {
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: 1px;
   color: var(--text-main);
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+  display: grid;
+  gap: 4px;
+  width: 285px;
+  font-family: "Helvetica Neue", Arial, "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans CJK JP", sans-serif;
 }
 
-.logo span {
+.logo-main {
+  color: var(--text-main);
+  display: block;
+  width: 100%;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.logo-main em {
   color: var(--primary);
-  font-size: 14px;
-  font-weight: 600;
-  font-style: normal;
+  font-size: 0.72em;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.logo-sub {
+  color: var(--primary);
+  display: block;
+  width: 100%;
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 0.11em;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 nav ul {
   list-style: none;
   display: flex;
-  gap: 40px;
+  gap: 28px;
 }
 
 nav a {
+  display: grid;
+  gap: 3px;
   text-decoration: none;
   color: var(--text-main);
-  font-size: 15px;
   font-weight: 600;
-  letter-spacing: 1px;
   transition: color 0.3s;
   position: relative;
+  text-align: center;
+  white-space: nowrap;
 }
 
-nav a:hover {
+.nav-eyebrow {
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+  line-height: 1;
+}
+
+.nav-label {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+}
+
+nav a:hover,
+nav a.router-link-exact-active {
   color: var(--primary);
 }
 
@@ -64,6 +102,10 @@ nav a::after {
 }
 
 nav a:hover::after {
+  width: 100%;
+}
+
+nav a.router-link-exact-active::after {
   width: 100%;
 }
 

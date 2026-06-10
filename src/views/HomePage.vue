@@ -5,8 +5,8 @@
     <NewsSection :t="t" />
     <TimelineSection :t="t" />
     <TracksSection :t="t" />
-    <BenefitsSection />
-    <JudgesSection :t="t" />
+    <BenefitsSection :current-language="currentLanguage" />
+    <JudgesSection :current-language="currentLanguage" :t="t" />
     <PrizesSection :t="t" />
   </main>
 </template>
@@ -20,9 +20,10 @@ import NewsSection from '../components/NewsSection.vue'
 import PrizesSection from '../components/PrizesSection.vue'
 import TimelineSection from '../components/TimelineSection.vue'
 import TracksSection from '../components/TracksSection.vue'
-import type { TranslationKey } from '../i18n/translations'
+import type { LanguageCode, TranslationKey } from '../i18n/translations'
 
 defineProps<{
+  currentLanguage: LanguageCode
   t: (key: TranslationKey) => string
 }>()
 </script>

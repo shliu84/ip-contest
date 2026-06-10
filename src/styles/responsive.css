@@ -9,16 +9,22 @@
   .logo {
     order: 0;
     flex: 1 1 0;
+    width: auto;
     max-width: calc(100% - 125px);
     min-width: 0;
-    font-size: 18px;
-    gap: 5px;
-    white-space: nowrap;
     overflow: hidden;
   }
 
-  .logo span {
-    font-size: 11px;
+  .logo-main {
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .logo-sub {
+    font-size: 8px;
+    letter-spacing: 0.08em;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -80,13 +86,10 @@
   }
 
   nav a {
-    display: block;
     padding: 7px 11px;
     border: 1px solid rgba(237, 21, 102, 0.12);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.7);
-    font-size: 12px;
-    line-height: 1;
     white-space: nowrap;
   }
 
@@ -100,6 +103,54 @@
 
   .hero h1 {
     font-size: 3rem;
+  }
+
+  .subpage-hero {
+    padding-top: 175px;
+  }
+
+  .subpage-hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .foreword-card {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .foreword-heading {
+    border-right: 0;
+    border-bottom: 1px solid rgba(237, 21, 102, 0.16);
+    padding-right: 0;
+    padding-bottom: 22px;
+  }
+
+  .foreword-body {
+    grid-column: auto;
+  }
+
+  .purpose-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .purpose-row {
+    grid-template-columns: 88px 1fr;
+    gap: 18px;
+  }
+
+  .purpose-illustration-placeholder {
+    width: 88px;
+  }
+
+  .organizer-card,
+  .organizer-card.featured {
+    grid-template-columns: 92px 1fr;
+    gap: 18px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.45rem;
+    letter-spacing: 2px;
   }
 
   .about-card h2 {
@@ -130,6 +181,10 @@
 
   .benefit-card.featured {
     grid-column: auto;
+  }
+
+  .past-events-grid {
+    grid-template-columns: 1fr;
   }
 
   .judges-grid {

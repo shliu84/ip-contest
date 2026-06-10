@@ -29,7 +29,7 @@
   font-weight: 900;
   letter-spacing: 4px;
   line-height: 1.2;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .hero h1 span {
@@ -38,6 +38,15 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-style: italic;
+}
+
+.hero-subtitle {
+  color: var(--primary);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  line-height: 1.2;
+  margin-bottom: 22px;
 }
 
 .hero p {
@@ -53,6 +62,259 @@
   display: flex;
   gap: 20px;
   justify-content: center;
+}
+
+.subpage-hero {
+  padding: 170px 20px 70px;
+  text-align: center;
+}
+
+.subpage-kicker {
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.subpage-hero h1 {
+  color: var(--text-main);
+  font-size: 3.2rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+
+.subpage-hero p {
+  max-width: 760px;
+  margin: 0 auto;
+  color: var(--text-sub);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.9;
+}
+
+.foreword-section {
+  padding-top: 30px;
+}
+
+.foreword-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.34fr) 1fr;
+  gap: 36px 48px;
+  text-align: left;
+}
+
+.foreword-heading {
+  border-right: 1px solid rgba(237, 21, 102, 0.16);
+  padding-right: 36px;
+}
+
+.foreword-heading span {
+  display: block;
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.foreword-heading h2 {
+  color: var(--text-main);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+}
+
+.foreword-signature {
+  align-self: start;
+}
+
+.foreword-photo-placeholder {
+  display: grid;
+  place-items: center;
+  width: min(100%, 240px);
+  aspect-ratio: 4 / 5;
+  margin-bottom: 22px;
+  border: 1px solid rgba(237, 21, 102, 0.18);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(237, 21, 102, 0.08), rgba(255, 255, 255, 0.72)),
+    rgba(255, 255, 255, 0.64);
+  box-shadow: 6px 6px 0 rgba(237, 21, 102, 0.08);
+}
+
+.foreword-photo-placeholder span {
+  color: rgba(237, 21, 102, 0.48);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+
+.foreword-signature h3 {
+  color: var(--text-main);
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.foreword-signature p {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.7;
+}
+
+.foreword-body {
+  grid-column: 2;
+  display: grid;
+  gap: 16px;
+}
+
+.foreword-body p {
+  color: var(--text-sub);
+  font-size: 0.98rem;
+  font-weight: 500;
+  line-height: 1.95;
+}
+
+.foreword-list {
+  display: grid;
+  gap: 10px;
+  margin: 6px 0;
+  padding: 18px 20px;
+  border-left: 4px solid var(--primary);
+  background: rgba(255, 255, 255, 0.56);
+  list-style: none;
+}
+
+.foreword-list li {
+  display: grid;
+  gap: 2px;
+  color: var(--text-sub);
+  font-size: 0.94rem;
+  line-height: 1.75;
+}
+
+.foreword-list strong {
+  color: var(--text-main);
+  font-weight: 900;
+}
+
+.purpose-section {
+  padding-top: 30px;
+}
+
+.purpose-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.purpose-card {
+  display: grid;
+  gap: 18px;
+  text-align: left;
+}
+
+.purpose-row {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+
+.purpose-illustration-placeholder {
+  width: 112px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(237, 21, 102, 0.22);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(237, 21, 102, 0.12)),
+    rgba(255, 255, 255, 0.72);
+  box-shadow: 4px 4px 0 rgba(237, 21, 102, 0.08);
+}
+
+.purpose-content {
+  min-width: 0;
+}
+
+.purpose-card h3 {
+  color: var(--text-main);
+  font-size: 1.24rem;
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.purpose-card p {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.85;
+}
+
+.purpose-note {
+  color: var(--primary) !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  margin-top: 12px;
+}
+
+.organizer-section {
+  padding-top: 30px;
+}
+
+.organizer-card {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 26px;
+  align-items: start;
+  text-align: left;
+}
+
+.organizer-card.featured {
+  grid-template-columns: 190px 1fr;
+}
+
+.organization-image-placeholder {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(237, 21, 102, 0.2);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(237, 21, 102, 0.1)),
+    rgba(255, 255, 255, 0.7);
+  box-shadow: 4px 4px 0 rgba(237, 21, 102, 0.08);
+}
+
+.organizer-card h3 {
+  color: var(--text-main);
+  font-size: 1.3rem;
+  font-weight: 900;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.organizer-card p {
+  color: var(--text-sub);
+  font-size: 0.96rem;
+  font-weight: 500;
+  line-height: 1.9;
+}
+
+.organizer-card p + p {
+  margin-top: 12px;
+}
+
+.co-organizer-grid {
+  display: grid;
+  gap: 22px;
 }
 
 .about-card {
@@ -296,6 +558,39 @@
   color: var(--primary) !important;
   font-weight: 900 !important;
   margin-top: 14px;
+}
+
+.past-events-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.past-event-card {
+  text-align: left;
+}
+
+.past-event-year {
+  color: var(--primary);
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+
+.past-event-card h2 {
+  color: var(--text-main);
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.past-event-card p {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.8;
 }
 
 .judges-grid {

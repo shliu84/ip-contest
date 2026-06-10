@@ -9,8 +9,12 @@ export type TranslationKey =
   | 'navTracks'
   | 'navJudges'
   | 'navPrizes'
+  | 'navEventInfo'
+  | 'navGuidelines'
+  | 'navPastEvents'
   | 'heroBadge'
   | 'heroTitle'
+  | 'heroSubtitle'
   | 'heroLead'
   | 'ctaEntry'
   | 'ctaAbout'
@@ -236,8 +240,12 @@ export const translations: Record<LanguageCode, Translation> = {
     navTracks: '征集赛道',
     navJudges: '审查员',
     navPrizes: '奖项设置',
+    navEventInfo: '举办信息',
+    navGuidelines: '募集要项',
+    navPastEvents: '往届比赛',
     heroBadge: 'FOR ASIA CHARACTER CREATORS',
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
+    heroSubtitle: '~Art Festa~',
     heroLead: '支持以专业创作为目标的亚洲创作者勇敢挑战',
     ctaEntry: '立即投稿',
     ctaAbout: '了解大赛',
@@ -451,14 +459,18 @@ export const translations: Record<LanguageCode, Translation> = {
     title: 'ASIA IP CONTEST in TOKYO 2026 | アジアIPコンテスト',
     logoSub: 'アジアIPコンテスト',
     navHome: 'ホーム',
-    navAbout: 'コンテストとは',
+    navAbout: 'コンテスト概要',
     navNews: 'お知らせ',
     navTimeline: 'スケジュール',
     navTracks: '募集部門',
     navJudges: '審査員',
     navPrizes: '賞について',
+    navEventInfo: '開催情報',
+    navGuidelines: '募集要項',
+    navPastEvents: '過去大会',
     heroBadge: 'FOR ASIA CHARACTER CREATORS',
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
+    heroSubtitle: '~Art Festa~',
     heroLead: 'プロを目指すアジアのクリエイターたちの挑戦を応援する',
     ctaEntry: '今すぐ応募',
     ctaAbout: 'コンテストについて',
@@ -678,8 +690,12 @@ export const translations: Record<LanguageCode, Translation> = {
     navTracks: 'Categories',
     navJudges: 'Judges',
     navPrizes: 'Prizes',
+    navEventInfo: 'Event Info',
+    navGuidelines: 'Guidelines',
+    navPastEvents: 'Past Events',
     heroBadge: 'FOR ASIA CHARACTER CREATORS',
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
+    heroSubtitle: '~Art Festa~',
     heroLead: 'Supporting Asian creators who are challenging themselves to become professionals',
     ctaEntry: 'Submit Now',
     ctaAbout: 'About the Contest',

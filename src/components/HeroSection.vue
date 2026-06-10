@@ -2,6 +2,7 @@
   <section id="hero" class="hero container">
     <div class="hero-badge">{{ t('heroBadge') }}</div>
     <h1 v-html="t('heroTitle')" />
+    <div class="hero-subtitle">{{ t('heroSubtitle') }}</div>
     <p>{{ t('heroLead') }}</p>
     <div class="cta-group">
       <a href="/login?redirect=/dashboard" class="btn btn-primary">{{ t('ctaEntry') }}</a>

@@ -2,7 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteMeta } from 'vue-router'
 import { useSession } from '../stores/session'
 import type { UserRole } from '../types/api'
+import AboutPage from '../views/AboutPage.vue'
+import EventInfoPage from '../views/EventInfoPage.vue'
+import GuidelinesPage from '../views/GuidelinesPage.vue'
 import HomePage from '../views/HomePage.vue'
+import PastEventsPage from '../views/PastEventsPage.vue'
 import LoginPage from '../views/auth/LoginPage.vue'
 import RegisterPage from '../views/auth/RegisterPage.vue'
 import VerifyEmailPage from '../views/auth/VerifyEmailPage.vue'
@@ -24,6 +28,7 @@ declare module 'vue-router' {
     guestOnly?: boolean
     requiresAuth?: boolean
     roles?: UserRole[]
+    usesLanguage?: boolean
     usesTranslations?: boolean
   }
 }
@@ -44,10 +49,18 @@ const adminMeta: RouteMeta = {
   roles: ['committee', 'super_admin'],
 }
 
+const publicPageMeta: RouteMeta = {
+  usesLanguage: true,
+}
+
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', name: 'home', component: HomePage },
+    { path: '/', name: 'home', component: HomePage, meta: publicPageMeta },
+    { path: '/about', name: 'about', component: AboutPage, meta: publicPageMeta },
+    { path: '/event-info', name: 'event-info', component: EventInfoPage, meta: publicPageMeta },
+    { path: '/guidelines', name: 'guidelines', component: GuidelinesPage, meta: publicPageMeta },
+    { path: '/past-events', name: 'past-events', component: PastEventsPage, meta: publicPageMeta },
     { path: '/register', name: 'register', component: RegisterPage, meta: { guestOnly: true, usesTranslations: true } },
     { path: '/login', name: 'login', component: LoginPage, meta: { guestOnly: true, usesTranslations: true } },
     { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage, meta: { usesTranslations: true } },

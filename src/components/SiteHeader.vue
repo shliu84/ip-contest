@@ -1,18 +1,23 @@
 <template>
   <header ref="headerRef">
     <div class="logo">
-      ASIA IP <strong>2026</strong> <span>{{ t('logoSub') }}</span>
+      <span class="logo-sub">ASIA IP CONTEST in Tokyo 2026</span>
+      <span class="logo-main">
+        アジアIPコンテスト <em>~Art Festa~</em>
+      </span>
     </div>
     <div class="header-actions">
       <nav>
         <ul>
-          <li><a href="/#hero">{{ t('navHome') }}</a></li>
-          <li><a href="/#about">{{ t('navAbout') }}</a></li>
-          <li><a href="/#news">{{ t('navNews') }}</a></li>
-          <li><a href="/#timeline">{{ t('navTimeline') }}</a></li>
-          <li><a href="/#tracks">{{ t('navTracks') }}</a></li>
-          <li><a href="/#judges">{{ t('navJudges') }}</a></li>
-          <li><a href="/#prizes">{{ t('navPrizes') }}</a></li>
+          <li
+            v-for="item in navItems"
+            :key="item.to"
+          >
+            <RouterLink class="nav-link" :to="item.to">
+              <span class="nav-eyebrow">{{ item.eyebrow }}</span>
+              <span class="nav-label">{{ t(item.labelKey) }}</span>
+            </RouterLink>
+          </li>
         </ul>
       </nav>
       <div class="header-entry-links" role="group" :aria-label="t('ctaEntry')">
@@ -53,6 +58,14 @@ const languages: Array<{ code: LanguageCode; label: string }> = [
   { code: 'ja', label: '日' },
   { code: 'zh', label: '中' },
   { code: 'en', label: 'EN' },
+]
+
+const navItems: Array<{ to: string; eyebrow: string; labelKey: TranslationKey }> = [
+  { to: '/', eyebrow: 'HOME', labelKey: 'navHome' },
+  { to: '/about', eyebrow: 'ABOUT US', labelKey: 'navAbout' },
+  { to: '/event-info', eyebrow: 'EVENT INFO', labelKey: 'navEventInfo' },
+  { to: '/guidelines', eyebrow: 'GUIDELINES', labelKey: 'navGuidelines' },
+  { to: '/past-events', eyebrow: 'PAST EVENTS', labelKey: 'navPastEvents' },
 ]
 
 const headerRef = ref<HTMLElement | null>(null)
