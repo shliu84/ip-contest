@@ -336,6 +336,43 @@ describe('/api/auth/reset-password', () => {
     expect(responses.map((response) => response.status).sort()).toEqual([200, 400])
   })
 
+  it('does not let a failed same-millisecond reset overwrite the successful password', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-10T00:30:00.000Z'))
+    await insertUser({
+      email: 'same-ms-reset@example.com',
+      password: 'old password is valid',
+    })
+    const { rawToken } = await requestResetToken('same-ms-reset@example.com')
+
+    const attempts = [
+      { password: 'winner password one' },
+      { password: 'winner password two' },
+    ]
+    const responses = await Promise.all(attempts.map(async (attempt) => ({
+      password: attempt.password,
+      response: await postResetPassword({
+        token: rawToken,
+        password: attempt.password,
+      }),
+    })))
+
+    const successful = responses.filter(({ response }) => response.status === 200)
+    const failed = responses.filter(({ response }) => response.status === 400)
+    expect(successful).toHaveLength(1)
+    expect(failed).toHaveLength(1)
+
+    const updatedUser = await firstUser('same-ms-reset@example.com')
+    expect(await verifyPassword(
+      successful[0].password,
+      updatedUser?.password_hash ?? '',
+    )).toBe(true)
+    expect(await verifyPassword(
+      failed[0].password,
+      updatedUser?.password_hash ?? '',
+    )).toBe(false)
+  })
+
   it('returns the same invalid token response for expired, used, and unknown tokens', async () => {
     await insertUser({ email: 'invalid-token-reset@example.com' })
     const { rawToken: expiredToken } = await requestResetToken(

@@ -15,6 +15,7 @@ type ResetTokenRow = {
 }
 
 const INVALID_RESET_TOKEN_MESSAGE = 'Invalid reset token'
+const TOKEN_PATTERN = /^[A-Za-z0-9_-]{43}$/
 
 export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
   return handleApi(async () => {
@@ -24,6 +25,9 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
     }
     if (typeof body.token !== 'string' || typeof body.password !== 'string') {
       throw new ApiRequestError('bad_request', 'Invalid password reset body', 400)
+    }
+    if (!TOKEN_PATTERN.test(body.token)) {
+      throw invalidResetToken()
     }
     if (!validatePassword(body.password)) {
       throw new ApiRequestError('bad_request', 'Invalid password', 400)
@@ -44,46 +48,41 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
 
     const nowIso = new Date().toISOString()
     const passwordHash = await hashPassword(body.password)
-    const [claimed, updatedUser] = await context.env.DB.batch([
-      context.env.DB.prepare(
-        `UPDATE password_reset_tokens
-         SET used_at = ?
-         WHERE id = ?
-           AND used_at IS NULL
-           AND expires_at > ?`,
-      ).bind(nowIso, row.id, nowIso),
-      context.env.DB.prepare(
-        `UPDATE users
-         SET password_hash = ?, updated_at = ?
-         WHERE id = ?
-           AND EXISTS (
-             SELECT 1
-             FROM password_reset_tokens
-             WHERE id = ?
-               AND used_at = ?
-           )`,
-      ).bind(passwordHash, nowIso, row.user_id, row.id, nowIso),
-      context.env.DB.prepare(
-        `DELETE FROM sessions
-         WHERE user_id = ?
-           AND EXISTS (
-             SELECT 1
-             FROM password_reset_tokens
-             WHERE id = ?
-               AND used_at = ?
-           )`,
-      ).bind(row.user_id, row.id, nowIso),
-    ])
+    const claimed = await context.env.DB.prepare(
+      `UPDATE password_reset_tokens
+       SET used_at = ?
+       WHERE id = ?
+         AND used_at IS NULL
+         AND expires_at > ?`,
+    )
+      .bind(nowIso, row.id, nowIso)
+      .run()
 
     if (claimed.meta.changes !== 1) {
       throw invalidResetToken()
     }
 
+    const [updatedUser] = await context.env.DB.batch([
+      context.env.DB.prepare(
+        `UPDATE users
+         SET password_hash = ?, updated_at = ?
+         WHERE id = ?`,
+      ).bind(passwordHash, nowIso, row.user_id),
+      context.env.DB.prepare(
+        `DELETE FROM sessions
+         WHERE user_id = ?`,
+      ).bind(row.user_id),
+    ])
+
     if (updatedUser.meta.changes !== 1) {
       throw new Error('Claimed reset token did not update a user')
     }
 
-    return json({ ok: true })
+    return json({ ok: true }, {
+      headers: {
+        'cache-control': 'no-store',
+      },
+    })
   })
 }
 
