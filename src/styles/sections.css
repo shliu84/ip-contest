@@ -216,18 +216,100 @@
   font-weight: bold;
 }
 
+.benefits-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.benefit-card {
+  padding: 30px;
+  text-align: left;
+}
+
+.benefit-card.featured {
+  grid-column: 1 / -1;
+}
+
+.benefit-card h3 {
+  color: var(--text-main);
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.35;
+  margin-bottom: 16px;
+}
+
+.benefit-card p {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.benefit-card p + p {
+  margin-top: 10px;
+}
+
+.benefit-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.benefit-list li {
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.6;
+  padding-left: 18px;
+  position: relative;
+}
+
+.benefit-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.benefit-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 18px;
+  color: #fff;
+  background: var(--primary);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow: 4px 4px 0 rgba(237, 21, 102, 0.14);
+}
+
+.benefit-note {
+  color: var(--primary) !important;
+  font-weight: 900 !important;
+  margin-top: 14px;
+}
+
 .judges-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
 }
 
 .judge-card {
-  min-height: 260px;
+  min-height: 245px;
   padding: 28px 22px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 20px;
 }
 
 .judge-avatar {
@@ -239,38 +321,45 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.72);
   color: var(--primary);
-  font-size: 1.15rem;
+  font-size: 1.4rem;
   font-weight: 900;
-  letter-spacing: 1px;
   box-shadow: 5px 5px 0 rgba(237, 21, 102, 0.08);
-}
-
-.judge-number {
-  color: var(--primary);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 2px;
-  margin-bottom: 8px;
-  text-transform: uppercase;
 }
 
 .judge-card h3 {
   font-size: 1.2rem;
   font-weight: 900;
-  margin-bottom: 8px;
+  line-height: 1.35;
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+.judge-reading {
+  color: var(--text-sub);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 10px;
 }
 
 .judge-role {
   color: var(--text-main);
   font-size: 0.9rem;
   font-weight: 800;
-  margin-bottom: 14px;
+  line-height: 1.55;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
 }
 
 .judge-bio {
   color: var(--text-sub);
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.judge-bio + .judge-bio {
+  margin-top: 8px;
 }
 
 .prize-layout {

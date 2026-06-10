@@ -124,8 +124,16 @@
     grid-template-columns: 1fr;
   }
 
-  .judges-grid {
+  .benefits-layout {
     grid-template-columns: 1fr;
+  }
+
+  .benefit-card.featured {
+    grid-column: auto;
+  }
+
+  .judges-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .prize-layout {
@@ -139,5 +147,11 @@
 
   .prize-card.gold {
     transform: scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .judges-grid {
+    grid-template-columns: 1fr;
   }
 }
