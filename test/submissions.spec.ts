@@ -1,10 +1,12 @@
 import { env } from 'cloudflare:workers'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { onRequestGet, onRequestPost } from '../functions/api/submissions/index'
 import {
   onRequestGet as onRequestGetSubmission,
   onRequestPatch as onRequestPatchSubmission,
 } from '../functions/api/submissions/[id]'
+import { onRequestPost as onRequestPostUploadUrl } from '../functions/api/submissions/[id]/upload-url'
+import { onRequestDelete as onRequestDeleteFile } from '../functions/api/submissions/[id]/files/[fileId]'
 import { hashPassword } from '../functions/_lib/password'
 import { createSession } from '../functions/_lib/session'
 import { pagesContext } from './helpers/pages-context'
@@ -134,6 +136,34 @@ async function updateSubmission(submissionId: string, cookie: string | undefined
         ...(cookie ? { cookie } : {}),
       },
       body: JSON.stringify(body),
+    },
+  )))
+}
+
+async function uploadSubmissionFile(submissionId: string, cookie: string | undefined, body: unknown) {
+  return await onRequestPostUploadUrl(pagesContext(new Request(
+    `https://contest.example.com/api/submissions/${submissionId}/upload-url`,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(cookie ? { cookie } : {}),
+      },
+      body: JSON.stringify(body),
+    },
+  )))
+}
+
+async function deleteSubmissionFile(
+  submissionId: string,
+  fileId: string,
+  cookie: string | undefined,
+) {
+  return await onRequestDeleteFile(pagesContext(new Request(
+    `https://contest.example.com/api/submissions/${submissionId}/files/${fileId}`,
+    {
+      method: 'DELETE',
+      headers: cookie ? { cookie } : {},
     },
   )))
 }
@@ -443,5 +473,211 @@ describe('/api/submissions', () => {
 
     expect(response.status).toBe(409)
     expect(body.error.code).toBe('invalid_submission')
+  })
+
+  it('uploads a PNG base64 payload to the owner draft and stores metadata plus bytes', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    const bytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+
+    const response = await uploadSubmissionFile(createBody.submission.id, cookie, {
+      fileType: 'online_a4_image',
+      filename: ' entry art.png ',
+      contentType: 'image/png',
+      dataBase64: btoa(String.fromCharCode(...bytes)),
+    })
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-store')
+    const body = await jsonBody<SubmissionResponseBody>(response)
+    expect(body.submission.files).toHaveLength(1)
+    expect(body.submission.files[0]).toMatchObject({
+      fileType: 'online_a4_image',
+      originalFilename: ' entry art.png ',
+      contentType: 'image/png',
+      sizeBytes: bytes.byteLength,
+    })
+
+    const row = await env.DB.prepare(
+      `SELECT submission_id, file_type, r2_key, original_filename, content_type, size_bytes
+       FROM submission_files
+       WHERE id = ?`,
+    )
+      .bind(body.submission.files[0].id)
+      .first<{
+        submission_id: string
+        file_type: string
+        r2_key: string
+        original_filename: string
+        content_type: string
+        size_bytes: number
+      }>()
+    expect(row).toMatchObject({
+      submission_id: createBody.submission.id,
+      file_type: 'online_a4_image',
+      original_filename: ' entry art.png ',
+      content_type: 'image/png',
+      size_bytes: bytes.byteLength,
+    })
+    expect(row?.r2_key).toMatch(
+      new RegExp(
+        `^submissions/${body.submission.submissionNo}/online_a4_image/\\d+-[0-9a-f-]+-entry-art\\.png$`,
+      ),
+    )
+
+    const object = await env.SUBMISSION_BUCKET.get(row!.r2_key)
+    expect(object).not.toBeNull()
+    expect(new Uint8Array(await object!.arrayBuffer())).toEqual(bytes)
+  })
+
+  it('returns 404 when another applicant uploads to a draft they do not own', async () => {
+    const owner = await insertUser()
+    const otherApplicant = await insertUser()
+    const ownerCookie = await sessionCookie(owner.id)
+    const otherCookie = await sessionCookie(otherApplicant.id)
+    const createResponse = await createSubmission(ownerCookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+
+    const response = await uploadSubmissionFile(createBody.submission.id, otherCookie, {
+      fileType: 'online_a4_image',
+      filename: 'entry.png',
+      contentType: 'image/png',
+      dataBase64: btoa('png'),
+    })
+
+    expect(response.status).toBe(404)
+  })
+
+  it('returns 409 invalid_submission when uploading after payment is pending', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    await env.DB.prepare(
+      `UPDATE submissions
+       SET status = 'payment_pending'
+       WHERE id = ? AND user_id = ?`,
+    )
+      .bind(createBody.submission.id, user.id)
+      .run()
+
+    const response = await uploadSubmissionFile(createBody.submission.id, cookie, {
+      fileType: 'online_a4_image',
+      filename: 'entry.png',
+      contentType: 'image/png',
+      dataBase64: btoa('png'),
+    })
+    const body = await jsonBody<{ error: { code: string } }>(response)
+
+    expect(response.status).toBe(409)
+    expect(body.error.code).toBe('invalid_submission')
+  })
+
+  it('returns 400 for invalid upload base64 data', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+
+    const response = await uploadSubmissionFile(createBody.submission.id, cookie, {
+      fileType: 'online_a4_image',
+      filename: 'entry.png',
+      contentType: 'image/png',
+      dataBase64: 'not base64!',
+    })
+
+    expect(response.status).toBe(400)
+  })
+
+  it('returns 400 for encoded upload payloads that exceed the decoded size guard', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    const atobSpy = vi.spyOn(globalThis, 'atob')
+
+    try {
+      const response = await uploadSubmissionFile(createBody.submission.id, cookie, {
+        fileType: 'online_a4_image',
+        filename: 'entry.png',
+        contentType: 'image/png',
+        dataBase64: 'A'.repeat(13_981_018),
+      })
+
+      expect(response.status).toBe(400)
+      expect(atobSpy).not.toHaveBeenCalled()
+    } finally {
+      atobSpy.mockRestore()
+    }
+  })
+
+  it('stores different R2 keys for two uploads with the same filename and type', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    const nowSpy = vi.spyOn(Date, 'now').mockReturnValue(1_780_000_000_000)
+
+    try {
+      const uploadBody = {
+        fileType: 'online_a4_image',
+        filename: 'entry.png',
+        contentType: 'image/png',
+        dataBase64: btoa('png'),
+      }
+      await uploadSubmissionFile(createBody.submission.id, cookie, uploadBody)
+      await uploadSubmissionFile(createBody.submission.id, cookie, uploadBody)
+    } finally {
+      nowSpy.mockRestore()
+    }
+
+    const rows = await env.DB.prepare(
+      `SELECT r2_key
+       FROM submission_files
+       WHERE submission_id = ?
+       ORDER BY uploaded_at ASC, id ASC`,
+    )
+      .bind(createBody.submission.id)
+      .all<{ r2_key: string }>()
+    expect(rows.results).toHaveLength(2)
+    expect(rows.results[0].r2_key).not.toBe(rows.results[1].r2_key)
+  })
+
+  it('deletes a draft file metadata row and R2 object', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    const uploadResponse = await uploadSubmissionFile(createBody.submission.id, cookie, {
+      fileType: 'online_a4_image',
+      filename: 'entry.png',
+      contentType: 'image/png',
+      dataBase64: btoa('png-bytes'),
+    })
+    const uploadBody = await jsonBody<SubmissionResponseBody>(uploadResponse)
+    const fileId = uploadBody.submission.files[0].id
+    const row = await env.DB.prepare(
+      `SELECT r2_key
+       FROM submission_files
+       WHERE id = ?`,
+    )
+      .bind(fileId)
+      .first<{ r2_key: string }>()
+    expect(row).not.toBeNull()
+
+    const response = await deleteSubmissionFile(createBody.submission.id, fileId, cookie)
+    const body = await jsonBody<{ ok: boolean }>(response)
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-store')
+    expect(body).toEqual({ ok: true })
+    await expect(env.DB.prepare(
+      `SELECT id
+       FROM submission_files
+       WHERE id = ?`,
+    ).bind(fileId).first()).resolves.toBeNull()
+    await expect(env.SUBMISSION_BUCKET.get(row!.r2_key)).resolves.toBeNull()
   })
 })
