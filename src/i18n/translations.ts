@@ -130,6 +130,17 @@ export type TranslationKey =
   | 'submissionProceedToPayment'
   | 'submissionProceedPending'
   | 'submissionProceedError'
+  | 'paymentKicker'
+  | 'paymentTitle'
+  | 'paymentLead'
+  | 'paymentLoading'
+  | 'paymentLoadError'
+  | 'paymentMockConfirm'
+  | 'paymentMockConfirmPending'
+  | 'paymentMockConfirmError'
+  | 'paymentBackToEditor'
+  | 'paymentAlreadySubmitted'
+  | 'paymentUnavailable'
   | 'submissionBackToDashboard'
   | 'submissionDetailsTitle'
   | 'submissionDivisionLabel'
@@ -338,6 +349,17 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProceedToPayment: '进入付款',
     submissionProceedPending: '正在准备付款...',
     submissionProceedError: '无法进入付款，请检查投稿内容后重试。',
+    paymentKicker: '付款',
+    paymentTitle: '确认付款',
+    paymentLead: '确认投稿金额，并在沙盒环境中模拟付款成功。',
+    paymentLoading: '正在读取投稿...',
+    paymentLoadError: '无法读取付款信息，请稍后再试。',
+    paymentMockConfirm: '模拟付款成功',
+    paymentMockConfirmPending: '正在确认...',
+    paymentMockConfirmError: '无法确认付款，请稍后再试。',
+    paymentBackToEditor: '返回投稿编辑',
+    paymentAlreadySubmitted: '该投稿已完成提交。',
+    paymentUnavailable: '当前状态无法付款。',
     submissionBackToDashboard: '返回控制台',
     submissionDetailsTitle: '投稿信息',
     submissionDivisionLabel: '赛道',
@@ -540,6 +562,17 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProceedToPayment: '支払いへ進む',
     submissionProceedPending: '支払い準備中...',
     submissionProceedError: '支払いへ進めませんでした。応募内容を確認して再度お試しください。',
+    paymentKicker: '支払い',
+    paymentTitle: '支払い確認',
+    paymentLead: '応募料を確認し、サンドボックス環境で支払い成功をシミュレートします。',
+    paymentLoading: '応募作品を読み込み中...',
+    paymentLoadError: '支払い情報を読み込めませんでした。時間をおいて再度お試しください。',
+    paymentMockConfirm: '支払い成功をシミュレート',
+    paymentMockConfirmPending: '確認中...',
+    paymentMockConfirmError: '支払いを確認できませんでした。時間をおいて再度お試しください。',
+    paymentBackToEditor: '応募作品編集に戻る',
+    paymentAlreadySubmitted: 'この応募作品は提出済みです。',
+    paymentUnavailable: '現在のステータスでは支払いできません。',
     submissionBackToDashboard: 'ダッシュボードに戻る',
     submissionDetailsTitle: '応募情報',
     submissionDivisionLabel: '部門',
@@ -742,6 +775,17 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProceedToPayment: 'Proceed to Payment',
     submissionProceedPending: 'Preparing payment...',
     submissionProceedError: 'Payment could not be prepared. Please check the submission and try again.',
+    paymentKicker: 'Payment',
+    paymentTitle: 'Confirm Payment',
+    paymentLead: 'Confirm the submission fee and simulate a successful payment in the sandbox.',
+    paymentLoading: 'Loading submission...',
+    paymentLoadError: 'Payment information could not be loaded. Please try again later.',
+    paymentMockConfirm: 'Simulate Payment Success',
+    paymentMockConfirmPending: 'Confirming...',
+    paymentMockConfirmError: 'Payment could not be confirmed. Please try again later.',
+    paymentBackToEditor: 'Back to Submission Editor',
+    paymentAlreadySubmitted: 'This submission has already been submitted.',
+    paymentUnavailable: 'Payment is unavailable for the current status.',
     submissionBackToDashboard: 'Back to Dashboard',
     submissionDetailsTitle: 'Submission Details',
     submissionDivisionLabel: 'Division',
