@@ -148,6 +148,16 @@
     gap: 18px;
   }
 
+  .event-info-grid,
+  .event-schedule-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-info-list div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
   .hero-subtitle {
     font-size: 1.45rem;
     letter-spacing: 2px;

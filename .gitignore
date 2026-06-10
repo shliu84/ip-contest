@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+temp/
 
 # Cloudflare local configuration and state
 .dev.vars
