@@ -95,6 +95,41 @@ export type TranslationKey =
   | 'dashboardLogout'
   | 'dashboardLogoutPending'
   | 'dashboardWelcome'
+  | 'dashboardCreateDraft'
+  | 'dashboardCreateDraftPending'
+  | 'dashboardSubmissionsTitle'
+  | 'dashboardSubmissionsLead'
+  | 'dashboardSubmissionsUnavailableTitle'
+  | 'dashboardSubmissionsUnavailableText'
+  | 'dashboardLoadingSubmissions'
+  | 'dashboardLoadError'
+  | 'dashboardEmptyTitle'
+  | 'dashboardEmptyText'
+  | 'dashboardSubmissionNo'
+  | 'dashboardSubmissionWork'
+  | 'dashboardSubmissionDivision'
+  | 'dashboardSubmissionStatus'
+  | 'dashboardSubmissionFee'
+  | 'dashboardSubmissionFiles'
+  | 'dashboardSubmissionCreated'
+  | 'dashboardSubmissionUpdated'
+  | 'dashboardSubmissionAction'
+  | 'dashboardUntitledSubmission'
+  | 'dashboardEditSubmission'
+  | 'dashboardViewSubmission'
+  | 'submissionDivision2d'
+  | 'submissionDivision3d'
+  | 'submissionDivisionAi'
+  | 'submissionDivisionCorporate'
+  | 'submissionStatusDraft'
+  | 'submissionStatusPaymentPending'
+  | 'submissionStatusSubmitted'
+  | 'submissionStatusScreening'
+  | 'submissionStatusScreenedIn'
+  | 'submissionStatusScreenedOut'
+  | 'submissionStatusAssigned'
+  | 'submissionStatusReviewed'
+  | 'submissionStatusWithdrawn'
   | 'roleApplicant'
   | 'roleCommittee'
   | 'roleJudge'
@@ -173,7 +208,7 @@ export const translations: Record<LanguageCode, Translation> = {
     forgotLead: '输入账户邮箱，我们会发送重置密码的链接。',
     resetTitle: '重置密码',
     resetLead: '设置新的账户密码。',
-    dashboardKicker: '参赛者',
+    dashboardKicker: '账户',
     dashboardTitle: '控制台',
     dashboardLead: '你已登录 ASIA IP CONTEST 账户。',
     emailLabel: '邮箱',
@@ -209,6 +244,41 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardLogout: '退出登录',
     dashboardLogoutPending: '正在退出...',
     dashboardWelcome: '账户状态',
+    dashboardCreateDraft: '新建草稿',
+    dashboardCreateDraftPending: '正在创建...',
+    dashboardSubmissionsTitle: '投稿',
+    dashboardSubmissionsLead: '查看并继续编辑你的投稿。',
+    dashboardSubmissionsUnavailableTitle: '投稿功能不可用',
+    dashboardSubmissionsUnavailableText: '评委、委员会和管理员账户不能在此控制台创建或编辑参赛投稿。',
+    dashboardLoadingSubmissions: '正在读取投稿...',
+    dashboardLoadError: '无法读取投稿，请稍后再试。',
+    dashboardEmptyTitle: '还没有投稿',
+    dashboardEmptyText: '创建草稿后即可填写作品信息。',
+    dashboardSubmissionNo: '投稿编号',
+    dashboardSubmissionWork: '作品名',
+    dashboardSubmissionDivision: '赛道',
+    dashboardSubmissionStatus: '状态',
+    dashboardSubmissionFee: '报名费',
+    dashboardSubmissionFiles: '文件',
+    dashboardSubmissionCreated: '创建日',
+    dashboardSubmissionUpdated: '更新日',
+    dashboardSubmissionAction: '操作',
+    dashboardUntitledSubmission: '未命名作品',
+    dashboardEditSubmission: '编辑',
+    dashboardViewSubmission: '查看',
+    submissionDivision2d: '2D',
+    submissionDivision3d: '3D',
+    submissionDivisionAi: 'AI',
+    submissionDivisionCorporate: '企业',
+    submissionStatusDraft: '草稿',
+    submissionStatusPaymentPending: '待付款',
+    submissionStatusSubmitted: '已提交',
+    submissionStatusScreening: '初审中',
+    submissionStatusScreenedIn: '初审通过',
+    submissionStatusScreenedOut: '初审未通过',
+    submissionStatusAssigned: '已分配',
+    submissionStatusReviewed: '已评审',
+    submissionStatusWithdrawn: '已撤回',
     roleApplicant: '参赛者',
     roleCommittee: '委员会',
     roleJudge: '评委',
@@ -281,7 +351,7 @@ export const translations: Record<LanguageCode, Translation> = {
     forgotLead: 'アカウントのメールアドレスを入力してください。パスワード再設定リンクを送信します。',
     resetTitle: 'パスワード再設定',
     resetLead: '新しいアカウントパスワードを設定します。',
-    dashboardKicker: '応募者',
+    dashboardKicker: 'アカウント',
     dashboardTitle: 'ダッシュボード',
     dashboardLead: 'ASIA IP CONTEST アカウントにログインしています。',
     emailLabel: 'メールアドレス',
@@ -317,6 +387,41 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardLogout: 'ログアウト',
     dashboardLogoutPending: 'ログアウト中...',
     dashboardWelcome: 'アカウント状態',
+    dashboardCreateDraft: '下書きを作成',
+    dashboardCreateDraftPending: '作成中...',
+    dashboardSubmissionsTitle: '応募作品',
+    dashboardSubmissionsLead: '応募作品の確認と編集を行えます。',
+    dashboardSubmissionsUnavailableTitle: '応募機能は利用できません',
+    dashboardSubmissionsUnavailableText: '審査員、委員会、管理者アカウントでは、このダッシュボードから応募作品の作成や編集はできません。',
+    dashboardLoadingSubmissions: '応募作品を読み込み中...',
+    dashboardLoadError: '応募作品を読み込めませんでした。時間をおいて再度お試しください。',
+    dashboardEmptyTitle: '応募作品はまだありません',
+    dashboardEmptyText: '下書きを作成すると作品情報を入力できます。',
+    dashboardSubmissionNo: '応募番号',
+    dashboardSubmissionWork: '作品名',
+    dashboardSubmissionDivision: '部門',
+    dashboardSubmissionStatus: 'ステータス',
+    dashboardSubmissionFee: '応募料',
+    dashboardSubmissionFiles: 'ファイル',
+    dashboardSubmissionCreated: '作成日',
+    dashboardSubmissionUpdated: '更新日',
+    dashboardSubmissionAction: '操作',
+    dashboardUntitledSubmission: '作品名未入力',
+    dashboardEditSubmission: '編集',
+    dashboardViewSubmission: '表示',
+    submissionDivision2d: '2D',
+    submissionDivision3d: '3D',
+    submissionDivisionAi: 'AI',
+    submissionDivisionCorporate: '法人',
+    submissionStatusDraft: '下書き',
+    submissionStatusPaymentPending: '支払い待ち',
+    submissionStatusSubmitted: '提出済み',
+    submissionStatusScreening: '一次審査中',
+    submissionStatusScreenedIn: '一次通過',
+    submissionStatusScreenedOut: '一次不通過',
+    submissionStatusAssigned: '割り当て済み',
+    submissionStatusReviewed: '審査済み',
+    submissionStatusWithdrawn: '取り下げ',
     roleApplicant: '応募者',
     roleCommittee: '委員会',
     roleJudge: '審査員',
@@ -389,7 +494,7 @@ export const translations: Record<LanguageCode, Translation> = {
     forgotLead: 'Enter your account email and we will send a password reset link.',
     resetTitle: 'Reset Password',
     resetLead: 'Set a new account password.',
-    dashboardKicker: 'Applicant',
+    dashboardKicker: 'Account',
     dashboardTitle: 'Dashboard',
     dashboardLead: 'You are signed in to your ASIA IP CONTEST account.',
     emailLabel: 'Email',
@@ -425,6 +530,41 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardLogout: 'Log Out',
     dashboardLogoutPending: 'Logging out...',
     dashboardWelcome: 'Account Status',
+    dashboardCreateDraft: 'Create Draft',
+    dashboardCreateDraftPending: 'Creating...',
+    dashboardSubmissionsTitle: 'Submissions',
+    dashboardSubmissionsLead: 'Review your submissions and continue drafts.',
+    dashboardSubmissionsUnavailableTitle: 'Submission tools unavailable',
+    dashboardSubmissionsUnavailableText: 'Judge, committee, and administrator accounts cannot create or edit applicant submissions from this dashboard.',
+    dashboardLoadingSubmissions: 'Loading submissions...',
+    dashboardLoadError: 'Submissions could not be loaded. Please try again later.',
+    dashboardEmptyTitle: 'No submissions yet',
+    dashboardEmptyText: 'Create a draft to start entering your work details.',
+    dashboardSubmissionNo: 'Submission No.',
+    dashboardSubmissionWork: 'Work',
+    dashboardSubmissionDivision: 'Division',
+    dashboardSubmissionStatus: 'Status',
+    dashboardSubmissionFee: 'Fee',
+    dashboardSubmissionFiles: 'Files',
+    dashboardSubmissionCreated: 'Created',
+    dashboardSubmissionUpdated: 'Updated',
+    dashboardSubmissionAction: 'Action',
+    dashboardUntitledSubmission: 'Untitled work',
+    dashboardEditSubmission: 'Edit',
+    dashboardViewSubmission: 'View',
+    submissionDivision2d: '2D',
+    submissionDivision3d: '3D',
+    submissionDivisionAi: 'AI',
+    submissionDivisionCorporate: 'Corporate',
+    submissionStatusDraft: 'Draft',
+    submissionStatusPaymentPending: 'Payment pending',
+    submissionStatusSubmitted: 'Submitted',
+    submissionStatusScreening: 'Screening',
+    submissionStatusScreenedIn: 'Screened in',
+    submissionStatusScreenedOut: 'Screened out',
+    submissionStatusAssigned: 'Assigned',
+    submissionStatusReviewed: 'Reviewed',
+    submissionStatusWithdrawn: 'Withdrawn',
     roleApplicant: 'Applicant',
     roleCommittee: 'Committee',
     roleJudge: 'Judge',
