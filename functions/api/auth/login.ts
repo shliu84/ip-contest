@@ -2,7 +2,7 @@ import type { AppEnv } from '../../_lib/env'
 import { ApiRequestError, handleApi, json, readJson } from '../../_lib/http'
 import { hashPassword, verifyPassword } from '../../_lib/password'
 import { createSession } from '../../_lib/session'
-import { normalizeEmail, validateEmail, validatePassword } from '../../_lib/validation'
+import { normalizeEmail, validateEmail } from '../../_lib/validation'
 
 type LoginBody = {
   email?: unknown
@@ -18,6 +18,8 @@ type LoginUserRow = {
 }
 
 const INVALID_LOGIN_MESSAGE = 'Invalid email or password'
+const INVALID_LOGIN_PADDING_PASSWORD = 'invalid login padding'
+const MAX_LOGIN_PASSWORD_LENGTH = 128
 
 export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
   return handleApi(async () => {
@@ -33,8 +35,10 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
     if (!validateEmail(email)) {
       throw new ApiRequestError('bad_request', 'Invalid email', 400)
     }
-    if (!validatePassword(body.password)) {
-      throw new ApiRequestError('bad_request', 'Invalid password', 400)
+
+    if (isPasswordTooLong(body.password)) {
+      await hashPassword(INVALID_LOGIN_PADDING_PASSWORD)
+      throw invalidLogin()
     }
 
     const user = await context.env.DB.prepare(
@@ -91,4 +95,8 @@ function invalidLogin() {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
+}
+
+function isPasswordTooLong(password: string) {
+  return Array.from(password).length > MAX_LOGIN_PASSWORD_LENGTH
 }

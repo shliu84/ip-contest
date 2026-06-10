@@ -131,7 +131,7 @@ describe('/api/auth/login', () => {
     })
   })
 
-  it('returns the same unauthorized response for unknown email and wrong password', async () => {
+  it('returns the same unauthorized response for unknown email, wrong password, and short password', async () => {
     await insertUser({
       email: 'known@example.com',
       password: 'correct horse battery staple',
@@ -145,26 +145,30 @@ describe('/api/auth/login', () => {
       email: 'known@example.com',
       password: 'wrong horse battery staple',
     })
+    const shortPassword = await postLogin({
+      email: 'known@example.com',
+      password: 'short',
+    })
 
     expect(unknown.status).toBe(401)
     expect(wrongPassword.status).toBe(401)
+    expect(shortPassword.status).toBe(401)
     expect(unknown.headers.get('set-cookie')).toBeNull()
     expect(wrongPassword.headers.get('set-cookie')).toBeNull()
-    await expect(unknown.json()).resolves.toEqual({
+    expect(shortPassword.headers.get('set-cookie')).toBeNull()
+
+    const invalidCredentialsBody = {
       error: {
         code: 'unauthorized',
         message: 'Invalid email or password',
       },
-    })
-    await expect(wrongPassword.json()).resolves.toEqual({
-      error: {
-        code: 'unauthorized',
-        message: 'Invalid email or password',
-      },
-    })
+    }
+    await expect(unknown.json()).resolves.toEqual(invalidCredentialsBody)
+    await expect(wrongPassword.json()).resolves.toEqual(invalidCredentialsBody)
+    await expect(shortPassword.json()).resolves.toEqual(invalidCredentialsBody)
   })
 
-  it('rejects an overlong password before creating a session', async () => {
+  it('returns unauthorized for an overlong password before creating a session', async () => {
     await insertUser({
       email: 'overlong@example.com',
       password: 'correct horse battery staple',
@@ -175,9 +179,15 @@ describe('/api/auth/login', () => {
       password: 'x'.repeat(129),
     })
 
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(401)
     expect(response.headers.get('set-cookie')).toBeNull()
     expect(await sessionCount()).toBe(0)
+    await expect(response.json()).resolves.toEqual({
+      error: {
+        code: 'unauthorized',
+        message: 'Invalid email or password',
+      },
+    })
   })
 
   it('rejects an unverified user with email_not_verified without creating a session', async () => {
