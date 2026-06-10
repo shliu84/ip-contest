@@ -5,6 +5,7 @@ export type ApiErrorCode =
   | 'not_found'
   | 'conflict'
   | 'invalid_submission'
+  | 'quota_exceeded'
   | 'email_not_verified'
   | 'email_delivery_failed'
   | 'server_error'

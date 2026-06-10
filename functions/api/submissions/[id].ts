@@ -4,6 +4,7 @@ import { ApiRequestError, handleApi, json, readJson } from '../../_lib/http'
 import {
   assertDraft,
   assertRecord,
+  changedRows,
   feeForDivision,
   isDivision,
   loadSubmission,
@@ -95,13 +96,13 @@ export const onRequestPatch: PagesFunction<AppEnv> = async (context) => {
     assertDraft(submission.status)
 
     const nowIso = new Date().toISOString()
-    await context.env.DB.batch([
+    const results = await context.env.DB.batch([
       context.env.DB.prepare(
         `UPDATE submissions
          SET division = ?,
              fee_amount = ?,
              updated_at = ?
-         WHERE id = ? AND user_id = ?`,
+         WHERE id = ? AND user_id = ? AND status = 'draft'`,
       ).bind(
         update.division,
         feeForDivision(update.division),
@@ -125,7 +126,12 @@ export const onRequestPatch: PagesFunction<AppEnv> = async (context) => {
              address = ?,
              wechat_id = ?,
              certificate_language = ?
-         WHERE submission_id = ?`,
+         WHERE submission_id = ?
+           AND EXISTS (
+             SELECT 1
+             FROM submissions
+             WHERE id = ? AND user_id = ? AND status = 'draft'
+           )`,
       ).bind(
         update.profile.lastName,
         update.profile.firstName,
@@ -142,6 +148,8 @@ export const onRequestPatch: PagesFunction<AppEnv> = async (context) => {
         update.profile.wechatId,
         update.profile.certificateLanguage,
         submissionId,
+        submissionId,
+        user.id,
       ),
       context.env.DB.prepare(
         `UPDATE submission_works
@@ -151,7 +159,12 @@ export const onRequestPatch: PagesFunction<AppEnv> = async (context) => {
              payer_name = ?,
              usage_permission = ?,
              terms_accepted = ?
-         WHERE submission_id = ?`,
+         WHERE submission_id = ?
+           AND EXISTS (
+             SELECT 1
+             FROM submissions
+             WHERE id = ? AND user_id = ? AND status = 'draft'
+           )`,
       ).bind(
         update.work.characterName,
         update.work.themeAndSetting,
@@ -160,8 +173,13 @@ export const onRequestPatch: PagesFunction<AppEnv> = async (context) => {
         update.work.usagePermission ? 1 : 0,
         update.work.termsAccepted ? 1 : 0,
         submissionId,
+        submissionId,
+        user.id,
       ),
     ])
+    if (changedRows(results[0]) === 0) {
+      throw new ApiRequestError('invalid_submission', 'Only draft submissions can be changed', 409)
+    }
 
     const updatedSubmission = await loadSubmission(context.env.DB, submissionId, user.id)
     if (!updatedSubmission) {

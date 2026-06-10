@@ -13,6 +13,8 @@ export type SubmissionStatus =
   | 'withdrawn'
 
 export const DIVISIONS = ['2d', '3d', 'ai', 'corporate'] as const
+export const MAX_DRAFT_SUBMISSIONS_PER_USER = 20
+export const MAX_FILES_PER_SUBMISSION = 12
 
 export type SubmissionDetailRow = {
   id: string
@@ -80,6 +82,10 @@ export function assertDraft(status: SubmissionStatus) {
   if (status !== 'draft') {
     throw new ApiRequestError('invalid_submission', 'Only draft submissions can be changed', 409)
   }
+}
+
+export function changedRows(result: D1Result) {
+  return Number(result.meta.changes ?? 0)
 }
 
 export async function loadSubmission(db: D1Database, submissionId: string, userId: string) {

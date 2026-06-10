@@ -2,7 +2,13 @@ import type { AppEnv } from '../../../_lib/env'
 import { requireApplicant } from '../../../_lib/authz'
 import { ApiRequestError, handleApi, json, readJson } from '../../../_lib/http'
 import { submissionObjectKey } from '../../../_lib/r2'
-import { assertDraft, assertRecord, loadSubmission } from '../../../_lib/submissions'
+import {
+  assertDraft,
+  assertRecord,
+  changedRows,
+  loadSubmission,
+  MAX_FILES_PER_SUBMISSION,
+} from '../../../_lib/submissions'
 
 type UploadBody = {
   fileType: FileType
@@ -50,6 +56,7 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
     if (bytes.byteLength > MAX_UPLOAD_BYTES) {
       throw new ApiRequestError('bad_request', 'Uploaded file is too large', 400)
     }
+    await assertFileQuota(context.env.DB, submissionId)
 
     const fileId = crypto.randomUUID()
     const r2Key = submissionObjectKey({
@@ -66,18 +73,28 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
 
     const nowIso = new Date().toISOString()
     try {
-      await context.env.DB.prepare(
+      const result = await context.env.DB.prepare(
         `INSERT INTO submission_files (
-           id,
-           submission_id,
-           file_type,
-           r2_key,
-           original_filename,
-           content_type,
-           size_bytes,
-           uploaded_at
-         )
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            id,
+            submission_id,
+            file_type,
+            r2_key,
+            original_filename,
+            content_type,
+            size_bytes,
+            uploaded_at
+          )
+          SELECT ?, ?, ?, ?, ?, ?, ?, ?
+          WHERE EXISTS (
+            SELECT 1
+            FROM submissions
+            WHERE id = ? AND user_id = ? AND status = 'draft'
+          )
+          AND (
+            SELECT COUNT(*)
+            FROM submission_files
+            WHERE submission_id = ?
+          ) < ?`,
       )
         .bind(
           fileId,
@@ -88,9 +105,21 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
           upload.contentType,
           bytes.byteLength,
           nowIso,
+          submissionId,
+          user.id,
+          submissionId,
+          MAX_FILES_PER_SUBMISSION,
         )
         .run()
+      if (changedRows(result) === 0) {
+        await context.env.SUBMISSION_BUCKET.delete(r2Key)
+        await assertSubmissionStillDraft(context.env.DB, submissionId, user.id)
+        throw new ApiRequestError('quota_exceeded', 'File limit reached', 409)
+      }
     } catch (error) {
+      if (error instanceof ApiRequestError) {
+        throw error
+      }
       try {
         await context.env.SUBMISSION_BUCKET.delete(r2Key)
       } catch (deleteError) {
@@ -163,6 +192,32 @@ function decodeBase64(value: string) {
     bytes[index] = binary.charCodeAt(index)
   }
   return bytes
+}
+
+async function assertFileQuota(db: D1Database, submissionId: string) {
+  const row = await db.prepare(
+    `SELECT COUNT(*) AS count
+     FROM submission_files
+     WHERE submission_id = ?`,
+  )
+    .bind(submissionId)
+    .first<{ count: number | string }>()
+  if (Number(row?.count ?? 0) >= MAX_FILES_PER_SUBMISSION) {
+    throw new ApiRequestError('quota_exceeded', 'File limit reached', 409)
+  }
+}
+
+async function assertSubmissionStillDraft(db: D1Database, submissionId: string, userId: string) {
+  const row = await db.prepare(
+    `SELECT status
+     FROM submissions
+     WHERE id = ? AND user_id = ?`,
+  )
+    .bind(submissionId, userId)
+    .first<{ status: string }>()
+  if (row?.status !== 'draft') {
+    throw new ApiRequestError('invalid_submission', 'Only draft submissions can be changed', 409)
+  }
 }
 
 function submissionIdFromContext(context: Parameters<PagesFunction<AppEnv>>[0]) {

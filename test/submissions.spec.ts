@@ -9,6 +9,10 @@ import { onRequestPost as onRequestPostUploadUrl } from '../functions/api/submis
 import { onRequestDelete as onRequestDeleteFile } from '../functions/api/submissions/[id]/files/[fileId]'
 import { hashPassword } from '../functions/_lib/password'
 import { createSession } from '../functions/_lib/session'
+import {
+  MAX_DRAFT_SUBMISSIONS_PER_USER,
+  MAX_FILES_PER_SUBMISSION,
+} from '../functions/_lib/submissions'
 import { pagesContext } from './helpers/pages-context'
 
 type SubmissionResponseBody = {
@@ -172,6 +176,36 @@ async function jsonBody<T>(response: Response): Promise<T> {
   return await response.json() as T
 }
 
+function validSubmissionUpdate(email: string) {
+  return {
+    division: '3d',
+    profile: {
+      lastName: '',
+      firstName: '',
+      penName: '',
+      email,
+      phone: '',
+      countryRegion: '',
+      city: '',
+      postalCode: '',
+      prefecture: '',
+      occupation: '',
+      school: '',
+      address: '',
+      wechatId: '',
+      certificateLanguage: 'ja',
+    },
+    work: {
+      characterName: '',
+      themeAndSetting: '',
+      exhibitionInfo: '',
+      payerName: '',
+      usagePermission: false,
+      termsAccepted: false,
+    },
+  }
+}
+
 describe('/api/submissions', () => {
   it('requires an applicant session for listing and creating submissions', async () => {
     const noSessionList = await listSubmissions()
@@ -216,6 +250,22 @@ describe('/api/submissions', () => {
     })
     expect(body.submission.submissionNo).toMatch(/^AIPC2026-[0-9A-F]{8}$/)
     expect(body.submission).not.toHaveProperty('fileCount')
+  })
+
+  it('limits active drafts per applicant account', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+
+    for (let index = 0; index < MAX_DRAFT_SUBMISSIONS_PER_USER; index += 1) {
+      await expect(createSubmission(cookie, { division: '2d' }))
+        .resolves.toMatchObject({ status: 201 })
+    }
+
+    const response = await createSubmission(cookie, { division: '2d' })
+    const body = await jsonBody<{ error: { code: string } }>(response)
+
+    expect(response.status).toBe(409)
+    expect(body.error.code).toBe('quota_exceeded')
   })
 
   it('lists only the current applicant submissions ordered newest first', async () => {
@@ -475,6 +525,49 @@ describe('/api/submissions', () => {
     expect(body.error.code).toBe('invalid_submission')
   })
 
+  it('rejects a draft patch if the status changes before the write lands', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    const originalBatch = env.DB.batch.bind(env.DB)
+    const batchSpy = vi.spyOn(env.DB, 'batch')
+
+    batchSpy.mockImplementationOnce(async (statements) => {
+      await env.DB.prepare(
+        `UPDATE submissions
+         SET status = 'payment_pending'
+         WHERE id = ? AND user_id = ?`,
+      )
+        .bind(createBody.submission.id, user.id)
+        .run()
+      return await originalBatch(statements)
+    })
+
+    try {
+      const response = await updateSubmission(
+        createBody.submission.id,
+        cookie,
+        validSubmissionUpdate(user.email),
+      )
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(409)
+      expect(body.error.code).toBe('invalid_submission')
+    } finally {
+      batchSpy.mockRestore()
+    }
+
+    const row = await env.DB.prepare(
+      `SELECT division
+       FROM submissions
+       WHERE id = ?`,
+    )
+      .bind(createBody.submission.id)
+      .first<{ division: string }>()
+    expect(row?.division).toBe('2d')
+  })
+
   it('uploads a PNG base64 payload to the owner draft and stores metadata plus bytes', async () => {
     const user = await insertUser()
     const cookie = await sessionCookie(user.id)
@@ -645,6 +738,77 @@ describe('/api/submissions', () => {
     expect(rows.results[0].r2_key).not.toBe(rows.results[1].r2_key)
   })
 
+  it('limits files per submission', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+
+    for (let index = 0; index < MAX_FILES_PER_SUBMISSION; index += 1) {
+      await expect(uploadSubmissionFile(createBody.submission.id, cookie, {
+        fileType: 'online_a4_image',
+        filename: `entry-${index}.png`,
+        contentType: 'image/png',
+        dataBase64: btoa(`png-${index}`),
+      })).resolves.toMatchObject({ status: 200 })
+    }
+
+    const response = await uploadSubmissionFile(createBody.submission.id, cookie, {
+      fileType: 'online_a4_image',
+      filename: 'entry-over-limit.png',
+      contentType: 'image/png',
+      dataBase64: btoa('png-over-limit'),
+    })
+    const body = await jsonBody<{ error: { code: string } }>(response)
+
+    expect(response.status).toBe(409)
+    expect(body.error.code).toBe('quota_exceeded')
+  })
+
+  it('rejects an upload if the status changes before metadata is stored', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    const originalPut = env.SUBMISSION_BUCKET.put.bind(env.SUBMISSION_BUCKET)
+    const putSpy = vi.spyOn(env.SUBMISSION_BUCKET, 'put')
+
+    putSpy.mockImplementationOnce(async (...args) => {
+      await env.DB.prepare(
+        `UPDATE submissions
+         SET status = 'payment_pending'
+         WHERE id = ? AND user_id = ?`,
+      )
+        .bind(createBody.submission.id, user.id)
+        .run()
+      return await originalPut(...args)
+    })
+
+    try {
+      const response = await uploadSubmissionFile(createBody.submission.id, cookie, {
+        fileType: 'online_a4_image',
+        filename: 'entry.png',
+        contentType: 'image/png',
+        dataBase64: btoa('png'),
+      })
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(409)
+      expect(body.error.code).toBe('invalid_submission')
+    } finally {
+      putSpy.mockRestore()
+    }
+
+    const files = await env.DB.prepare(
+      `SELECT id
+       FROM submission_files
+       WHERE submission_id = ?`,
+    )
+      .bind(createBody.submission.id)
+      .all<{ id: string }>()
+    expect(files.results).toHaveLength(0)
+  })
+
   it('deletes a draft file metadata row and R2 object', async () => {
     const user = await insertUser()
     const cookie = await sessionCookie(user.id)
@@ -679,5 +843,74 @@ describe('/api/submissions', () => {
        WHERE id = ?`,
     ).bind(fileId).first()).resolves.toBeNull()
     await expect(env.SUBMISSION_BUCKET.get(row!.r2_key)).resolves.toBeNull()
+  })
+
+  it('rejects a file delete if the status changes before metadata is removed', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    const uploadResponse = await uploadSubmissionFile(createBody.submission.id, cookie, {
+      fileType: 'online_a4_image',
+      filename: 'entry.png',
+      contentType: 'image/png',
+      dataBase64: btoa('png-bytes'),
+    })
+    const uploadBody = await jsonBody<SubmissionResponseBody>(uploadResponse)
+    const fileId = uploadBody.submission.files[0].id
+    const row = await env.DB.prepare(
+      `SELECT r2_key
+       FROM submission_files
+       WHERE id = ?`,
+    )
+      .bind(fileId)
+      .first<{ r2_key: string }>()
+    const originalPrepare = env.DB.prepare.bind(env.DB)
+    const prepareSpy = vi.spyOn(env.DB, 'prepare')
+
+    prepareSpy.mockImplementation((query) => {
+      const statement = originalPrepare(query)
+      if (typeof query === 'string' && query.includes('DELETE FROM submission_files')) {
+        const originalBind = statement.bind.bind(statement)
+        return {
+          ...statement,
+          bind(...values: unknown[]) {
+            const bound = originalBind(...values)
+            const originalRun = bound.run.bind(bound)
+            return {
+              ...bound,
+              async run() {
+                await env.DB.prepare(
+                  `UPDATE submissions
+                   SET status = 'payment_pending'
+                   WHERE id = ? AND user_id = ?`,
+                )
+                  .bind(createBody.submission.id, user.id)
+                  .run()
+                return await originalRun()
+              },
+            }
+          },
+        } as D1PreparedStatement
+      }
+      return statement
+    })
+
+    try {
+      const response = await deleteSubmissionFile(createBody.submission.id, fileId, cookie)
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(409)
+      expect(body.error.code).toBe('invalid_submission')
+    } finally {
+      prepareSpy.mockRestore()
+    }
+
+    await expect(env.DB.prepare(
+      `SELECT id
+       FROM submission_files
+       WHERE id = ?`,
+    ).bind(fileId).first()).resolves.not.toBeNull()
+    await expect(env.SUBMISSION_BUCKET.get(row!.r2_key)).resolves.not.toBeNull()
   })
 })

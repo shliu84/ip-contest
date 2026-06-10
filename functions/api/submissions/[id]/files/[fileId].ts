@@ -1,7 +1,7 @@
 import type { AppEnv } from '../../../../_lib/env'
 import { requireApplicant } from '../../../../_lib/authz'
 import { ApiRequestError, handleApi, json } from '../../../../_lib/http'
-import { assertDraft, loadSubmission } from '../../../../_lib/submissions'
+import { assertDraft, changedRows, loadSubmission } from '../../../../_lib/submissions'
 
 type SubmissionFileStorageRow = {
   id: string
@@ -34,13 +34,22 @@ export const onRequestDelete: PagesFunction<AppEnv> = async (context) => {
       throw new ApiRequestError('not_found', 'File not found', 404)
     }
 
-    await context.env.SUBMISSION_BUCKET.delete(file.r2_key)
-    await context.env.DB.prepare(
+    const result = await context.env.DB.prepare(
       `DELETE FROM submission_files
-       WHERE id = ? AND submission_id = ?`,
+       WHERE id = ? AND submission_id = ?
+         AND EXISTS (
+           SELECT 1
+           FROM submissions
+           WHERE id = ? AND user_id = ? AND status = 'draft'
+         )`,
     )
-      .bind(fileId, submissionId)
+      .bind(fileId, submissionId, submissionId, user.id)
       .run()
+    if (changedRows(result) === 0) {
+      throw new ApiRequestError('invalid_submission', 'Only draft submissions can be changed', 409)
+    }
+
+    await context.env.SUBMISSION_BUCKET.delete(file.r2_key)
 
     return json({ ok: true }, {
       headers: NO_STORE_HEADERS,

@@ -7,6 +7,7 @@ import {
   feeForDivision,
   isDivision,
   mapSubmission,
+  MAX_DRAFT_SUBMISSIONS_PER_USER,
   type SubmissionDetailRow,
   type SubmissionFileRow,
 } from '../../_lib/submissions'
@@ -45,6 +46,17 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
 
     if (!isDivision(body.division)) {
       throw new ApiRequestError('bad_request', 'Invalid division', 400)
+    }
+
+    const draftCount = await context.env.DB.prepare(
+      `SELECT COUNT(*) AS count
+       FROM submissions
+       WHERE user_id = ? AND status = 'draft'`,
+    )
+      .bind(user.id)
+      .first<{ count: number | string }>()
+    if (Number(draftCount?.count ?? 0) >= MAX_DRAFT_SUBMISSIONS_PER_USER) {
+      throw new ApiRequestError('quota_exceeded', 'Draft submission limit reached', 409)
     }
 
     const submissionId = crypto.randomUUID()
