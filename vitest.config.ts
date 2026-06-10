@@ -1,6 +1,10 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-pool-workers'
+import {
+  buildPagesASSETSBinding,
+  cloudflareTest,
+  readD1Migrations,
+} from '@cloudflare/vitest-pool-workers'
 import { defineConfig } from 'vitest/config'
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url))
@@ -12,6 +16,9 @@ export default defineConfig({
         compatibilityDate: '2026-06-10',
         d1Databases: ['DB'],
         r2Buckets: ['SUBMISSION_BUCKET'],
+        serviceBindings: {
+          ASSETS: await buildPagesASSETSBinding(path.join(rootDir, 'public')),
+        },
         bindings: {
           TEST_MIGRATIONS: await readD1Migrations(path.join(rootDir, 'migrations')),
           SESSION_SECRET: 'test-session-secret',
