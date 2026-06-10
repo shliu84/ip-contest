@@ -23,18 +23,17 @@ type AdminSubmissionListBody = {
   submissions: {
     id: string
     submissionNo: string
+    applicantEmail: string
     status: SubmissionStatus
     division: SubmissionDivision
-    applicant: {
-      id: string
-      email: string
-      lastName: string
-      firstName: string
-    }
-    work: {
-      characterName: string
-    }
+    feeAmount: number
+    currency: string
+    characterName: string
     fileCount: number
+    createdAt: string
+    updatedAt: string
+    paidAt: string | null
+    submittedAt: string | null
   }[]
 }
 
@@ -238,29 +237,68 @@ async function jsonBody<T>(response: Response): Promise<T> {
   return await response.json() as T
 }
 
+async function storedSubmissionStatus(submissionId: string) {
+  const row = await env.DB.prepare('SELECT status FROM submissions WHERE id = ?')
+    .bind(submissionId)
+    .first<{ status: SubmissionStatus }>()
+  return row?.status
+}
+
 describe('/api/admin/submissions authorization', () => {
   it('requires a committee or super admin session', async () => {
     const applicant = await insertUser('applicant', 'applicant@example.com')
     const committee = await insertUser('committee', 'committee@example.com')
     const judge = await insertUser('judge', 'judge@example.com')
     const superAdmin = await insertUser('super_admin', 'super-admin@example.com')
-    await insertSubmission({
+    const submission = await insertSubmission({
       userId: applicant.id,
       applicantEmail: applicant.email,
       submissionNo: 'AIPC2026-AUTH',
     })
+    const applicantCookie = await sessionCookie(applicant.id)
+    const committeeCookie = await sessionCookie(committee.id)
+    const judgeCookie = await sessionCookie(judge.id)
+    const superAdminCookie = await sessionCookie(superAdmin.id)
 
     const unauthenticated = await listAdminSubmissions(undefined)
-    const applicantResponse = await listAdminSubmissions(await sessionCookie(applicant.id))
-    const judgeResponse = await listAdminSubmissions(await sessionCookie(judge.id))
-    const committeeResponse = await listAdminSubmissions(await sessionCookie(committee.id))
-    const superAdminResponse = await listAdminSubmissions(await sessionCookie(superAdmin.id))
+    const applicantResponse = await listAdminSubmissions(applicantCookie)
+    const judgeResponse = await listAdminSubmissions(judgeCookie)
+    const committeeResponse = await listAdminSubmissions(committeeCookie)
+    const superAdminResponse = await listAdminSubmissions(superAdminCookie)
 
     expect(unauthenticated.status).toBe(401)
     expect(applicantResponse.status).toBe(403)
     expect(judgeResponse.status).toBe(403)
     expect(committeeResponse.status).toBe(200)
     expect(superAdminResponse.status).toBe(200)
+
+    const unauthenticatedDetail = await getAdminSubmission(submission.id, undefined)
+    const applicantDetail = await getAdminSubmission(submission.id, applicantCookie)
+    const judgeDetail = await getAdminSubmission(submission.id, judgeCookie)
+    const committeeDetail = await getAdminSubmission(submission.id, committeeCookie)
+
+    expect(unauthenticatedDetail.status).toBe(401)
+    expect(applicantDetail.status).toBe(403)
+    expect(judgeDetail.status).toBe(403)
+    expect(committeeDetail.status).toBe(200)
+
+    const unauthenticatedStatus = await updateAdminSubmissionStatus(submission.id, undefined, {
+      status: 'screening',
+    })
+    const applicantStatus = await updateAdminSubmissionStatus(submission.id, applicantCookie, {
+      status: 'screening',
+    })
+    const judgeStatus = await updateAdminSubmissionStatus(submission.id, judgeCookie, {
+      status: 'screening',
+    })
+    const committeeStatus = await updateAdminSubmissionStatus(submission.id, committeeCookie, {
+      status: 'screening',
+    })
+
+    expect(unauthenticatedStatus.status).toBe(401)
+    expect(applicantStatus.status).toBe(403)
+    expect(judgeStatus.status).toBe(403)
+    expect(committeeStatus.status).toBe(200)
   })
 })
 
@@ -320,19 +358,19 @@ describe('/api/admin/submissions list', () => {
     expect(byDivision.submissions.map((submission) => submission.id)).toEqual([submitted2d.id])
     expect(byQuery.submissions.map((submission) => submission.id)).toEqual([submitted2d.id])
     expect(byQuery.submissions[0]).toMatchObject({
+      id: submitted2d.id,
       submissionNo: 'AIPC2026-FILTER-2D',
+      applicantEmail: firstApplicant.email,
       status: 'submitted',
       division: '2d',
-      applicant: {
-        id: firstApplicant.id,
-        email: firstApplicant.email,
-        lastName: 'Sato',
-        firstName: 'Aoi',
-      },
-      work: {
-        characterName: 'Aurora Pilot',
-      },
+      feeAmount: 10000,
+      currency: 'JPY',
+      characterName: 'Aurora Pilot',
       fileCount: 1,
+      createdAt: '2026-06-10T02:00:00.000Z',
+      updatedAt: '2026-06-10T02:00:00.000Z',
+      paidAt: '2026-06-10T01:30:00.000Z',
+      submittedAt: '2026-06-10T01:45:00.000Z',
     })
   })
 })
@@ -413,9 +451,6 @@ describe('/api/admin/submissions/:id/status', () => {
     const screening = await updateAdminSubmissionStatus(submission.id, cookie, {
       status: 'screening',
     })
-    const screenedIn = await updateAdminSubmissionStatus(submission.id, cookie, {
-      status: 'screened_in',
-    })
 
     expect(screening.status).toBe(200)
     await expect(screening.json()).resolves.toMatchObject({
@@ -424,6 +459,12 @@ describe('/api/admin/submissions/:id/status', () => {
         status: 'screening',
       },
     })
+    await expect(storedSubmissionStatus(submission.id)).resolves.toBe('screening')
+
+    const screenedIn = await updateAdminSubmissionStatus(submission.id, cookie, {
+      status: 'screened_in',
+    })
+
     expect(screenedIn.status).toBe(200)
     await expect(screenedIn.json()).resolves.toMatchObject({
       submission: {
