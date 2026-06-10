@@ -82,6 +82,80 @@ export function assertDraft(status: SubmissionStatus) {
   }
 }
 
+export async function loadSubmission(db: D1Database, submissionId: string, userId: string) {
+  const row = await db.prepare(submissionDetailSelect('WHERE s.id = ? AND s.user_id = ?'))
+    .bind(submissionId, userId)
+    .first<SubmissionDetailRow>()
+  if (!row) {
+    return null
+  }
+
+  const files = await db.prepare(
+    `SELECT
+       id,
+       file_type,
+       original_filename,
+       content_type,
+       size_bytes,
+       uploaded_at
+     FROM submission_files
+     WHERE submission_id = ?
+     ORDER BY uploaded_at ASC, id ASC`,
+  )
+    .bind(submissionId)
+    .all<SubmissionFileRow>()
+
+  return mapSubmission(row, files.results)
+}
+
+export function submissionDetailSelect(whereClause: string, orderClause = '') {
+  return `
+    SELECT
+      s.id,
+      s.submission_no,
+      s.status,
+      s.division,
+      s.fee_amount,
+      s.currency,
+      s.stripe_checkout_session_id,
+      s.stripe_payment_intent_id,
+      s.paid_at,
+      s.submitted_at,
+      s.created_at,
+      s.updated_at,
+      p.last_name,
+      p.first_name,
+      p.pen_name,
+      p.email,
+      p.phone,
+      p.country_region,
+      p.city,
+      p.postal_code,
+      p.prefecture,
+      p.occupation,
+      p.school,
+      p.address,
+      p.wechat_id,
+      p.certificate_language,
+      w.character_name,
+      w.theme_and_setting,
+      w.exhibition_info,
+      w.payer_name,
+      w.usage_permission,
+      w.terms_accepted,
+      (
+        SELECT COUNT(*)
+        FROM submission_files f
+        WHERE f.submission_id = s.id
+      ) AS file_count
+    FROM submissions s
+    JOIN submission_profiles p ON p.submission_id = s.id
+    JOIN submission_works w ON w.submission_id = s.id
+    ${whereClause}
+    ${orderClause}
+  `
+}
+
 export function createSubmissionNo() {
   const bytes = new Uint8Array(4)
   crypto.getRandomValues(bytes)
