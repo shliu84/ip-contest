@@ -1,10 +1,15 @@
 import type {
   ApiOkResponse,
+  CreateSubmissionRequest,
   ForgotPasswordRequest,
   LoginRequest,
   LoginResponse,
   RegisterRequest,
   ResetPasswordRequest,
+  SubmissionListResponse,
+  SubmissionResponse,
+  UpdateSubmissionRequest,
+  UploadSubmissionFileRequest,
 } from '../types/api'
 
 type ApiErrorPayload = {
@@ -126,4 +131,40 @@ export function resetPassword(body: ResetPasswordRequest) {
     method: 'POST',
     body: JSON.stringify(body),
   })
+}
+
+export function listSubmissions() {
+  return apiFetch<SubmissionListResponse>('/api/submissions')
+}
+
+export function createSubmission(body: CreateSubmissionRequest) {
+  return apiFetch<SubmissionResponse>('/api/submissions', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export function getSubmission(id: string) {
+  return apiFetch<SubmissionResponse>(`/api/submissions/${encodeURIComponent(id)}`)
+}
+
+export function updateSubmission(id: string, body: UpdateSubmissionRequest) {
+  return apiFetch<SubmissionResponse>(`/api/submissions/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  })
+}
+
+export function uploadSubmissionFile(id: string, body: UploadSubmissionFileRequest) {
+  return apiFetch<SubmissionResponse>(`/api/submissions/${encodeURIComponent(id)}/upload-url`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export function deleteSubmissionFile(id: string, fileId: string) {
+  return apiFetch<ApiOkResponse>(
+    `/api/submissions/${encodeURIComponent(id)}/files/${encodeURIComponent(fileId)}`,
+    { method: 'DELETE' },
+  )
 }

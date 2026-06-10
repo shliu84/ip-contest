@@ -95,6 +95,96 @@ export type TranslationKey =
   | 'dashboardLogout'
   | 'dashboardLogoutPending'
   | 'dashboardWelcome'
+  | 'dashboardCreateDraft'
+  | 'dashboardCreateDraftPending'
+  | 'dashboardSubmissionsTitle'
+  | 'dashboardSubmissionsLead'
+  | 'dashboardSubmissionsUnavailableTitle'
+  | 'dashboardSubmissionsUnavailableText'
+  | 'dashboardLoadingSubmissions'
+  | 'dashboardLoadError'
+  | 'dashboardEmptyTitle'
+  | 'dashboardEmptyText'
+  | 'dashboardSubmissionNo'
+  | 'dashboardSubmissionWork'
+  | 'dashboardSubmissionDivision'
+  | 'dashboardSubmissionStatus'
+  | 'dashboardSubmissionFee'
+  | 'dashboardSubmissionFiles'
+  | 'dashboardSubmissionCreated'
+  | 'dashboardSubmissionUpdated'
+  | 'dashboardSubmissionAction'
+  | 'dashboardUntitledSubmission'
+  | 'dashboardEditSubmission'
+  | 'dashboardViewSubmission'
+  | 'submissionEditorKicker'
+  | 'submissionEditorTitle'
+  | 'submissionEditorLead'
+  | 'submissionEditorLoading'
+  | 'submissionLoadError'
+  | 'submissionReadOnlyNotice'
+  | 'submissionSave'
+  | 'submissionSavePending'
+  | 'submissionSaveSuccess'
+  | 'submissionSaveError'
+  | 'submissionBackToDashboard'
+  | 'submissionDetailsTitle'
+  | 'submissionDivisionLabel'
+  | 'submissionNoLabel'
+  | 'submissionProfileTitle'
+  | 'profileLastNameLabel'
+  | 'profileFirstNameLabel'
+  | 'profilePenNameLabel'
+  | 'profilePhoneLabel'
+  | 'profileCountryRegionLabel'
+  | 'profileCityLabel'
+  | 'profilePostalCodeLabel'
+  | 'profilePrefectureLabel'
+  | 'profileOccupationLabel'
+  | 'profileSchoolLabel'
+  | 'profileAddressLabel'
+  | 'profileWechatLabel'
+  | 'certificateLanguageLabel'
+  | 'certificateLanguageJa'
+  | 'certificateLanguageEn'
+  | 'certificateLanguageZh'
+  | 'submissionWorkTitle'
+  | 'workCharacterNameLabel'
+  | 'workThemeAndSettingLabel'
+  | 'workExhibitionInfoLabel'
+  | 'workPayerNameLabel'
+  | 'workUsagePermissionLabel'
+  | 'workTermsAcceptedLabel'
+  | 'submissionFilesTitle'
+  | 'submissionFileOnlineA4Image'
+  | 'submissionFilePhysicalA2Image'
+  | 'submissionFileProcessScreenshot'
+  | 'submissionFileUneditedOriginalAi'
+  | 'submissionUploadFile'
+  | 'submissionUploadPending'
+  | 'submissionUploadError'
+  | 'submissionUploadTypeError'
+  | 'submissionUploadSizeError'
+  | 'submissionNoFiles'
+  | 'submissionFileNameLabel'
+  | 'submissionFileSizeLabel'
+  | 'submissionFileUploadedAtLabel'
+  | 'submissionDeleteFile'
+  | 'submissionDeletePending'
+  | 'submissionDeleteError'
+  | 'submissionDivision2d'
+  | 'submissionDivision3d'
+  | 'submissionDivisionAi'
+  | 'submissionDivisionCorporate'
+  | 'submissionStatusDraft'
+  | 'submissionStatusPaymentPending'
+  | 'submissionStatusSubmitted'
+  | 'submissionStatusScreening'
+  | 'submissionStatusScreenedIn'
+  | 'submissionStatusScreenedOut'
+  | 'submissionStatusAssigned'
+  | 'submissionStatusReviewed'
+  | 'submissionStatusWithdrawn'
   | 'roleApplicant'
   | 'roleCommittee'
   | 'roleJudge'
@@ -104,6 +194,7 @@ export type TranslationKey =
   | 'apiErrorEmailDeliveryFailed'
   | 'apiErrorUnauthorized'
   | 'apiErrorEmailNotVerified'
+  | 'apiErrorInvalidSubmission'
   | 'apiErrorRequestFailed'
 
 export type Translation = {
@@ -173,7 +264,7 @@ export const translations: Record<LanguageCode, Translation> = {
     forgotLead: '输入账户邮箱，我们会发送重置密码的链接。',
     resetTitle: '重置密码',
     resetLead: '设置新的账户密码。',
-    dashboardKicker: '参赛者',
+    dashboardKicker: '账户',
     dashboardTitle: '控制台',
     dashboardLead: '你已登录 ASIA IP CONTEST 账户。',
     emailLabel: '邮箱',
@@ -209,6 +300,96 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardLogout: '退出登录',
     dashboardLogoutPending: '正在退出...',
     dashboardWelcome: '账户状态',
+    dashboardCreateDraft: '新建草稿',
+    dashboardCreateDraftPending: '正在创建...',
+    dashboardSubmissionsTitle: '投稿',
+    dashboardSubmissionsLead: '查看并继续编辑你的投稿。',
+    dashboardSubmissionsUnavailableTitle: '投稿功能不可用',
+    dashboardSubmissionsUnavailableText: '评委、委员会和管理员账户不能在此控制台创建或编辑参赛投稿。',
+    dashboardLoadingSubmissions: '正在读取投稿...',
+    dashboardLoadError: '无法读取投稿，请稍后再试。',
+    dashboardEmptyTitle: '还没有投稿',
+    dashboardEmptyText: '创建草稿后即可填写作品信息。',
+    dashboardSubmissionNo: '投稿编号',
+    dashboardSubmissionWork: '作品名',
+    dashboardSubmissionDivision: '赛道',
+    dashboardSubmissionStatus: '状态',
+    dashboardSubmissionFee: '报名费',
+    dashboardSubmissionFiles: '文件',
+    dashboardSubmissionCreated: '创建日',
+    dashboardSubmissionUpdated: '更新日',
+    dashboardSubmissionAction: '操作',
+    dashboardUntitledSubmission: '未命名作品',
+    dashboardEditSubmission: '编辑',
+    dashboardViewSubmission: '查看',
+    submissionEditorKicker: '投稿',
+    submissionEditorTitle: '投稿编辑',
+    submissionEditorLead: '填写参赛者资料、作品信息，并上传投稿文件。',
+    submissionEditorLoading: '正在读取投稿...',
+    submissionLoadError: '无法读取该投稿，请稍后再试。',
+    submissionReadOnlyNotice: '该投稿已不再是草稿，当前页面仅可查看。',
+    submissionSave: '保存',
+    submissionSavePending: '正在保存...',
+    submissionSaveSuccess: '投稿已保存。',
+    submissionSaveError: '无法保存投稿，请稍后再试。',
+    submissionBackToDashboard: '返回控制台',
+    submissionDetailsTitle: '投稿信息',
+    submissionDivisionLabel: '赛道',
+    submissionNoLabel: '投稿编号',
+    submissionProfileTitle: '参赛者资料',
+    profileLastNameLabel: '姓',
+    profileFirstNameLabel: '名',
+    profilePenNameLabel: '笔名',
+    profilePhoneLabel: '电话号码',
+    profileCountryRegionLabel: '国家 / 地区',
+    profileCityLabel: '城市',
+    profilePostalCodeLabel: '邮政编码',
+    profilePrefectureLabel: '都道府县 / 省州',
+    profileOccupationLabel: '职业',
+    profileSchoolLabel: '学校',
+    profileAddressLabel: '地址',
+    profileWechatLabel: '微信号',
+    certificateLanguageLabel: '证书语言',
+    certificateLanguageJa: '日语',
+    certificateLanguageEn: '英语',
+    certificateLanguageZh: '中文',
+    submissionWorkTitle: '作品信息',
+    workCharacterNameLabel: '角色 / 作品名称',
+    workThemeAndSettingLabel: '主题与设定',
+    workExhibitionInfoLabel: '展示信息',
+    workPayerNameLabel: '付款人姓名',
+    workUsagePermissionLabel: '同意主办方在赛事宣传、展示和审查中使用投稿作品。',
+    workTermsAcceptedLabel: '同意投稿条款。',
+    submissionFilesTitle: '投稿文件',
+    submissionFileOnlineA4Image: '线上审查用 A4 图像',
+    submissionFilePhysicalA2Image: '线下展示用 A2 图像',
+    submissionFileProcessScreenshot: '制作过程 / 提示词截图',
+    submissionFileUneditedOriginalAi: '未编辑的 AI 原始文件',
+    submissionUploadFile: '上传文件',
+    submissionUploadPending: '正在上传...',
+    submissionUploadError: '无法上传文件，请稍后再试。',
+    submissionUploadTypeError: '请上传 JPG、PNG、WebP 或 PDF 文件。',
+    submissionUploadSizeError: '文件大小不能超过 10MB。',
+    submissionNoFiles: '尚未上传文件。',
+    submissionFileNameLabel: '文件名',
+    submissionFileSizeLabel: '大小',
+    submissionFileUploadedAtLabel: '上传时间',
+    submissionDeleteFile: '删除',
+    submissionDeletePending: '正在删除...',
+    submissionDeleteError: '无法删除文件，请稍后再试。',
+    submissionDivision2d: '2D',
+    submissionDivision3d: '3D',
+    submissionDivisionAi: 'AI',
+    submissionDivisionCorporate: '企业',
+    submissionStatusDraft: '草稿',
+    submissionStatusPaymentPending: '待付款',
+    submissionStatusSubmitted: '已提交',
+    submissionStatusScreening: '初审中',
+    submissionStatusScreenedIn: '初审通过',
+    submissionStatusScreenedOut: '初审未通过',
+    submissionStatusAssigned: '已分配',
+    submissionStatusReviewed: '已评审',
+    submissionStatusWithdrawn: '已撤回',
     roleApplicant: '参赛者',
     roleCommittee: '委员会',
     roleJudge: '评委',
@@ -218,6 +399,7 @@ export const translations: Record<LanguageCode, Translation> = {
     apiErrorEmailDeliveryFailed: '验证邮件暂时无法发送，请稍后重试。',
     apiErrorUnauthorized: '邮箱或密码不正确。',
     apiErrorEmailNotVerified: '请先完成邮箱验证后再登录。',
+    apiErrorInvalidSubmission: '该投稿当前状态无法执行此操作。',
     apiErrorRequestFailed: '请求失败，请稍后再试。',
   },
   ja: {
@@ -281,7 +463,7 @@ export const translations: Record<LanguageCode, Translation> = {
     forgotLead: 'アカウントのメールアドレスを入力してください。パスワード再設定リンクを送信します。',
     resetTitle: 'パスワード再設定',
     resetLead: '新しいアカウントパスワードを設定します。',
-    dashboardKicker: '応募者',
+    dashboardKicker: 'アカウント',
     dashboardTitle: 'ダッシュボード',
     dashboardLead: 'ASIA IP CONTEST アカウントにログインしています。',
     emailLabel: 'メールアドレス',
@@ -317,6 +499,96 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardLogout: 'ログアウト',
     dashboardLogoutPending: 'ログアウト中...',
     dashboardWelcome: 'アカウント状態',
+    dashboardCreateDraft: '下書きを作成',
+    dashboardCreateDraftPending: '作成中...',
+    dashboardSubmissionsTitle: '応募作品',
+    dashboardSubmissionsLead: '応募作品の確認と編集を行えます。',
+    dashboardSubmissionsUnavailableTitle: '応募機能は利用できません',
+    dashboardSubmissionsUnavailableText: '審査員、委員会、管理者アカウントでは、このダッシュボードから応募作品の作成や編集はできません。',
+    dashboardLoadingSubmissions: '応募作品を読み込み中...',
+    dashboardLoadError: '応募作品を読み込めませんでした。時間をおいて再度お試しください。',
+    dashboardEmptyTitle: '応募作品はまだありません',
+    dashboardEmptyText: '下書きを作成すると作品情報を入力できます。',
+    dashboardSubmissionNo: '応募番号',
+    dashboardSubmissionWork: '作品名',
+    dashboardSubmissionDivision: '部門',
+    dashboardSubmissionStatus: 'ステータス',
+    dashboardSubmissionFee: '応募料',
+    dashboardSubmissionFiles: 'ファイル',
+    dashboardSubmissionCreated: '作成日',
+    dashboardSubmissionUpdated: '更新日',
+    dashboardSubmissionAction: '操作',
+    dashboardUntitledSubmission: '作品名未入力',
+    dashboardEditSubmission: '編集',
+    dashboardViewSubmission: '表示',
+    submissionEditorKicker: '応募',
+    submissionEditorTitle: '応募作品編集',
+    submissionEditorLead: '応募者情報、作品情報、提出ファイルを入力してください。',
+    submissionEditorLoading: '応募作品を読み込み中...',
+    submissionLoadError: '応募作品を読み込めませんでした。時間をおいて再度お試しください。',
+    submissionReadOnlyNotice: 'この応募作品は下書きではないため、現在は表示のみ可能です。',
+    submissionSave: '保存',
+    submissionSavePending: '保存中...',
+    submissionSaveSuccess: '応募作品を保存しました。',
+    submissionSaveError: '応募作品を保存できませんでした。時間をおいて再度お試しください。',
+    submissionBackToDashboard: 'ダッシュボードに戻る',
+    submissionDetailsTitle: '応募情報',
+    submissionDivisionLabel: '部門',
+    submissionNoLabel: '応募番号',
+    submissionProfileTitle: '応募者情報',
+    profileLastNameLabel: '姓',
+    profileFirstNameLabel: '名',
+    profilePenNameLabel: 'ペンネーム',
+    profilePhoneLabel: '電話番号',
+    profileCountryRegionLabel: '国 / 地域',
+    profileCityLabel: '市区町村',
+    profilePostalCodeLabel: '郵便番号',
+    profilePrefectureLabel: '都道府県 / 州',
+    profileOccupationLabel: '職業',
+    profileSchoolLabel: '学校名',
+    profileAddressLabel: '住所',
+    profileWechatLabel: 'WeChat ID',
+    certificateLanguageLabel: '証書言語',
+    certificateLanguageJa: '日本語',
+    certificateLanguageEn: '英語',
+    certificateLanguageZh: '中国語',
+    submissionWorkTitle: '作品情報',
+    workCharacterNameLabel: 'キャラクター / 作品名',
+    workThemeAndSettingLabel: 'テーマ・設定',
+    workExhibitionInfoLabel: '展示情報',
+    workPayerNameLabel: '支払者名',
+    workUsagePermissionLabel: 'コンテストの広報、展示、審査で応募作品を使用することに同意します。',
+    workTermsAcceptedLabel: '応募規約に同意します。',
+    submissionFilesTitle: '提出ファイル',
+    submissionFileOnlineA4Image: 'オンライン審査用 A4 画像',
+    submissionFilePhysicalA2Image: '会場展示用 A2 画像',
+    submissionFileProcessScreenshot: '制作過程 / プロンプトのスクリーンショット',
+    submissionFileUneditedOriginalAi: '未編集のAIオリジナルファイル',
+    submissionUploadFile: 'ファイルをアップロード',
+    submissionUploadPending: 'アップロード中...',
+    submissionUploadError: 'ファイルをアップロードできませんでした。時間をおいて再度お試しください。',
+    submissionUploadTypeError: 'JPG、PNG、WebP、PDFのいずれかをアップロードしてください。',
+    submissionUploadSizeError: 'ファイルサイズは10MB以下にしてください。',
+    submissionNoFiles: 'ファイルはまだアップロードされていません。',
+    submissionFileNameLabel: 'ファイル名',
+    submissionFileSizeLabel: 'サイズ',
+    submissionFileUploadedAtLabel: 'アップロード日時',
+    submissionDeleteFile: '削除',
+    submissionDeletePending: '削除中...',
+    submissionDeleteError: 'ファイルを削除できませんでした。時間をおいて再度お試しください。',
+    submissionDivision2d: '2D',
+    submissionDivision3d: '3D',
+    submissionDivisionAi: 'AI',
+    submissionDivisionCorporate: '法人',
+    submissionStatusDraft: '下書き',
+    submissionStatusPaymentPending: '支払い待ち',
+    submissionStatusSubmitted: '提出済み',
+    submissionStatusScreening: '一次審査中',
+    submissionStatusScreenedIn: '一次通過',
+    submissionStatusScreenedOut: '一次不通過',
+    submissionStatusAssigned: '割り当て済み',
+    submissionStatusReviewed: '審査済み',
+    submissionStatusWithdrawn: '取り下げ',
     roleApplicant: '応募者',
     roleCommittee: '委員会',
     roleJudge: '審査員',
@@ -326,6 +598,7 @@ export const translations: Record<LanguageCode, Translation> = {
     apiErrorEmailDeliveryFailed: '認証メールを送信できませんでした。時間をおいて再度お試しください。',
     apiErrorUnauthorized: 'メールアドレスまたはパスワードが正しくありません。',
     apiErrorEmailNotVerified: 'ログインする前にメール認証を完了してください。',
+    apiErrorInvalidSubmission: 'この応募作品の現在のステータスでは操作できません。',
     apiErrorRequestFailed: 'リクエストに失敗しました。時間をおいて再度お試しください。',
   },
   en: {
@@ -389,7 +662,7 @@ export const translations: Record<LanguageCode, Translation> = {
     forgotLead: 'Enter your account email and we will send a password reset link.',
     resetTitle: 'Reset Password',
     resetLead: 'Set a new account password.',
-    dashboardKicker: 'Applicant',
+    dashboardKicker: 'Account',
     dashboardTitle: 'Dashboard',
     dashboardLead: 'You are signed in to your ASIA IP CONTEST account.',
     emailLabel: 'Email',
@@ -425,6 +698,96 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardLogout: 'Log Out',
     dashboardLogoutPending: 'Logging out...',
     dashboardWelcome: 'Account Status',
+    dashboardCreateDraft: 'Create Draft',
+    dashboardCreateDraftPending: 'Creating...',
+    dashboardSubmissionsTitle: 'Submissions',
+    dashboardSubmissionsLead: 'Review your submissions and continue drafts.',
+    dashboardSubmissionsUnavailableTitle: 'Submission tools unavailable',
+    dashboardSubmissionsUnavailableText: 'Judge, committee, and administrator accounts cannot create or edit applicant submissions from this dashboard.',
+    dashboardLoadingSubmissions: 'Loading submissions...',
+    dashboardLoadError: 'Submissions could not be loaded. Please try again later.',
+    dashboardEmptyTitle: 'No submissions yet',
+    dashboardEmptyText: 'Create a draft to start entering your work details.',
+    dashboardSubmissionNo: 'Submission No.',
+    dashboardSubmissionWork: 'Work',
+    dashboardSubmissionDivision: 'Division',
+    dashboardSubmissionStatus: 'Status',
+    dashboardSubmissionFee: 'Fee',
+    dashboardSubmissionFiles: 'Files',
+    dashboardSubmissionCreated: 'Created',
+    dashboardSubmissionUpdated: 'Updated',
+    dashboardSubmissionAction: 'Action',
+    dashboardUntitledSubmission: 'Untitled work',
+    dashboardEditSubmission: 'Edit',
+    dashboardViewSubmission: 'View',
+    submissionEditorKicker: 'Submission',
+    submissionEditorTitle: 'Submission Editor',
+    submissionEditorLead: 'Enter applicant details, work details, and submission files.',
+    submissionEditorLoading: 'Loading submission...',
+    submissionLoadError: 'Submission could not be loaded. Please try again later.',
+    submissionReadOnlyNotice: 'This submission is no longer a draft. The page is view-only.',
+    submissionSave: 'Save',
+    submissionSavePending: 'Saving...',
+    submissionSaveSuccess: 'Submission saved.',
+    submissionSaveError: 'Submission could not be saved. Please try again later.',
+    submissionBackToDashboard: 'Back to Dashboard',
+    submissionDetailsTitle: 'Submission Details',
+    submissionDivisionLabel: 'Division',
+    submissionNoLabel: 'Submission No.',
+    submissionProfileTitle: 'Applicant Profile',
+    profileLastNameLabel: 'Last Name',
+    profileFirstNameLabel: 'First Name',
+    profilePenNameLabel: 'Pen Name',
+    profilePhoneLabel: 'Phone',
+    profileCountryRegionLabel: 'Country / Region',
+    profileCityLabel: 'City',
+    profilePostalCodeLabel: 'Postal Code',
+    profilePrefectureLabel: 'Prefecture / State',
+    profileOccupationLabel: 'Occupation',
+    profileSchoolLabel: 'School',
+    profileAddressLabel: 'Address',
+    profileWechatLabel: 'WeChat ID',
+    certificateLanguageLabel: 'Certificate Language',
+    certificateLanguageJa: 'Japanese',
+    certificateLanguageEn: 'English',
+    certificateLanguageZh: 'Chinese',
+    submissionWorkTitle: 'Work Details',
+    workCharacterNameLabel: 'Character / Work Name',
+    workThemeAndSettingLabel: 'Theme and Setting',
+    workExhibitionInfoLabel: 'Exhibition Information',
+    workPayerNameLabel: 'Payer Name',
+    workUsagePermissionLabel: 'I allow the organizer to use this work for contest promotion, exhibition, and review.',
+    workTermsAcceptedLabel: 'I accept the submission terms.',
+    submissionFilesTitle: 'Submission Files',
+    submissionFileOnlineA4Image: 'Online Review A4 Image',
+    submissionFilePhysicalA2Image: 'Physical Exhibition A2 Image',
+    submissionFileProcessScreenshot: 'Process / Prompt Screenshot',
+    submissionFileUneditedOriginalAi: 'Unedited Original AI File',
+    submissionUploadFile: 'Upload File',
+    submissionUploadPending: 'Uploading...',
+    submissionUploadError: 'File could not be uploaded. Please try again later.',
+    submissionUploadTypeError: 'Upload a JPG, PNG, WebP, or PDF file.',
+    submissionUploadSizeError: 'File size must be 10MB or less.',
+    submissionNoFiles: 'No files uploaded yet.',
+    submissionFileNameLabel: 'Filename',
+    submissionFileSizeLabel: 'Size',
+    submissionFileUploadedAtLabel: 'Uploaded',
+    submissionDeleteFile: 'Delete',
+    submissionDeletePending: 'Deleting...',
+    submissionDeleteError: 'File could not be deleted. Please try again later.',
+    submissionDivision2d: '2D',
+    submissionDivision3d: '3D',
+    submissionDivisionAi: 'AI',
+    submissionDivisionCorporate: 'Corporate',
+    submissionStatusDraft: 'Draft',
+    submissionStatusPaymentPending: 'Payment pending',
+    submissionStatusSubmitted: 'Submitted',
+    submissionStatusScreening: 'Screening',
+    submissionStatusScreenedIn: 'Screened in',
+    submissionStatusScreenedOut: 'Screened out',
+    submissionStatusAssigned: 'Assigned',
+    submissionStatusReviewed: 'Reviewed',
+    submissionStatusWithdrawn: 'Withdrawn',
     roleApplicant: 'Applicant',
     roleCommittee: 'Committee',
     roleJudge: 'Judge',
@@ -434,6 +797,7 @@ export const translations: Record<LanguageCode, Translation> = {
     apiErrorEmailDeliveryFailed: 'Verification email could not be sent. Please try again later.',
     apiErrorUnauthorized: 'Email or password is incorrect.',
     apiErrorEmailNotVerified: 'Please verify your email before logging in.',
+    apiErrorInvalidSubmission: 'This action is not available for the current submission status.',
     apiErrorRequestFailed: 'The request failed. Please try again later.',
   },
 }
