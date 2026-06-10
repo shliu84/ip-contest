@@ -12,6 +12,7 @@ type UserRow = {
   password_hash: string
   role: string
   email_verified_at: string | null
+  updated_at: string
 }
 
 type VerificationTokenRow = {
@@ -65,7 +66,7 @@ async function verifyEmail(token: string) {
 
 async function firstUser(email: string) {
   return await env.DB.prepare(
-    `SELECT id, email, password_hash, role, email_verified_at
+    `SELECT id, email, password_hash, role, email_verified_at, updated_at
      FROM users
      WHERE email = ?`,
   )
@@ -341,6 +342,7 @@ describe('/api/auth/verify-email', () => {
     const user = await firstUser('verify@example.com')
     const token = await firstVerificationToken(user!.id)
     expect(user?.email_verified_at).toBe('2026-06-10T01:00:00.000Z')
+    expect(user?.updated_at).toBe('2026-06-10T01:00:00.000Z')
     expect(token?.used_at).toBe('2026-06-10T01:00:00.000Z')
   })
 
