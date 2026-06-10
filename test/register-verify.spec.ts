@@ -53,7 +53,7 @@ async function registerWithBaseUrl(body: unknown, appBaseUrl: string) {
       body: JSON.stringify(body),
     },
   ))
-  context.env.APP_BASE_URL = appBaseUrl
+  context.env = { ...context.env, APP_BASE_URL: appBaseUrl }
   return await onRequestPost(context)
 }
 
@@ -83,8 +83,8 @@ async function firstVerificationToken(userId: string) {
     .first<VerificationTokenRow>()
 }
 
-function resendPayload(fetchMock: ReturnType<typeof stubResend>) {
-  const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit]
+function resendPayload(fetchMock: ReturnType<typeof stubResend>, index = 0) {
+  const [url, init] = fetchMock.mock.calls[index] as unknown as [string, RequestInit]
   return {
     url,
     init,
@@ -277,6 +277,15 @@ describe('/api/auth/register', () => {
     expect(href).toMatch(/^https:\/\/contest\.example\.com\/verify-email\?token=/)
     expect(html).not.toContain('onclick')
     expect(html).not.toContain('alert(1)')
+
+    const defaultResponse = await register({
+      email: 'default-url@example.com',
+      password: 'correct horse battery staple',
+    })
+    expect(defaultResponse.status).toBe(201)
+    expect(resendPayload(fetchMock, 1).body.html).toContain(
+      'https://contest.example.com/verify-email?token=',
+    )
   })
 
   it('rejects invalid email and short password bodies', async () => {
