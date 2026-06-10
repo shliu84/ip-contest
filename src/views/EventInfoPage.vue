@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="event-page-layout container">
+    <div class="event-page-layout event-info-page-layout container">
       <aside
         class="event-page-nav"
         :aria-label="copy.nav.label"
@@ -159,6 +159,11 @@
       </div>
     </section>
       </div>
+      <MobileSectionNav
+        :active-href="activeHref"
+        :items="copy.nav.items"
+        :label="copy.nav.label"
+      />
     </div>
   </main>
 </template>
@@ -166,6 +171,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import BenefitsSection from '../components/BenefitsSection.vue'
+import MobileSectionNav from '../components/MobileSectionNav.vue'
 import type { LanguageCode } from '../i18n/translations'
 
 const props = defineProps<{

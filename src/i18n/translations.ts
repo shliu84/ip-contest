@@ -17,6 +17,8 @@ export type TranslationKey =
   | 'heroSubtitle'
   | 'heroLead'
   | 'ctaEntry'
+  | 'headerEntry'
+  | 'headerLogin'
   | 'ctaAbout'
   | 'aboutKicker'
   | 'aboutTitle'
@@ -253,6 +255,8 @@ export const translations: Record<LanguageCode, Translation> = {
     heroSubtitle: '~Art Festa~',
     heroLead: '支持以专业创作为目标的亚洲创作者勇敢挑战',
     ctaEntry: '立即投稿',
+    headerEntry: '投稿',
+    headerLogin: '登录',
     ctaAbout: '了解大赛',
     aboutKicker: 'ASIA IP CONTEST 是什么？',
     aboutTitle: '支持以专业创作为目标的亚洲创作者勇敢挑战',
@@ -430,7 +434,7 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadFile: '上传文件',
     submissionUploadPending: '正在上传...',
     submissionUploadError: '无法上传文件，请稍后再试。',
-    submissionUploadTypeError: '请上传 JPG、PNG、WebP 或 PDF 文件。',
+    submissionUploadTypeError: '请上传 JPG、PNG 或 WebP 文件。',
     submissionUploadSizeError: '文件大小不能超过 10MB。',
     submissionNoFiles: '尚未上传文件。',
     submissionFileNameLabel: '文件名',
@@ -483,6 +487,8 @@ export const translations: Record<LanguageCode, Translation> = {
     heroSubtitle: '~Art Festa~',
     heroLead: 'プロを目指すアジアのクリエイターたちの挑戦を応援する',
     ctaEntry: '今すぐ応募',
+    headerEntry: '応募',
+    headerLogin: 'ログイン',
     ctaAbout: 'コンテストについて',
     aboutKicker: 'ASIA IP CONTEST とは？',
     aboutTitle: 'プロを目指すアジアのクリエイターたちの挑戦を応援する',
@@ -660,7 +666,7 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadFile: 'ファイルをアップロード',
     submissionUploadPending: 'アップロード中...',
     submissionUploadError: 'ファイルをアップロードできませんでした。時間をおいて再度お試しください。',
-    submissionUploadTypeError: 'JPG、PNG、WebP、PDFのいずれかをアップロードしてください。',
+    submissionUploadTypeError: 'JPG、PNG、WebPのいずれかをアップロードしてください。',
     submissionUploadSizeError: 'ファイルサイズは10MB以下にしてください。',
     submissionNoFiles: 'ファイルはまだアップロードされていません。',
     submissionFileNameLabel: 'ファイル名',
@@ -713,6 +719,8 @@ export const translations: Record<LanguageCode, Translation> = {
     heroSubtitle: '~Art Festa~',
     heroLead: 'Supporting Asian creators who are challenging themselves to become professionals',
     ctaEntry: 'Submit Now',
+    headerEntry: 'Submit',
+    headerLogin: 'Login',
     ctaAbout: 'About the Contest',
     aboutKicker: 'What is ASIA IP CONTEST?',
     aboutTitle: 'Supporting Asian creators who are challenging themselves to become professionals',
@@ -890,7 +898,7 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadFile: 'Upload File',
     submissionUploadPending: 'Uploading...',
     submissionUploadError: 'File could not be uploaded. Please try again later.',
-    submissionUploadTypeError: 'Upload a JPG, PNG, WebP, or PDF file.',
+    submissionUploadTypeError: 'Upload a JPG, PNG, or WebP file.',
     submissionUploadSizeError: 'File size must be 10MB or less.',
     submissionNoFiles: 'No files uploaded yet.',
     submissionFileNameLabel: 'Filename',

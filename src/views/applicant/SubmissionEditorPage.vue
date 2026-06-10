@@ -329,7 +329,7 @@ const route = useRoute()
 const router = useRouter()
 
 const maxUploadBytes = 10 * 1024 * 1024
-const acceptedUploadTypes = 'image/jpeg,image/png,image/webp,application/pdf'
+const acceptedUploadTypes = 'image/jpeg,image/png,image/webp'
 const allowedContentTypes = new Set(acceptedUploadTypes.split(','))
 
 const divisionOptions: SubmissionDivision[] = ['2d', '3d', 'ai', 'corporate']
