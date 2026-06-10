@@ -19,30 +19,28 @@ type SubmissionStatus =
   | 'withdrawn'
 type SubmissionDivision = '2d' | '3d' | 'ai' | 'corporate'
 
+type AdminSubmissionListItem = {
+  id: string
+  submissionNo: string
+  applicantEmail: string
+  status: SubmissionStatus
+  division: SubmissionDivision
+  feeAmount: number
+  currency: string
+  characterName: string
+  fileCount: number
+  createdAt: string
+  updatedAt: string
+  paidAt: string | null
+  submittedAt: string | null
+}
+
 type AdminSubmissionListBody = {
-  submissions: {
-    id: string
-    submissionNo: string
-    applicantEmail: string
-    status: SubmissionStatus
-    division: SubmissionDivision
-    feeAmount: number
-    currency: string
-    characterName: string
-    fileCount: number
-    createdAt: string
-    updatedAt: string
-    paidAt: string | null
-    submittedAt: string | null
-  }[]
+  submissions: AdminSubmissionListItem[]
 }
 
 type AdminSubmissionDetailBody = {
-  submission: {
-    id: string
-    submissionNo: string
-    status: SubmissionStatus
-    division: SubmissionDivision
+  submission: AdminSubmissionListItem & {
     applicant: {
       id: string
       email: string
@@ -400,8 +398,17 @@ describe('/api/admin/submissions/:id detail', () => {
     expect(body.submission).toMatchObject({
       id: submission.id,
       submissionNo: 'AIPC2026-DETAIL',
+      applicantEmail: applicant.email,
       status: 'submitted',
       division: 'corporate',
+      feeAmount: 100000,
+      currency: 'JPY',
+      characterName: 'Archive Sentinel',
+      fileCount: 1,
+      paidAt: '2026-06-10T01:30:00.000Z',
+      submittedAt: '2026-06-10T01:45:00.000Z',
+      createdAt: '2026-06-10T02:00:00.000Z',
+      updatedAt: '2026-06-10T02:00:00.000Z',
       applicant: {
         id: applicant.id,
         email: applicant.email,
