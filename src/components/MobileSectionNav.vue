@@ -1,7 +1,10 @@
 <template>
   <div class="mobile-section-nav" :class="{ open: isOpen }">
     <div class="mobile-section-nav-panel">
-      <div class="mobile-section-nav-title">ON THIS PAGE</div>
+      <div class="mobile-section-nav-title">
+        <span>{{ titleEyebrow }}</span>
+        <strong>{{ title }}</strong>
+      </div>
       <a
         v-for="item in items"
         :key="item.href"
@@ -52,6 +55,8 @@ import { ref } from 'vue'
 
 defineProps<{
   label: string
+  titleEyebrow: string
+  title: string
   activeHref: string
   items: Array<{ label: string; href: string; level?: number }>
 }>()

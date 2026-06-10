@@ -6,7 +6,10 @@
         :aria-label="copy.nav.label"
         :style="navProgressStyle"
       >
-        <div class="event-page-nav-title">ON THIS PAGE</div>
+        <div class="event-page-nav-title">
+          <span>{{ copy.nav.titleEyebrow }}</span>
+          <strong>{{ copy.nav.title }}</strong>
+        </div>
         <a
           v-for="item in copy.nav.items"
           :key="item.href"
@@ -172,6 +175,8 @@
         :active-href="activeHref"
         :items="copy.nav.items"
         :label="copy.nav.label"
+        :title="copy.nav.title"
+        :title-eyebrow="copy.nav.titleEyebrow"
       />
     </div>
   </main>
@@ -231,6 +236,8 @@ const pageCopy = {
     lead: '确认 ASIA IP CONTEST in Tokyo 2026 的赛事概要、募集部门、日程与参赛相关信息。',
     nav: {
       label: '页面内导航',
+      titleEyebrow: 'EVENT INFO',
+      title: '举办信息',
       items: [
         { label: '赛事概要', href: '#event-overview' },
         { label: '赛事日程', href: '#event-schedule' },
@@ -340,6 +347,8 @@ const pageCopy = {
     lead: 'ASIA IP CONTEST in Tokyo 2026のイベント概要、募集部門、スケジュール、参加に関する情報をまとめています。',
     nav: {
       label: 'ページ内ナビゲーション',
+      titleEyebrow: 'EVENT INFO',
+      title: '開催情報',
       items: [
         { label: '開催概要', href: '#event-overview' },
         { label: 'スケジュール', href: '#event-schedule' },
@@ -449,6 +458,8 @@ const pageCopy = {
     lead: 'Find event details, categories, schedule, and participation information for ASIA IP CONTEST in Tokyo 2026.',
     nav: {
       label: 'On this page',
+      titleEyebrow: 'EVENT INFO',
+      title: 'Event Info',
       items: [
         { label: 'Overview', href: '#event-overview' },
         { label: 'Schedule', href: '#event-schedule' },
@@ -558,6 +569,8 @@ const pageCopy = {
   lead: string
   nav: {
     label: string
+    titleEyebrow: string
+    title: string
     items: Array<{ label: string; href: string }>
   }
   overview: {

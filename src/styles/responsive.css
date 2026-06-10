@@ -361,12 +361,25 @@
   }
 
   .mobile-section-nav-title {
-    color: var(--primary);
-    font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.18em;
-    line-height: 1;
+    border-bottom: 1px solid rgba(30, 30, 34, 0.08);
+    display: grid;
+    gap: 6px;
     padding: 4px 4px 12px;
+  }
+
+  .mobile-section-nav-title span {
+    color: var(--primary);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    line-height: 1;
+  }
+
+  .mobile-section-nav-title strong {
+    color: var(--text-main);
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.35;
   }
 
   .mobile-section-nav-link {

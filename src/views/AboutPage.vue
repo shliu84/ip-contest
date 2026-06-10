@@ -6,7 +6,10 @@
         :aria-label="copy.nav.label"
         :style="navProgressStyle"
       >
-        <div class="event-page-nav-title">ON THIS PAGE</div>
+        <div class="event-page-nav-title">
+          <span>{{ copy.nav.titleEyebrow }}</span>
+          <strong>{{ copy.nav.title }}</strong>
+        </div>
         <a
           v-for="item in copy.nav.items"
           :key="item.href"
@@ -124,6 +127,8 @@
         :active-href="activeHref"
         :items="copy.nav.items"
         :label="copy.nav.label"
+        :title="copy.nav.title"
+        :title-eyebrow="copy.nav.titleEyebrow"
       />
     </div>
   </main>
@@ -176,6 +181,8 @@ const pageCopy = {
     lead: '了解 ASIA IP CONTEST 如何连接亚洲创作者、企业与角色 IP 市场。',
     nav: {
       label: '页面内导航',
+      titleEyebrow: 'ABOUT US',
+      title: '关于大赛',
       items: [
         { label: '致辞', href: '#about-foreword' },
         { label: '大赛目的', href: '#about-purpose' },
@@ -259,6 +266,8 @@ const pageCopy = {
     lead: 'ASIA IP CONTESTが、アジアのクリエイターと企業、そしてキャラクターIP市場をつなぐ理由。',
     nav: {
       label: 'ページ内ナビゲーション',
+      titleEyebrow: 'ABOUT US',
+      title: 'について',
       items: [
         { label: 'ご挨拶', href: '#about-foreword' },
         { label: '目的', href: '#about-purpose' },
@@ -342,6 +351,8 @@ const pageCopy = {
     lead: 'Learn how ASIA IP CONTEST connects Asian creators, companies, and the character IP market.',
     nav: {
       label: 'On this page',
+      titleEyebrow: 'ABOUT US',
+      title: 'About Us',
       items: [
         { label: 'Foreword', href: '#about-foreword' },
         { label: 'Purpose', href: '#about-purpose' },
@@ -425,6 +436,8 @@ const pageCopy = {
   lead: string
   nav: {
     label: string
+    titleEyebrow: string
+    title: string
     items: Array<{ label: string; href: string }>
   }
   foreword: {

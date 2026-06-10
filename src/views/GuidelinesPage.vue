@@ -6,7 +6,10 @@
         :aria-label="copy.nav.label"
         :style="navProgressStyle"
       >
-        <div class="event-page-nav-title">ON THIS PAGE</div>
+        <div class="event-page-nav-title">
+          <span>{{ copy.nav.titleEyebrow }}</span>
+          <strong>{{ copy.nav.title }}</strong>
+        </div>
         <a
           v-for="item in copy.nav.items"
           :key="item.href"
@@ -133,6 +136,8 @@
         :active-href="activeHref"
         :items="copy.nav.items"
         :label="copy.nav.label"
+        :title="copy.nav.title"
+        :title-eyebrow="copy.nav.titleEyebrow"
       />
     </div>
   </main>
@@ -151,6 +156,8 @@ const props = defineProps<{
 type GuidelineCopy = {
   nav: {
     label: string
+    titleEyebrow: string
+    title: string
     items: Array<{ label: string; href: string; level?: number }>
   }
   categoryGroups: Array<{ id: string; eyebrow: string; title: string; body: string; categoryIds: string[] }>
@@ -219,6 +226,8 @@ const pageCopy: Record<LanguageCode, GuidelineCopy> = {
   zh: {
     nav: {
       label: '页面内导航',
+      titleEyebrow: 'GUIDELINES',
+      title: '募集要项',
       items: navItemsByLanguage.zh,
     },
     categoryGroups: [
@@ -353,6 +362,8 @@ const pageCopy: Record<LanguageCode, GuidelineCopy> = {
   ja: {
     nav: {
       label: 'ページ内ナビゲーション',
+      titleEyebrow: 'GUIDELINES',
+      title: '募集要項',
       items: navItemsByLanguage.ja,
     },
     categoryGroups: [
@@ -487,6 +498,8 @@ const pageCopy: Record<LanguageCode, GuidelineCopy> = {
   en: {
     nav: {
       label: 'On this page',
+      titleEyebrow: 'GUIDELINES',
+      title: 'Guidelines',
       items: navItemsByLanguage.en,
     },
     categoryGroups: [
