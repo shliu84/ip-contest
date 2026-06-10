@@ -105,6 +105,10 @@
     font-size: 3rem;
   }
 
+  .home-section-dots {
+    display: none;
+  }
+
   .subpage-hero {
     padding-top: 175px;
   }
@@ -148,14 +152,111 @@
     gap: 18px;
   }
 
-  .event-info-grid,
-  .event-schedule-grid {
-    grid-template-columns: 1fr;
+  .event-page-layout {
+    display: block;
+  }
+
+  .event-page-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    margin-inline: -14px;
+    overflow-x: auto;
+    padding: 10px 14px 12px;
+    position: static;
+    scrollbar-width: none;
+  }
+
+  .event-page-nav::before,
+  .event-page-nav::after {
+    display: none;
+  }
+
+  .event-page-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .event-page-nav-title {
+    display: none;
+  }
+
+  .event-page-nav-link {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(237, 21, 102, 0.12);
+    border-radius: 999px;
+    flex: 0 0 auto;
+    font-size: 0.84rem;
+    padding: 9px 12px;
+    white-space: nowrap;
+  }
+
+  .event-page-nav-link::before {
+    display: none;
+  }
+
+  .event-page-nav-link:hover {
+    transform: none;
+  }
+
+  .event-page-nav-link.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    box-shadow: 3px 3px 0 rgba(237, 21, 102, 0.16);
+  }
+
+  .event-page-content > [id] {
+    scroll-margin-top: 170px;
   }
 
   .event-info-list div {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+
+  .event-schedule-timeline {
+    gap: 18px;
+  }
+
+  .event-schedule-timeline::before {
+    left: 20px;
+  }
+
+  .event-schedule-item {
+    grid-template-columns: 42px 1fr;
+    gap: 16px;
+  }
+
+  .event-schedule-marker {
+    font-size: 0.7rem;
+    height: 42px;
+  }
+
+  .event-schedule-card {
+    padding: 22px;
+  }
+
+  .event-detail-card {
+    grid-template-columns: 84px 1fr;
+    gap: 18px;
+  }
+
+  .event-detail-media {
+    width: 84px;
+  }
+
+  .event-judge-detail-card {
+    grid-template-columns: 118px 1fr;
+  }
+
+  .event-judge-index {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 34px;
+  }
+
+  .event-judge-index-link {
+    font-size: 0.82rem;
+    padding: 9px 12px;
   }
 
   .hero-subtitle {
@@ -216,6 +317,20 @@
 }
 
 @media (max-width: 640px) {
+  .event-judge-detail-card {
+    gap: 14px;
+    grid-template-columns: 96px 1fr;
+    padding: 20px;
+  }
+
+  .event-judge-profile-side h3 {
+    font-size: 1rem;
+  }
+
+  .event-judge-index {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .judges-grid {
     grid-template-columns: 1fr;
   }
