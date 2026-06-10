@@ -44,6 +44,19 @@ async function register(body: unknown) {
   )))
 }
 
+async function registerWithBaseUrl(body: unknown, appBaseUrl: string) {
+  const context = pagesContext(new Request(
+    'https://contest.example.com/api/auth/register',
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+  ))
+  context.env.APP_BASE_URL = appBaseUrl
+  return await onRequestPost(context)
+}
+
 async function verifyEmail(token: string) {
   return await onRequestGet(pagesContext(new Request(
     `https://contest.example.com/api/auth/verify-email?token=${encodeURIComponent(token)}`,
@@ -88,6 +101,12 @@ function tokenFromHtml(html: string) {
   const match = html.match(/\/verify-email\?token=([^"' <]+)/)
   expect(match).not.toBeNull()
   return decodeURIComponent(match![1])
+}
+
+function hrefFromHtml(html: string) {
+  const match = html.match(/href="([^"]+)"/)
+  expect(match).not.toBeNull()
+  return match![1]
 }
 
 async function registerAndToken(email = 'verify@example.com') {
@@ -147,6 +166,7 @@ describe('/api/auth/register', () => {
     expect(payload.url).toBe('https://api.resend.com/emails')
     expect(payload.init.method).toBe('POST')
     expect(new Headers(payload.init.headers).get('authorization')).toBe('Bearer re_test')
+    expect(new Headers(payload.init.headers).get('content-type')).toBe('application/json')
     expect(payload.body.from).toBe('contest@example.com')
     expect(payload.body.to).toEqual(['mail-target@example.com'])
     expect(payload.body.subject).toContain('Verify')
@@ -158,6 +178,19 @@ describe('/api/auth/register', () => {
     const token = await firstVerificationToken(user!.id)
     expect(token?.token_hash).toBe(await hashToken(rawToken))
     expect(token?.token_hash).not.toBe(rawToken)
+  })
+
+  it('rejects JSON null, arrays, and non-object registration bodies', async () => {
+    stubResend()
+
+    const nullBody = await register(null)
+    const arrayBody = await register([])
+    const stringBody = await register('not an object')
+
+    expect(nullBody.status).toBe(400)
+    expect(arrayBody.status).toBe(400)
+    expect(stringBody.status).toBe(400)
+    expect(fetch).not.toHaveBeenCalled()
   })
 
   it('rejects duplicate email registrations with conflict', async () => {
@@ -179,6 +212,71 @@ describe('/api/auth/register', () => {
         message: 'Email already registered',
       },
     })
+  })
+
+  it('maps a duplicate email unique constraint race to conflict', async () => {
+    stubResend()
+    await env.DB.prepare(
+      `INSERT INTO users (id, email, password_hash, role)
+       VALUES (?, ?, ?, 'applicant')`,
+    )
+      .bind(crypto.randomUUID(), 'race@example.com', 'password-hash')
+      .run()
+
+    const context = pagesContext(new Request(
+      'https://contest.example.com/api/auth/register',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email: 'race@example.com',
+          password: 'correct horse battery staple',
+        }),
+      },
+    ))
+    const realDb = context.env.DB
+    const db = Object.create(realDb) as D1Database
+    db.prepare = ((query: string) => {
+      if (query.includes('SELECT id FROM users WHERE email = ?')) {
+        return {
+          bind() {
+            return {
+              async first() {
+                return null
+              },
+            }
+          },
+        } as unknown as D1PreparedStatement
+      }
+      return realDb.prepare(query)
+    }) as D1Database['prepare']
+    context.env.DB = db
+
+    const response = await onRequestPost(context)
+
+    expect(response.status).toBe(409)
+    await expect(response.json()).resolves.toEqual({
+      error: {
+        code: 'conflict',
+        message: 'Email already registered',
+      },
+    })
+  })
+
+  it('builds and escapes the verification URL from a configured base URL', async () => {
+    const fetchMock = stubResend()
+
+    const response = await registerWithBaseUrl({
+      email: 'url-safe@example.com',
+      password: 'correct horse battery staple',
+    }, 'https://contest.example.com/app/?next=" onclick="alert(1)')
+
+    expect(response.status).toBe(201)
+    const html = resendPayload(fetchMock).body.html
+    const href = hrefFromHtml(html)
+    expect(href).toMatch(/^https:\/\/contest\.example\.com\/verify-email\?token=/)
+    expect(html).not.toContain('onclick')
+    expect(html).not.toContain('alert(1)')
   })
 
   it('rejects invalid email and short password bodies', async () => {
@@ -269,5 +367,17 @@ describe('/api/auth/verify-email', () => {
     expect(used.status).toBe(400)
     expect(unknown.status).toBe(400)
     expect(missing.status).toBe(400)
+  })
+
+  it('allows only one concurrent verification request to use a token', async () => {
+    const { rawToken } = await registerAndToken('single-use@example.com')
+
+    const responses = await Promise.all([
+      verifyEmail(rawToken),
+      verifyEmail(rawToken),
+    ])
+    const statuses = responses.map((response) => response.status).sort()
+
+    expect(statuses).toEqual([200, 400])
   })
 })

@@ -18,6 +18,9 @@ type RegisterBody = {
 export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
   return handleApi(async () => {
     const body = await readJson<RegisterBody>(context.request)
+    if (!isRecord(body) || Array.isArray(body)) {
+      throw new ApiRequestError('bad_request', 'Invalid registration body', 400)
+    }
     if (typeof body.email !== 'string' || typeof body.password !== 'string') {
       throw new ApiRequestError('bad_request', 'Invalid registration body', 400)
     }
@@ -47,21 +50,25 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
     const nowIso = new Date(now).toISOString()
     const expiresAt = new Date(now + VERIFICATION_TOKEN_SECONDS * 1000).toISOString()
     const passwordHash = await hashPassword(body.password)
+    const verificationUrl = verificationUrlFor(context.env.APP_BASE_URL, rawToken)
 
-    await context.env.DB.batch([
-      context.env.DB.prepare(
-        `INSERT INTO users (id, email, password_hash, role, created_at, updated_at)
-         VALUES (?, ?, ?, 'applicant', ?, ?)`,
-      ).bind(userId, email, passwordHash, nowIso, nowIso),
-      context.env.DB.prepare(
-        `INSERT INTO email_verification_tokens (id, user_id, token_hash, expires_at, created_at)
-         VALUES (?, ?, ?, ?, ?)`,
-      ).bind(tokenId, userId, tokenHash, expiresAt, nowIso),
-    ])
-
-    const verificationUrl = `${context.env.APP_BASE_URL}/verify-email?token=${
-      encodeURIComponent(rawToken)
-    }`
+    try {
+      await context.env.DB.batch([
+        context.env.DB.prepare(
+          `INSERT INTO users (id, email, password_hash, role, created_at, updated_at)
+           VALUES (?, ?, ?, 'applicant', ?, ?)`,
+        ).bind(userId, email, passwordHash, nowIso, nowIso),
+        context.env.DB.prepare(
+          `INSERT INTO email_verification_tokens (id, user_id, token_hash, expires_at, created_at)
+           VALUES (?, ?, ?, ?, ?)`,
+        ).bind(tokenId, userId, tokenHash, expiresAt, nowIso),
+      ])
+    } catch (error) {
+      if (isDuplicateEmailError(error)) {
+        throw new ApiRequestError('conflict', 'Email already registered', 409)
+      }
+      throw error
+    }
 
     try {
       await sendEmail(context.env, {
@@ -69,7 +76,7 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
         subject: 'Verify your ASIA IP CONTEST account',
         html: [
           '<p>Please verify your email address for ASIA IP CONTEST.</p>',
-          `<p><a href="${verificationUrl}">${verificationUrl}</a></p>`,
+          `<p><a href="${escapeHtml(verificationUrl)}">${escapeHtml(verificationUrl)}</a></p>`,
         ].join(''),
       })
     } catch {
@@ -88,4 +95,41 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
 
     return json({ ok: true }, { status: 201 })
   })
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
+function verificationUrlFor(appBaseUrl: string, rawToken: string) {
+  const url = new URL('/verify-email', appBaseUrl)
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    throw new Error('APP_BASE_URL must use http or https')
+  }
+  url.searchParams.set('token', rawToken)
+  return url.toString()
+}
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case '&':
+        return '&amp;'
+      case '<':
+        return '&lt;'
+      case '>':
+        return '&gt;'
+      case '"':
+        return '&quot;'
+      case "'":
+        return '&#39;'
+      default:
+        return character
+    }
+  })
+}
+
+function isDuplicateEmailError(error: unknown) {
+  return error instanceof Error
+    && /UNIQUE constraint failed: users\.email/i.test(error.message)
 }

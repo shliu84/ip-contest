@@ -5,7 +5,6 @@ import { hashToken } from '../../_lib/tokens'
 type VerificationTokenRow = {
   id: string
   user_id: string
-  expires_at: string
 }
 
 export const onRequestGet: PagesFunction<AppEnv> = async (context) => {
@@ -17,31 +16,39 @@ export const onRequestGet: PagesFunction<AppEnv> = async (context) => {
 
     const tokenHash = await hashToken(token)
     const row = await context.env.DB.prepare(
-      `SELECT id, user_id, expires_at
+      `SELECT id, user_id
        FROM email_verification_tokens
-       WHERE token_hash = ?
-         AND used_at IS NULL`,
+       WHERE token_hash = ?`,
     )
       .bind(tokenHash)
       .first<VerificationTokenRow>()
 
-    if (!row || new Date(row.expires_at).getTime() <= Date.now()) {
+    if (!row) {
       throw new ApiRequestError('bad_request', 'Invalid verification token', 400)
     }
 
     const nowIso = new Date().toISOString()
-    await context.env.DB.batch([
-      context.env.DB.prepare(
-        `UPDATE users
-         SET email_verified_at = ?, updated_at = ?
-         WHERE id = ?`,
-      ).bind(nowIso, nowIso, row.user_id),
-      context.env.DB.prepare(
-        `UPDATE email_verification_tokens
-         SET used_at = ?
-         WHERE id = ?`,
-      ).bind(nowIso, row.id),
-    ])
+    const claimed = await context.env.DB.prepare(
+      `UPDATE email_verification_tokens
+       SET used_at = ?
+       WHERE id = ?
+         AND used_at IS NULL
+         AND expires_at > ?`,
+    )
+      .bind(nowIso, row.id, nowIso)
+      .run()
+
+    if (claimed.meta.changes !== 1) {
+      throw new ApiRequestError('bad_request', 'Invalid verification token', 400)
+    }
+
+    await context.env.DB.prepare(
+      `UPDATE users
+       SET email_verified_at = ?, updated_at = ?
+       WHERE id = ?`,
+    )
+      .bind(nowIso, nowIso, row.user_id)
+      .run()
 
     return json({ ok: true })
   })
