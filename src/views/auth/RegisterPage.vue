@@ -39,7 +39,7 @@
             autocomplete="new-password"
             type="password"
             required
-            minlength="8"
+            minlength="10"
             :disabled="isPending"
           >
         </div>
@@ -52,7 +52,7 @@
             autocomplete="new-password"
             type="password"
             required
-            minlength="8"
+            minlength="10"
             :disabled="isPending"
           >
         </div>
@@ -92,7 +92,7 @@ const isSuccess = ref(false)
 async function submit() {
   errorMessage.value = ''
 
-  if (password.value.length < 8) {
+  if (Array.from(password.value).length < 10) {
     errorMessage.value = props.t('errorPasswordRequirements')
     return
   }

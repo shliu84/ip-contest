@@ -75,7 +75,9 @@ async function submit() {
 
   try {
     await session.login(email.value, password.value)
-    const redirect = typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/')
+    const redirect = typeof route.query.redirect === 'string'
+      && route.query.redirect.startsWith('/')
+      && !route.query.redirect.startsWith('//')
       ? route.query.redirect
       : '/dashboard'
     await router.push(redirect)
