@@ -108,8 +108,10 @@ export function logout() {
 }
 
 export function verifyEmail(token: string) {
-  const params = new URLSearchParams({ token })
-  return apiFetch<ApiOkResponse>(`/api/auth/verify-email?${params.toString()}`)
+  return apiFetch<ApiOkResponse>('/api/auth/verify-email', {
+    method: 'POST',
+    body: JSON.stringify({ token }),
+  })
 }
 
 export function requestPasswordReset(body: ForgotPasswordRequest) {

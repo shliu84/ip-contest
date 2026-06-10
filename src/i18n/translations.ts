@@ -69,10 +69,12 @@ export type TranslationKey =
   | 'submitLogin'
   | 'submitForgot'
   | 'submitReset'
+  | 'submitVerify'
   | 'pendingRegister'
   | 'pendingLogin'
   | 'pendingForgot'
   | 'pendingReset'
+  | 'pendingVerify'
   | 'successRegisterTitle'
   | 'successRegisterText'
   | 'successForgotText'
@@ -166,7 +168,7 @@ export const translations: Record<LanguageCode, Translation> = {
     loginTitle: '登录',
     loginLead: '登录后可以管理投稿、付款和账户信息。',
     verifyTitle: '验证邮箱',
-    verifyLead: '正在确认你的邮箱验证链接。',
+    verifyLead: '请点击按钮完成邮箱验证。',
     forgotTitle: '忘记密码',
     forgotLead: '输入账户邮箱，我们会发送重置密码的链接。',
     resetTitle: '重置密码',
@@ -181,10 +183,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submitLogin: '登录',
     submitForgot: '发送重置链接',
     submitReset: '更新密码',
+    submitVerify: '验证邮箱',
     pendingRegister: '正在创建...',
     pendingLogin: '正在登录...',
     pendingForgot: '正在发送...',
     pendingReset: '正在更新...',
+    pendingVerify: '正在确认...',
     successRegisterTitle: '请检查邮箱',
     successRegisterText: '验证链接已发送。完成邮箱验证后即可登录。',
     successForgotText: '如果该邮箱已注册并完成验证，我们会发送重置密码的链接。',
@@ -272,7 +276,7 @@ export const translations: Record<LanguageCode, Translation> = {
     loginTitle: 'ログイン',
     loginLead: 'ログインすると、応募作品・支払い・アカウント情報を管理できます。',
     verifyTitle: 'メール認証',
-    verifyLead: 'メール認証リンクを確認しています。',
+    verifyLead: 'ボタンを押してメール認証を完了してください。',
     forgotTitle: 'パスワードを忘れた場合',
     forgotLead: 'アカウントのメールアドレスを入力してください。パスワード再設定リンクを送信します。',
     resetTitle: 'パスワード再設定',
@@ -287,10 +291,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submitLogin: 'ログイン',
     submitForgot: '再設定リンクを送信',
     submitReset: 'パスワードを更新',
+    submitVerify: 'メール認証',
     pendingRegister: '作成中...',
     pendingLogin: 'ログイン中...',
     pendingForgot: '送信中...',
     pendingReset: '更新中...',
+    pendingVerify: '確認中...',
     successRegisterTitle: 'メールをご確認ください',
     successRegisterText: '認証リンクを送信しました。メール認証が完了するとログインできます。',
     successForgotText: 'このメールアドレスが登録済みで認証済みの場合、再設定リンクを送信します。',
@@ -378,7 +384,7 @@ export const translations: Record<LanguageCode, Translation> = {
     loginTitle: 'Login',
     loginLead: 'Log in to manage submissions, payments, and account details.',
     verifyTitle: 'Verify Email',
-    verifyLead: 'Checking your email verification link.',
+    verifyLead: 'Click the button to verify your email.',
     forgotTitle: 'Forgot Password',
     forgotLead: 'Enter your account email and we will send a password reset link.',
     resetTitle: 'Reset Password',
@@ -393,10 +399,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submitLogin: 'Login',
     submitForgot: 'Send Reset Link',
     submitReset: 'Update Password',
+    submitVerify: 'Verify Email',
     pendingRegister: 'Creating...',
     pendingLogin: 'Logging in...',
     pendingForgot: 'Sending...',
     pendingReset: 'Updating...',
+    pendingVerify: 'Verifying...',
     successRegisterTitle: 'Check Your Email',
     successRegisterText: 'We sent a verification link. You can log in after verifying your email.',
     successForgotText: 'If that email is registered and verified, we will send a password reset link.',

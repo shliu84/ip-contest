@@ -1,5 +1,5 @@
 import type { AppEnv } from '../../_lib/env'
-import { ApiRequestError, handleApi, json } from '../../_lib/http'
+import { ApiRequestError, handleApi, json, readJson } from '../../_lib/http'
 import { hashToken } from '../../_lib/tokens'
 
 type VerificationTokenRow = {
@@ -7,9 +7,37 @@ type VerificationTokenRow = {
   user_id: string
 }
 
-export const onRequestGet: PagesFunction<AppEnv> = async (context) => {
+type VerifyEmailBody = {
+  token?: unknown
+}
+
+function methodNotAllowed() {
+  return json(
+    { error: { code: 'bad_request', message: 'Use POST to verify email' } },
+    {
+      status: 405,
+      headers: { allow: 'POST' },
+    },
+  )
+}
+
+export const onRequestGet: PagesFunction<AppEnv> = async () => {
+  return methodNotAllowed()
+}
+
+export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
   return handleApi(async () => {
-    const token = new URL(context.request.url).searchParams.get('token')
+    const queryToken = new URL(context.request.url).searchParams.get('token')
+    let bodyToken: unknown
+
+    if (context.request.headers.get('content-type')?.includes('application/json')) {
+      const body = await readJson<VerifyEmailBody>(context.request)
+      if (body && typeof body === 'object' && !Array.isArray(body)) {
+        bodyToken = body.token
+      }
+    }
+
+    const token = typeof bodyToken === 'string' ? bodyToken : queryToken
     if (!token) {
       throw new ApiRequestError('bad_request', 'Invalid verification token', 400)
     }
@@ -57,6 +85,6 @@ export const onRequestGet: PagesFunction<AppEnv> = async (context) => {
       throw new Error('Verified token did not update a user')
     }
 
-    return json({ ok: true })
+    return json({ ok: true }, { headers: { 'cache-control': 'no-store' } })
   })
 }

@@ -1,7 +1,10 @@
 import { env } from 'cloudflare:workers'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { onRequestPost } from '../functions/api/auth/register'
-import { onRequestGet } from '../functions/api/auth/verify-email'
+import {
+  onRequestGet as verifyEmailGet,
+  onRequestPost as verifyEmailPost,
+} from '../functions/api/auth/verify-email'
 import { verifyPassword } from '../functions/_lib/password'
 import { hashToken } from '../functions/_lib/tokens'
 import { pagesContext } from './helpers/pages-context'
@@ -59,7 +62,18 @@ async function registerWithBaseUrl(body: unknown, appBaseUrl: string) {
 }
 
 async function verifyEmail(token: string) {
-  return await onRequestGet(pagesContext(new Request(
+  return await verifyEmailPost(pagesContext(new Request(
+    'https://contest.example.com/api/auth/verify-email',
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ token }),
+    },
+  )))
+}
+
+async function verifyEmailGetRequest(token: string) {
+  return await verifyEmailGet(pagesContext(new Request(
     `https://contest.example.com/api/auth/verify-email?token=${encodeURIComponent(token)}`,
   )))
 }
@@ -337,6 +351,7 @@ describe('/api/auth/verify-email', () => {
     const response = await verifyEmail(rawToken)
 
     expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-store')
     await expect(response.json()).resolves.toEqual({ ok: true })
 
     const user = await firstUser('verify@example.com')
@@ -346,7 +361,23 @@ describe('/api/auth/verify-email', () => {
     expect(token?.used_at).toBe('2026-06-10T01:00:00.000Z')
   })
 
-  it('rejects expired, used, unknown, and missing tokens', async () => {
+  it('does not verify email or use a token on GET requests', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-06-10T01:30:00.000Z'))
+    const { rawToken } = await registerAndToken('get-safe@example.com')
+
+    const response = await verifyEmailGetRequest(rawToken)
+
+    expect(response.status).not.toBe(200)
+    expect(response.status).toBe(405)
+
+    const user = await firstUser('get-safe@example.com')
+    const token = await firstVerificationToken(user!.id)
+    expect(user?.email_verified_at).toBeNull()
+    expect(token?.used_at).toBeNull()
+  })
+
+  it('rejects expired, used, unknown, and missing tokens on POST', async () => {
     const { rawToken: expiredToken } = await registerAndToken('expired@example.com')
     const expiredHash = await hashToken(expiredToken)
     await env.DB.prepare(
@@ -370,8 +401,13 @@ describe('/api/auth/verify-email', () => {
     const expired = await verifyEmail(expiredToken)
     const used = await verifyEmail(usedToken)
     const unknown = await verifyEmail('unknown-token')
-    const missing = await onRequestGet(pagesContext(new Request(
+    const missing = await verifyEmailPost(pagesContext(new Request(
       'https://contest.example.com/api/auth/verify-email',
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({}),
+      },
     )))
 
     expect(expired.status).toBe(400)

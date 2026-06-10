@@ -8,7 +8,7 @@
       </div>
 
       <p v-if="isPending" class="form-success" role="status" aria-live="polite">
-        {{ t('verifyLead') }}
+        {{ t('pendingVerify') }}
       </p>
 
       <div v-else-if="isSuccess" class="form-success" role="status" aria-live="polite">
@@ -16,8 +16,15 @@
         <RouterLink class="auth-link" to="/login">{{ t('loginLink') }}</RouterLink>
       </div>
 
-      <div v-else class="form-error" role="alert" aria-live="polite">
+      <div v-else-if="errorMessage" class="form-error" role="alert" aria-live="polite">
         <span>{{ errorMessage }}</span>
+        <RouterLink class="auth-link" to="/login">{{ t('loginLink') }}</RouterLink>
+      </div>
+
+      <div v-else class="auth-actions">
+        <button class="btn btn-primary auth-submit" type="button" @click="confirmVerification">
+          {{ t('submitVerify') }}
+        </button>
         <RouterLink class="auth-link" to="/login">{{ t('loginLink') }}</RouterLink>
       </div>
     </div>
@@ -25,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import type { TranslationKey } from '../../i18n/translations'
 import { verifyEmail } from '../../services/api'
@@ -35,21 +42,19 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const isPending = ref(true)
+const token = typeof route.query.token === 'string' ? route.query.token : ''
+const isPending = ref(false)
 const isSuccess = ref(false)
-const errorMessage = ref('')
-let hasRequestedVerification = false
+const errorMessage = ref(token ? '' : props.t('missingTokenError'))
 
-onMounted(async () => {
-  if (hasRequestedVerification) return
-  hasRequestedVerification = true
-
-  const token = typeof route.query.token === 'string' ? route.query.token : ''
+async function confirmVerification() {
   if (!token) {
     errorMessage.value = props.t('missingTokenError')
-    isPending.value = false
     return
   }
+
+  isPending.value = true
+  errorMessage.value = ''
 
   try {
     await verifyEmail(token)
@@ -59,5 +64,5 @@ onMounted(async () => {
   } finally {
     isPending.value = false
   }
-})
+}
 </script>
