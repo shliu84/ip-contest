@@ -268,6 +268,63 @@ describe('/api/submissions', () => {
     expect(body.error.code).toBe('quota_exceeded')
   })
 
+  it('rejects draft creation if the quota is reached after the precheck', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+
+    for (let index = 0; index < MAX_DRAFT_SUBMISSIONS_PER_USER - 1; index += 1) {
+      await expect(createSubmission(cookie, { division: '2d' }))
+        .resolves.toMatchObject({ status: 201 })
+    }
+
+    const originalBatch = env.DB.batch.bind(env.DB)
+    const batchSpy = vi.spyOn(env.DB, 'batch')
+    batchSpy.mockImplementationOnce(async (statements) => {
+      await env.DB.prepare(
+        `INSERT INTO submissions (
+           id,
+           user_id,
+           submission_no,
+           status,
+           division,
+           fee_amount,
+           currency,
+           created_at,
+           updated_at
+         )
+         VALUES (?, ?, ?, 'draft', '2d', 10000, 'JPY', ?, ?)`,
+      )
+        .bind(
+          crypto.randomUUID(),
+          user.id,
+          `AIPC2026-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
+          '2026-06-10T04:00:00.000Z',
+          '2026-06-10T04:00:00.000Z',
+        )
+        .run()
+      return await originalBatch(statements)
+    })
+
+    try {
+      const response = await createSubmission(cookie, { division: '2d' })
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(409)
+      expect(body.error.code).toBe('quota_exceeded')
+    } finally {
+      batchSpy.mockRestore()
+    }
+
+    const count = await env.DB.prepare(
+      `SELECT COUNT(*) AS count
+       FROM submissions
+       WHERE user_id = ? AND status = 'draft'`,
+    )
+      .bind(user.id)
+      .first<{ count: number | string }>()
+    expect(Number(count?.count ?? 0)).toBe(MAX_DRAFT_SUBMISSIONS_PER_USER)
+  })
+
   it('lists only the current applicant submissions ordered newest first', async () => {
     const firstUser = await insertUser()
     const secondUser = await insertUser()

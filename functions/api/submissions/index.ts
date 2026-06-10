@@ -3,6 +3,7 @@ import { requireApplicant } from '../../_lib/authz'
 import { ApiRequestError, handleApi, json, readJson } from '../../_lib/http'
 import {
   assertRecord,
+  changedRows,
   createSubmissionNo,
   feeForDivision,
   isDivision,
@@ -61,7 +62,7 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
 
     const submissionId = crypto.randomUUID()
     const nowIso = new Date().toISOString()
-    await context.env.DB.batch([
+    const results = await context.env.DB.batch([
       context.env.DB.prepare(
         `INSERT INTO submissions (
            id,
@@ -74,7 +75,12 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
            created_at,
            updated_at
          )
-         VALUES (?, ?, ?, 'draft', ?, ?, 'JPY', ?, ?)`,
+         SELECT ?, ?, ?, 'draft', ?, ?, 'JPY', ?, ?
+         WHERE (
+           SELECT COUNT(*)
+           FROM submissions
+           WHERE user_id = ? AND status = 'draft'
+         ) < ?`,
       ).bind(
         submissionId,
         user.id,
@@ -83,16 +89,31 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
         feeForDivision(body.division),
         nowIso,
         nowIso,
+        user.id,
+        MAX_DRAFT_SUBMISSIONS_PER_USER,
       ),
       context.env.DB.prepare(
         `INSERT INTO submission_profiles (submission_id, email)
-         VALUES (?, ?)`,
-      ).bind(submissionId, user.email),
+         SELECT ?, ?
+         WHERE EXISTS (
+           SELECT 1
+           FROM submissions
+           WHERE id = ? AND user_id = ?
+         )`,
+      ).bind(submissionId, user.email, submissionId, user.id),
       context.env.DB.prepare(
         `INSERT INTO submission_works (submission_id)
-         VALUES (?)`,
-      ).bind(submissionId),
+         SELECT ?
+         WHERE EXISTS (
+           SELECT 1
+           FROM submissions
+           WHERE id = ? AND user_id = ?
+         )`,
+      ).bind(submissionId, submissionId, user.id),
     ])
+    if (changedRows(results[0]) === 0) {
+      throw new ApiRequestError('quota_exceeded', 'Draft submission limit reached', 409)
+    }
 
     const submission = await loadSubmission(context.env.DB, submissionId, user.id)
     if (!submission) {
