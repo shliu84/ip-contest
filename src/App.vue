@@ -7,28 +7,21 @@
     :t="t"
   />
 
-  <main>
-    <HeroSection :t="t" />
-    <AboutSection :t="t" />
-    <NewsSection :t="t" />
-    <TimelineSection :t="t" />
-    <TracksSection :t="t" />
-    <PrizesSection :t="t" />
-  </main>
+  <RouterView v-slot="{ Component, route }">
+    <component
+      :is="Component"
+      v-bind="route.name === 'home' ? { t } : {}"
+    />
+  </RouterView>
 
   <SiteFooter :t="t" />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import AboutSection from './components/AboutSection.vue'
-import HeroSection from './components/HeroSection.vue'
-import NewsSection from './components/NewsSection.vue'
-import PrizesSection from './components/PrizesSection.vue'
+import { RouterView } from 'vue-router'
 import SiteFooter from './components/SiteFooter.vue'
 import SiteHeader from './components/SiteHeader.vue'
-import TimelineSection from './components/TimelineSection.vue'
-import TracksSection from './components/TracksSection.vue'
 import { useLanguage } from './composables/useLanguage'
 import { useRibbonCanvas } from './composables/useRibbonCanvas'
 

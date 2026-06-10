@@ -6,12 +6,13 @@
     <div class="header-actions">
       <nav>
         <ul>
-          <li><a href="#hero">{{ t('navHome') }}</a></li>
-          <li><a href="#about">{{ t('navAbout') }}</a></li>
-          <li><a href="#news">{{ t('navNews') }}</a></li>
-          <li><a href="#timeline">{{ t('navTimeline') }}</a></li>
-          <li><a href="#tracks">{{ t('navTracks') }}</a></li>
-          <li><a href="#prizes">{{ t('navPrizes') }}</a></li>
+          <li><a href="/#hero">{{ t('navHome') }}</a></li>
+          <li><a href="/#about">{{ t('navAbout') }}</a></li>
+          <li><a href="/#news">{{ t('navNews') }}</a></li>
+          <li><a href="/#timeline">{{ t('navTimeline') }}</a></li>
+          <li><a href="/#tracks">{{ t('navTracks') }}</a></li>
+          <li><a href="/#judges">{{ t('navJudges') }}</a></li>
+          <li><a href="/#prizes">{{ t('navPrizes') }}</a></li>
         </ul>
       </nav>
       <div class="lang-switcher" aria-label="Language selector">

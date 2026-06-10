@@ -1,0 +1,44 @@
+export type ApiErrorCode =
+  | 'bad_request'
+  | 'unauthorized'
+  | 'forbidden'
+  | 'not_found'
+  | 'server_error'
+
+export class ApiRequestError extends Error {
+  code: ApiErrorCode
+  status: number
+
+  constructor(code: ApiErrorCode, message: string, status = 400) {
+    super(message)
+    this.name = 'ApiRequestError'
+    this.code = code
+    this.status = status
+  }
+}
+
+export function json(data: unknown, init: ResponseInit = {}) {
+  const headers = new Headers(init.headers)
+  headers.set('content-type', 'application/json; charset=utf-8')
+  return new Response(JSON.stringify(data), {
+    ...init,
+    headers,
+  })
+}
+
+export function apiError(code: ApiErrorCode, message: string, status = 400) {
+  return json({ error: { code, message } }, { status })
+}
+
+export async function readJson<T>(request: Request): Promise<T> {
+  const contentType = request.headers.get('content-type') || ''
+  if (!contentType.includes('application/json')) {
+    throw new ApiRequestError('bad_request', 'Expected application/json', 400)
+  }
+
+  try {
+    return await request.json() as T
+  } catch {
+    throw new ApiRequestError('bad_request', 'Malformed JSON body', 400)
+  }
+}

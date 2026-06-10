@@ -216,6 +216,63 @@
   font-weight: bold;
 }
 
+.judges-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 22px;
+}
+
+.judge-card {
+  min-height: 260px;
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.judge-avatar {
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(237, 21, 102, 0.3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--primary);
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  box-shadow: 5px 5px 0 rgba(237, 21, 102, 0.08);
+}
+
+.judge-number {
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.judge-card h3 {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.judge-role {
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.judge-bio {
+  color: var(--text-sub);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
 .prize-layout {
   display: flex;
   justify-content: center;
