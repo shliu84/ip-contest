@@ -2,7 +2,7 @@ import type { AppEnv } from '../../_lib/env'
 import { ApiRequestError, handleApi, json, readJson } from '../../_lib/http'
 import { hashPassword, verifyPassword } from '../../_lib/password'
 import { createSession } from '../../_lib/session'
-import { normalizeEmail, validateEmail } from '../../_lib/validation'
+import { normalizeEmail, validateEmail, validatePassword } from '../../_lib/validation'
 
 type LoginBody = {
   email?: unknown
@@ -32,6 +32,9 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
     const email = normalizeEmail(body.email)
     if (!validateEmail(email)) {
       throw new ApiRequestError('bad_request', 'Invalid email', 400)
+    }
+    if (!validatePassword(body.password)) {
+      throw new ApiRequestError('bad_request', 'Invalid password', 400)
     }
 
     const user = await context.env.DB.prepare(
@@ -75,6 +78,7 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
       },
     }, {
       headers: {
+        'cache-control': 'no-store',
         'set-cookie': cookie,
       },
     })

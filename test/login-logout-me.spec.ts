@@ -88,6 +88,12 @@ async function storedSessionForCookie(cookie: string) {
     .first<SessionRow>()
 }
 
+async function sessionCount() {
+  const row = await env.DB.prepare('SELECT COUNT(*) AS count FROM sessions')
+    .first<{ count: number }>()
+  return row?.count ?? 0
+}
+
 describe('/api/auth/login', () => {
   it('creates a session cookie and returns the verified user for correct credentials', async () => {
     const user = await insertUser({
@@ -102,6 +108,7 @@ describe('/api/auth/login', () => {
     })
 
     expect(response.status).toBe(200)
+    expect(response.headers.get('cache-control')).toBe('no-store')
     await expect(response.json()).resolves.toEqual({
       user: {
         id: user.id,
@@ -117,6 +124,7 @@ describe('/api/auth/login', () => {
     expect(cookie).toContain('SameSite=Lax')
     expect(cookie).toContain('Path=/')
     expect(cookie).toContain('Max-Age=604800')
+    expect(cookie).toContain('Secure')
 
     await expect(storedSessionForCookie(cookie!)).resolves.toMatchObject({
       user_id: user.id,
@@ -140,6 +148,8 @@ describe('/api/auth/login', () => {
 
     expect(unknown.status).toBe(401)
     expect(wrongPassword.status).toBe(401)
+    expect(unknown.headers.get('set-cookie')).toBeNull()
+    expect(wrongPassword.headers.get('set-cookie')).toBeNull()
     await expect(unknown.json()).resolves.toEqual({
       error: {
         code: 'unauthorized',
@@ -154,7 +164,23 @@ describe('/api/auth/login', () => {
     })
   })
 
-  it('rejects an unverified user with email_not_verified', async () => {
+  it('rejects an overlong password before creating a session', async () => {
+    await insertUser({
+      email: 'overlong@example.com',
+      password: 'correct horse battery staple',
+    })
+
+    const response = await postLogin({
+      email: 'overlong@example.com',
+      password: 'x'.repeat(129),
+    })
+
+    expect(response.status).toBe(400)
+    expect(response.headers.get('set-cookie')).toBeNull()
+    expect(await sessionCount()).toBe(0)
+  })
+
+  it('rejects an unverified user with email_not_verified without creating a session', async () => {
     await insertUser({
       email: 'unverified@example.com',
       emailVerifiedAt: null,
@@ -166,6 +192,8 @@ describe('/api/auth/login', () => {
     })
 
     expect(response.status).toBe(403)
+    expect(response.headers.get('set-cookie')).toBeNull()
+    expect(await sessionCount()).toBe(0)
     await expect(response.json()).resolves.toEqual({
       error: {
         code: 'email_not_verified',
@@ -234,5 +262,4 @@ describe('/api/auth/logout', () => {
     await expect(response.json()).resolves.toEqual({ ok: true })
     expect(response.headers.get('set-cookie')).toContain('Max-Age=0')
   })
-}
-)
+})
