@@ -4,7 +4,7 @@
     <h1 v-html="t('heroTitle')" />
     <p>{{ t('heroLead') }}</p>
     <div class="cta-group">
-      <a href="#" class="btn btn-primary">{{ t('ctaEntry') }}</a>
+      <a href="/login?redirect=/dashboard" class="btn btn-primary">{{ t('ctaEntry') }}</a>
       <a href="#about" class="btn btn-outline">{{ t('ctaAbout') }}</a>
     </div>
   </section>

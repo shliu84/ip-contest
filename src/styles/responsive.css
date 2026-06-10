@@ -28,6 +28,26 @@
     display: contents;
   }
 
+  .header-entry-links {
+    order: 2;
+    display: flex;
+    flex: 1 0 100%;
+    gap: 8px;
+    margin-inline: -14px;
+    overflow-x: auto;
+    padding: 0 14px 2px;
+    scrollbar-width: none;
+  }
+
+  .header-entry-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .header-entry-link {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
   .lang-switcher {
     order: 1;
     flex: 0 0 auto;
@@ -42,7 +62,7 @@
   }
 
   nav {
-    order: 2;
+    order: 3;
     flex: 1 0 100%;
     margin-inline: -14px;
     overflow-x: auto;
