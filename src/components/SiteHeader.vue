@@ -15,6 +15,12 @@
           <li><a href="/#prizes">{{ t('navPrizes') }}</a></li>
         </ul>
       </nav>
+      <div class="header-entry-links" role="group" :aria-label="t('ctaEntry')">
+        <a class="header-entry-link" href="/login">{{ t('loginLink') }}</a>
+        <a class="header-entry-link header-entry-link-primary" href="/login?redirect=/dashboard">
+          {{ t('ctaEntry') }}
+        </a>
+      </div>
       <div class="lang-switcher" aria-label="Language selector">
         <button
           v-for="lang in languages"
