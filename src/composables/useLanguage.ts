@@ -22,7 +22,6 @@ export function useLanguage() {
 
   watchEffect(() => {
     document.documentElement.lang = copy.value.lang
-    document.title = copy.value.title
   })
 
   return {

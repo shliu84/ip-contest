@@ -26,9 +26,11 @@ import SiteFooter from './components/SiteFooter.vue'
 import SiteHeader from './components/SiteHeader.vue'
 import { useLanguage } from './composables/useLanguage'
 import { useRibbonCanvas } from './composables/useRibbonCanvas'
+import { useSeoMetadata } from './composables/useSeoMetadata'
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const { currentLanguage, setLanguage, t } = useLanguage()
 
 useRibbonCanvas(canvasRef)
+useSeoMetadata(currentLanguage)
 </script>
