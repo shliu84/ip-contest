@@ -54,7 +54,9 @@
   font-weight: 800;
 }
 
-.form-field input {
+.form-field input,
+.form-field select,
+.form-field textarea {
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;
@@ -67,15 +69,29 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-field input:focus {
+.form-field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(237, 21, 102, 0.13);
 }
 
-.form-field input:disabled {
+.form-field input:disabled,
+.form-field select:disabled,
+.form-field textarea:disabled {
   color: var(--text-sub);
   background: rgba(255, 255, 255, 0.48);
   cursor: not-allowed;
+}
+
+.form-field select:disabled,
+.form-field input[type="file"]:disabled {
+  opacity: 0.72;
 }
 
 .form-error,
@@ -254,6 +270,155 @@
   border-bottom: 0;
 }
 
+.submission-editor-panel {
+  width: min(100%, 1120px);
+}
+
+.submission-editor-summary {
+  margin-bottom: 26px;
+}
+
+.submission-editor-form {
+  gap: 0;
+}
+
+.submission-editor-section {
+  display: grid;
+  gap: 18px;
+  padding: 26px 0;
+  border-top: 1px solid rgba(237, 21, 102, 0.14);
+}
+
+.submission-editor-section:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-field-wide {
+  grid-column: 1 / -1;
+}
+
+.checkbox-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.checkbox-field {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: var(--text-main);
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.checkbox-field input {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  accent-color: var(--primary);
+}
+
+.checkbox-field input:disabled {
+  cursor: not-allowed;
+}
+
+.submission-editor-actions {
+  padding-top: 6px;
+}
+
+.submission-file-section {
+  margin-top: 28px;
+  padding-bottom: 0;
+}
+
+.submission-file-groups {
+  display: grid;
+  gap: 18px;
+}
+
+.submission-file-group {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.54);
+  border: 1px solid rgba(237, 21, 102, 0.14);
+  border-radius: 8px;
+}
+
+.submission-file-group-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.submission-file-group h4 {
+  min-width: 0;
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.file-upload-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 10px 14px;
+  color: var(--primary);
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(237, 21, 102, 0.18);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 900;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.file-upload-control input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-upload-control:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(237, 21, 102, 0.13);
+}
+
+.file-upload-control.is-disabled,
+.file-upload-control:has(input:disabled) {
+  color: var(--text-sub);
+  background: rgba(255, 255, 255, 0.48);
+  cursor: not-allowed;
+}
+
+.file-upload-control:has(input:disabled) input {
+  cursor: not-allowed;
+}
+
+.submission-file-table {
+  min-width: 680px;
+}
+
+.auth-text-button:disabled {
+  color: var(--text-sub);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
 @media (max-width: 640px) {
   .auth-page {
     padding-top: 170px;
@@ -285,6 +450,24 @@
   .dashboard-summary dl > div {
     grid-template-columns: 1fr;
     gap: 5px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .submission-file-group {
+    padding: 14px 12px;
+  }
+
+  .submission-file-group-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .file-upload-control {
+    justify-content: center;
+    width: 100%;
   }
 
   .dashboard-table-wrap {
