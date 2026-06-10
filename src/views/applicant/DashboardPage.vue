@@ -103,7 +103,7 @@
                 <td :data-label="t('dashboardSubmissionAction')">
                   <RouterLink
                     class="auth-link"
-                    :to="`/submissions/${submission.id}`"
+                    :to="submissionActionPath(submission)"
                     :aria-label="submissionActionAriaLabel(submission)"
                   >
                     {{ submission.status === 'draft' ? t('dashboardEditSubmission') : t('dashboardViewSubmission') }}
@@ -125,6 +125,7 @@ import type { TranslationKey } from '../../i18n/translations'
 import { ApiClientError, createSubmission, listSubmissions } from '../../services/api'
 import { useSession } from '../../stores/session'
 import type { SubmissionDivision, SubmissionListItem, SubmissionStatus, UserRole } from '../../types/api'
+import { submissionActionPath } from './dashboard-routing'
 
 const props = defineProps<{
   t: (key: TranslationKey) => string

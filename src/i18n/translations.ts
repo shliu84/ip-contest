@@ -127,6 +127,28 @@ export type TranslationKey =
   | 'submissionSavePending'
   | 'submissionSaveSuccess'
   | 'submissionSaveError'
+  | 'submissionProceedToPayment'
+  | 'submissionProceedPending'
+  | 'submissionProceedError'
+  | 'paymentKicker'
+  | 'paymentTitle'
+  | 'paymentLead'
+  | 'paymentLoading'
+  | 'paymentLoadError'
+  | 'paymentMockConfirm'
+  | 'paymentMockConfirmPending'
+  | 'paymentMockConfirmError'
+  | 'paymentBackToEditor'
+  | 'paymentAlreadySubmitted'
+  | 'paymentUnavailable'
+  | 'paymentSuccessTitle'
+  | 'paymentSuccessLead'
+  | 'paymentSuccessMissing'
+  | 'paymentSubmittedAt'
+  | 'paymentPaidAt'
+  | 'paymentCancelTitle'
+  | 'paymentCancelLead'
+  | 'paymentReturnToPayment'
   | 'submissionBackToDashboard'
   | 'submissionDetailsTitle'
   | 'submissionDivisionLabel'
@@ -332,6 +354,28 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionSavePending: '正在保存...',
     submissionSaveSuccess: '投稿已保存。',
     submissionSaveError: '无法保存投稿，请稍后再试。',
+    submissionProceedToPayment: '进入付款',
+    submissionProceedPending: '正在准备付款...',
+    submissionProceedError: '无法进入付款，请检查投稿内容后重试。',
+    paymentKicker: '付款',
+    paymentTitle: '确认付款',
+    paymentLead: '确认投稿金额，并在沙盒环境中模拟付款成功。',
+    paymentLoading: '正在读取投稿...',
+    paymentLoadError: '无法读取付款信息，请稍后再试。',
+    paymentMockConfirm: '模拟付款成功',
+    paymentMockConfirmPending: '正在确认...',
+    paymentMockConfirmError: '无法确认付款，请稍后再试。',
+    paymentBackToEditor: '返回投稿编辑',
+    paymentAlreadySubmitted: '该投稿已完成提交。',
+    paymentUnavailable: '当前状态无法付款。',
+    paymentSuccessTitle: '投稿已完成',
+    paymentSuccessLead: '付款已确认，投稿已正式提交。',
+    paymentSuccessMissing: '无法确认投稿信息。',
+    paymentSubmittedAt: '提交时间',
+    paymentPaidAt: '付款时间',
+    paymentCancelTitle: '付款已取消',
+    paymentCancelLead: '投稿仍保留在待付款状态。你可以返回付款页继续。',
+    paymentReturnToPayment: '返回付款页',
     submissionBackToDashboard: '返回控制台',
     submissionDetailsTitle: '投稿信息',
     submissionDivisionLabel: '赛道',
@@ -531,6 +575,28 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionSavePending: '保存中...',
     submissionSaveSuccess: '応募作品を保存しました。',
     submissionSaveError: '応募作品を保存できませんでした。時間をおいて再度お試しください。',
+    submissionProceedToPayment: '支払いへ進む',
+    submissionProceedPending: '支払い準備中...',
+    submissionProceedError: '支払いへ進めませんでした。応募内容を確認して再度お試しください。',
+    paymentKicker: '支払い',
+    paymentTitle: '支払い確認',
+    paymentLead: '応募料を確認し、サンドボックス環境で支払い成功をシミュレートします。',
+    paymentLoading: '応募作品を読み込み中...',
+    paymentLoadError: '支払い情報を読み込めませんでした。時間をおいて再度お試しください。',
+    paymentMockConfirm: '支払い成功をシミュレート',
+    paymentMockConfirmPending: '確認中...',
+    paymentMockConfirmError: '支払いを確認できませんでした。時間をおいて再度お試しください。',
+    paymentBackToEditor: '応募作品編集に戻る',
+    paymentAlreadySubmitted: 'この応募作品は提出済みです。',
+    paymentUnavailable: '現在のステータスでは支払いできません。',
+    paymentSuccessTitle: '応募が完了しました',
+    paymentSuccessLead: '支払いが確認され、応募作品が正式に提出されました。',
+    paymentSuccessMissing: '応募情報を確認できませんでした。',
+    paymentSubmittedAt: '提出日時',
+    paymentPaidAt: '支払い日時',
+    paymentCancelTitle: '支払いがキャンセルされました',
+    paymentCancelLead: '応募作品は支払い待ちの状態で保存されています。支払いページに戻って続行できます。',
+    paymentReturnToPayment: '支払いページに戻る',
     submissionBackToDashboard: 'ダッシュボードに戻る',
     submissionDetailsTitle: '応募情報',
     submissionDivisionLabel: '部門',
@@ -730,6 +796,28 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionSavePending: 'Saving...',
     submissionSaveSuccess: 'Submission saved.',
     submissionSaveError: 'Submission could not be saved. Please try again later.',
+    submissionProceedToPayment: 'Proceed to Payment',
+    submissionProceedPending: 'Preparing payment...',
+    submissionProceedError: 'Payment could not be prepared. Please check the submission and try again.',
+    paymentKicker: 'Payment',
+    paymentTitle: 'Confirm Payment',
+    paymentLead: 'Confirm the submission fee and simulate a successful payment in the sandbox.',
+    paymentLoading: 'Loading submission...',
+    paymentLoadError: 'Payment information could not be loaded. Please try again later.',
+    paymentMockConfirm: 'Simulate Payment Success',
+    paymentMockConfirmPending: 'Confirming...',
+    paymentMockConfirmError: 'Payment could not be confirmed. Please try again later.',
+    paymentBackToEditor: 'Back to Submission Editor',
+    paymentAlreadySubmitted: 'This submission has already been submitted.',
+    paymentUnavailable: 'Payment is unavailable for the current status.',
+    paymentSuccessTitle: 'Submission Complete',
+    paymentSuccessLead: 'Payment has been confirmed and the submission has been officially submitted.',
+    paymentSuccessMissing: 'Submission information could not be confirmed.',
+    paymentSubmittedAt: 'Submitted',
+    paymentPaidAt: 'Paid',
+    paymentCancelTitle: 'Payment Canceled',
+    paymentCancelLead: 'The submission remains in payment pending status. You can return to the payment page to continue.',
+    paymentReturnToPayment: 'Return to Payment',
     submissionBackToDashboard: 'Back to Dashboard',
     submissionDetailsTitle: 'Submission Details',
     submissionDivisionLabel: 'Division',

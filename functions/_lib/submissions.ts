@@ -84,6 +84,16 @@ export function assertDraft(status: SubmissionStatus) {
   }
 }
 
+export function assertPaymentPending(status: SubmissionStatus) {
+  if (status !== 'payment_pending') {
+    throw new ApiRequestError(
+      'invalid_submission',
+      'Only payment pending submissions can be confirmed',
+      409,
+    )
+  }
+}
+
 export function changedRows(result: D1Result) {
   return Number(result.meta.changes ?? 0)
 }
@@ -218,4 +228,27 @@ export function mapSubmission(row: SubmissionDetailRow, files: SubmissionFileRow
       uploadedAt: file.uploaded_at,
     })),
   }
+}
+
+export type SubmissionModel = ReturnType<typeof mapSubmission>
+
+export function assertReadyForPayment(submission: SubmissionModel) {
+  if (
+    !hasText(submission.profile.lastName)
+    || !hasText(submission.profile.firstName)
+    || !hasText(submission.profile.email)
+    || !hasText(submission.profile.countryRegion)
+    || !hasText(submission.work.characterName)
+    || !hasText(submission.work.themeAndSetting)
+    || !hasText(submission.work.payerName)
+    || !submission.work.usagePermission
+    || !submission.work.termsAccepted
+    || submission.files.length === 0
+  ) {
+    throw new ApiRequestError('bad_request', 'Submission is incomplete', 400)
+  }
+}
+
+function hasText(value: string) {
+  return value.trim().length > 0
 }
