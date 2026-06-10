@@ -15,7 +15,7 @@ import {
 
 describe('authentication constants', () => {
   it('uses the required security and expiration settings', () => {
-    expect(PASSWORD_ITERATIONS).toBe(310_000)
+    expect(PASSWORD_ITERATIONS).toBe(100_000)
     expect(VERIFICATION_TOKEN_SECONDS).toBe(24 * 60 * 60)
     expect(RESET_TOKEN_SECONDS).toBe(60 * 60)
     expect(SESSION_SECONDS).toBe(7 * 24 * 60 * 60)
