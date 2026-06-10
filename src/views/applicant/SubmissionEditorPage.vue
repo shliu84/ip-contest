@@ -214,6 +214,15 @@
             <button class="btn btn-primary auth-submit" type="submit" :disabled="controlsDisabled">
               {{ isSaving ? t('submissionSavePending') : t('submissionSave') }}
             </button>
+            <button
+              v-if="!isReadOnly"
+              class="btn btn-outline auth-submit"
+              type="button"
+              :disabled="controlsDisabled"
+              @click="proceedToPayment"
+            >
+              {{ isProceedingToPayment ? t('submissionProceedPending') : t('submissionProceedToPayment') }}
+            </button>
             <RouterLink class="auth-link" to="/dashboard">{{ t('submissionBackToDashboard') }}</RouterLink>
           </div>
         </form>
@@ -296,6 +305,7 @@ import {
   createSubmission,
   deleteSubmissionFile,
   getSubmission,
+  submitSubmission,
   updateSubmission,
   uploadSubmissionFile,
 } from '../../services/api'
@@ -338,6 +348,7 @@ const filesHeadingId = 'submission-files-heading'
 const submission = ref<Submission | null>(null)
 const isLoading = ref(false)
 const isSaving = ref(false)
+const isProceedingToPayment = ref(false)
 const loadError = ref('')
 const saveError = ref('')
 const saveSuccess = ref('')
@@ -356,9 +367,25 @@ const isReadOnly = computed(() => submission.value?.status !== 'draft')
 const hasDeletingFiles = computed(() => deletingFileIds.value.size > 0)
 const hasActiveUpload = computed(() => uploadingType.value !== null)
 const hasFileMutation = computed(() => hasActiveUpload.value || hasDeletingFiles.value)
-const controlsDisabled = computed(() => isReadOnly.value || isSaving.value || hasFileMutation.value)
-const uploadDisabled = computed(() => isReadOnly.value || isSaving.value || hasFileMutation.value)
-const deleteDisabled = computed(() => isReadOnly.value || isSaving.value || hasActiveUpload.value || hasDeletingFiles.value)
+const controlsDisabled = computed(() => (
+  isReadOnly.value
+  || isSaving.value
+  || isProceedingToPayment.value
+  || hasFileMutation.value
+))
+const uploadDisabled = computed(() => (
+  isReadOnly.value
+  || isSaving.value
+  || isProceedingToPayment.value
+  || hasFileMutation.value
+))
+const deleteDisabled = computed(() => (
+  isReadOnly.value
+  || isSaving.value
+  || isProceedingToPayment.value
+  || hasActiveUpload.value
+  || hasDeletingFiles.value
+))
 
 const groupedFiles = computed<Record<SubmissionFileType, SubmissionFile[]>>(() => {
   const groups: Record<SubmissionFileType, SubmissionFile[]> = {
@@ -387,6 +414,7 @@ async function initialize() {
   const sequence = ++loadSequence
   isLoading.value = true
   isSaving.value = false
+  isProceedingToPayment.value = false
   loadError.value = ''
   saveError.value = ''
   saveSuccess.value = ''
@@ -465,6 +493,33 @@ async function saveSubmission() {
   } finally {
     if (isCurrentSubmissionRoute(submissionId)) {
       isSaving.value = false
+    }
+  }
+}
+
+async function proceedToPayment() {
+  if (!submission.value || controlsDisabled.value) {
+    return
+  }
+
+  const submissionId = submission.value.id
+  isProceedingToPayment.value = true
+  saveError.value = ''
+  saveSuccess.value = ''
+
+  try {
+    const response = await submitSubmission(submissionId)
+    if (isCurrentSubmissionRoute(submissionId)) {
+      applySubmission(response.submission)
+      await router.push(`/submissions/${submissionId}/payment`)
+    }
+  } catch (error) {
+    if (isCurrentSubmissionRoute(submissionId)) {
+      saveError.value = translatedError(error, 'submissionProceedError')
+    }
+  } finally {
+    if (isCurrentSubmissionRoute(submissionId)) {
+      isProceedingToPayment.value = false
     }
   }
 }

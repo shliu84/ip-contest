@@ -127,6 +127,9 @@ export type TranslationKey =
   | 'submissionSavePending'
   | 'submissionSaveSuccess'
   | 'submissionSaveError'
+  | 'submissionProceedToPayment'
+  | 'submissionProceedPending'
+  | 'submissionProceedError'
   | 'submissionBackToDashboard'
   | 'submissionDetailsTitle'
   | 'submissionDivisionLabel'
@@ -332,6 +335,9 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionSavePending: '正在保存...',
     submissionSaveSuccess: '投稿已保存。',
     submissionSaveError: '无法保存投稿，请稍后再试。',
+    submissionProceedToPayment: '进入付款',
+    submissionProceedPending: '正在准备付款...',
+    submissionProceedError: '无法进入付款，请检查投稿内容后重试。',
     submissionBackToDashboard: '返回控制台',
     submissionDetailsTitle: '投稿信息',
     submissionDivisionLabel: '赛道',
@@ -531,6 +537,9 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionSavePending: '保存中...',
     submissionSaveSuccess: '応募作品を保存しました。',
     submissionSaveError: '応募作品を保存できませんでした。時間をおいて再度お試しください。',
+    submissionProceedToPayment: '支払いへ進む',
+    submissionProceedPending: '支払い準備中...',
+    submissionProceedError: '支払いへ進めませんでした。応募内容を確認して再度お試しください。',
     submissionBackToDashboard: 'ダッシュボードに戻る',
     submissionDetailsTitle: '応募情報',
     submissionDivisionLabel: '部門',
@@ -730,6 +739,9 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionSavePending: 'Saving...',
     submissionSaveSuccess: 'Submission saved.',
     submissionSaveError: 'Submission could not be saved. Please try again later.',
+    submissionProceedToPayment: 'Proceed to Payment',
+    submissionProceedPending: 'Preparing payment...',
+    submissionProceedError: 'Payment could not be prepared. Please check the submission and try again.',
     submissionBackToDashboard: 'Back to Dashboard',
     submissionDetailsTitle: 'Submission Details',
     submissionDivisionLabel: 'Division',
