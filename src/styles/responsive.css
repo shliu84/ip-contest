@@ -978,12 +978,22 @@
   }
 
   .hero-subtitle {
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     letter-spacing: 2px;
   }
 
   .about-card h2 {
-    font-size: 2rem;
+    font-size: 1.72rem;
+  }
+
+  #about .sec-title h2,
+  #news .sec-title h2,
+  #timeline .sec-title h2,
+  #tracks .sec-title h2,
+  #benefits .sec-title h2,
+  #judges .sec-title h2,
+  #prizes .sec-title h2 {
+    font-size: 1.72rem;
   }
 
   .about-card {
@@ -1039,7 +1049,7 @@
   }
 
   .benefit-card.featured h3 {
-    font-size: 1.35rem;
+    font-size: 1.22rem;
   }
 
   .past-events-grid {
