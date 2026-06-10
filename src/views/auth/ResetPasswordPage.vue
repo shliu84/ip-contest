@@ -22,6 +22,7 @@
             type="password"
             required
             minlength="10"
+            maxlength="128"
             :disabled="isPending || !token"
           >
         </div>
@@ -35,6 +36,7 @@
             type="password"
             required
             minlength="10"
+            maxlength="128"
             :disabled="isPending || !token"
           >
         </div>

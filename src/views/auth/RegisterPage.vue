@@ -40,6 +40,7 @@
             type="password"
             required
             minlength="10"
+            maxlength="128"
             :disabled="isPending"
           >
         </div>
@@ -53,6 +54,7 @@
             type="password"
             required
             minlength="10"
+            maxlength="128"
             :disabled="isPending"
           >
         </div>

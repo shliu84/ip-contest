@@ -30,6 +30,12 @@ declare module 'vue-router' {
 
 const applicantMeta: RouteMeta = {
   requiresAuth: true,
+  roles: ['applicant'],
+  usesTranslations: true,
+}
+
+const accountMeta: RouteMeta = {
+  requiresAuth: true,
   usesTranslations: true,
 }
 
@@ -47,7 +53,7 @@ export const router = createRouter({
     { path: '/verify-email', name: 'verify-email', component: VerifyEmailPage, meta: { usesTranslations: true } },
     { path: '/forgot-password', name: 'forgot-password', component: ForgotPasswordPage, meta: { guestOnly: true, usesTranslations: true } },
     { path: '/reset-password', name: 'reset-password', component: ResetPasswordPage, meta: { usesTranslations: true } },
-    { path: '/dashboard', name: 'dashboard', component: DashboardPage, meta: applicantMeta },
+    { path: '/dashboard', name: 'dashboard', component: DashboardPage, meta: accountMeta },
     { path: '/submissions/new', name: 'submission-new', component: SubmissionEditorPage, meta: applicantMeta },
     { path: '/submissions/:id', name: 'submission-edit', component: SubmissionEditorPage, meta: applicantMeta },
     { path: '/submissions/:id/payment', name: 'submission-payment', component: PaymentPage, meta: applicantMeta },
@@ -79,7 +85,9 @@ router.beforeEach(async (to) => {
   }
 
   if (to.meta.guestOnly && user) {
-    return { name: 'dashboard' }
+    return user.role === 'committee' || user.role === 'super_admin'
+      ? { name: 'admin' }
+      : { name: 'dashboard' }
   }
 
   if (to.meta.roles && user && !to.meta.roles.includes(user.role)) {

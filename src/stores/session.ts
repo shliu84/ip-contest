@@ -12,19 +12,24 @@ export function useSession() {
     const requestId = activeSessionRequest + 1
     activeSessionRequest = requestId
     isLoadingSession.value = true
+    let didLoadSession = false
     try {
       const data = await apiFetch<MeResponse>('/api/me')
       if (requestId === activeSessionRequest) {
         currentUser.value = data.user
+        didLoadSession = true
       }
     } catch (error) {
       if (requestId === activeSessionRequest) {
         currentUser.value = null
       }
+      throw error
     } finally {
       if (requestId === activeSessionRequest) {
         isLoadingSession.value = false
-        hasLoadedSession.value = true
+        if (didLoadSession) {
+          hasLoadedSession.value = true
+        }
       }
     }
   }
