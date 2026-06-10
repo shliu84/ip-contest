@@ -237,7 +237,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { ApiClientError, getAdminSubmission, updateAdminSubmissionStatus } from '../../services/api'
 import type {
@@ -257,6 +257,7 @@ const isUpdatingStatus = ref(false)
 const loadError = ref('')
 const statusError = ref('')
 const statusSuccess = ref('')
+let loadRequestId = 0
 
 const submissionId = computed(() => {
   const id = route.params.id
@@ -282,40 +283,61 @@ const fullName = computed(() => {
   return fieldValue([lastName, firstName].filter(Boolean).join(' '))
 })
 
-onMounted(() => {
-  void loadSubmission()
-})
+watch(
+  submissionId,
+  (id) => {
+    void loadSubmission(id)
+  },
+  { immediate: true },
+)
 
-async function loadSubmission() {
+async function loadSubmission(id: string) {
+  const requestId = ++loadRequestId
+  submission.value = null
   loadError.value = ''
   statusError.value = ''
   statusSuccess.value = ''
   isLoading.value = true
 
   try {
-    const response = await getAdminSubmission(submissionId.value)
+    const response = await getAdminSubmission(id)
+    if (requestId !== loadRequestId) {
+      return
+    }
     submission.value = response.submission
   } catch (error) {
+    if (requestId !== loadRequestId) {
+      return
+    }
     loadError.value = errorText(error, 'Failed to load submission.')
   } finally {
-    isLoading.value = false
+    if (requestId === loadRequestId) {
+      isLoading.value = false
+    }
   }
 }
 
 async function updateStatus(status: SubmissionStatus) {
-  if (!submission.value) {
+  if (isUpdatingStatus.value || !submission.value) {
     return
   }
 
+  const targetSubmissionId = submission.value.id
   statusError.value = ''
   statusSuccess.value = ''
   isUpdatingStatus.value = true
 
   try {
-    const response = await updateAdminSubmissionStatus(submission.value.id, { status })
+    const response = await updateAdminSubmissionStatus(targetSubmissionId, { status })
+    if (targetSubmissionId !== submissionId.value) {
+      return
+    }
     submission.value = response.submission
     statusSuccess.value = 'Status updated.'
   } catch (error) {
+    if (targetSubmissionId !== submissionId.value) {
+      return
+    }
     statusError.value = errorText(error, 'Failed to update status.')
   } finally {
     isUpdatingStatus.value = false
