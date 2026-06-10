@@ -235,17 +235,78 @@
 
   .hero {
     min-height: auto;
-    padding-top: 108px;
+    padding: 108px 20px 56px;
+  }
+
+  .hero-badge {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    max-width: 100%;
+    padding: 8px 14px;
+    white-space: nowrap;
   }
 
   .hero h1 {
-    font-size: clamp(3rem, 15vw, 4.4rem);
-    line-height: 0.98;
+    font-size: clamp(2.34rem, 10vw, 2.86rem);
+    letter-spacing: 0.012em;
+    line-height: 0.96;
+    margin-bottom: 14px;
+    max-width: 100%;
+    overflow-wrap: normal;
+  }
+
+  .hero-title-line {
+    display: block;
+    white-space: nowrap;
   }
 
   .hero-place {
-    font-size: 0.62em;
-    line-height: 1.12;
+    display: block;
+    font-size: 0.56em;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+    margin-top: 0.14em;
+    white-space: nowrap;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.32rem, 6.2vw, 1.62rem);
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+  }
+
+  .hero p {
+    inline-size: min(100%, 18rem);
+    font-size: 0.96rem;
+    line-height: 1.72;
+    margin-bottom: 24px;
+    max-width: none;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+  }
+
+  .hero .cta-group {
+    align-self: flex-start;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    inline-size: calc(100vw - 40px);
+    max-inline-size: 340px;
+  }
+
+  .hero .cta-group .btn {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    min-width: 0;
+    padding: 12px 6px;
+    font-size: clamp(0.68rem, 3vw, 0.78rem);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    text-align: center;
+    white-space: normal;
   }
 
   .hero-meta-strip {
@@ -299,7 +360,7 @@
     background: var(--primary);
     border: 0;
     border-radius: 50%;
-    box-shadow: 5px 5px 0 rgba(237, 21, 102, 0.16);
+    box-shadow: 0 12px 28px rgba(237, 21, 102, 0.22);
     color: #fff;
     cursor: pointer;
     display: flex;
@@ -324,7 +385,7 @@
   }
 
   .mobile-section-nav.open .mobile-section-nav-toggle {
-    box-shadow: 7px 7px 0 rgba(237, 21, 102, 0.2);
+    box-shadow: 0 16px 34px rgba(237, 21, 102, 0.26);
     transform: translateY(-2px);
   }
 
@@ -648,7 +709,7 @@
     background: var(--primary);
     border-color: var(--primary);
     color: #fff;
-    box-shadow: 3px 3px 0 rgba(237, 21, 102, 0.16);
+    box-shadow: 0 8px 18px rgba(237, 21, 102, 0.16);
   }
 
   .about-page-layout .event-page-nav,
