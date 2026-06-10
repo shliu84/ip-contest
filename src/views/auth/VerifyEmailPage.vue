@@ -21,7 +21,7 @@
         <RouterLink class="auth-link" to="/login">{{ t('loginLink') }}</RouterLink>
       </div>
 
-      <div v-else class="auth-actions">
+      <div v-else class="form-actions">
         <button class="btn btn-primary auth-submit" type="button" @click="confirmVerification">
           {{ t('submitVerify') }}
         </button>
