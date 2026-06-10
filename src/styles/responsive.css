@@ -239,6 +239,11 @@
     line-height: 0.98;
   }
 
+  .hero-place {
+    font-size: 0.62em;
+    line-height: 1.12;
+  }
+
   .hero-meta-strip {
     border-radius: 14px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
