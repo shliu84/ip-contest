@@ -3,6 +3,9 @@ export type ApiErrorCode =
   | 'unauthorized'
   | 'forbidden'
   | 'not_found'
+  | 'conflict'
+  | 'email_not_verified'
+  | 'email_delivery_failed'
   | 'server_error'
 
 export class ApiRequestError extends Error {
@@ -28,6 +31,16 @@ export function json(data: unknown, init: ResponseInit = {}) {
 
 export function apiError(code: ApiErrorCode, message: string, status = 400) {
   return json({ error: { code, message } }, { status })
+}
+
+export function handleApi(handler: () => Promise<Response>) {
+  return handler().catch((error: unknown) => {
+    if (error instanceof ApiRequestError) {
+      return apiError(error.code, error.message, error.status)
+    }
+    console.error(error)
+    return apiError('server_error', 'Internal server error', 500)
+  })
 }
 
 export async function readJson<T>(request: Request): Promise<T> {

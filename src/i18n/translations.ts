@@ -48,6 +48,63 @@ export type TranslationKey =
   | 'popularTitle'
   | 'popularText'
   | 'footer'
+  | 'authKicker'
+  | 'registerTitle'
+  | 'registerLead'
+  | 'loginTitle'
+  | 'loginLead'
+  | 'verifyTitle'
+  | 'verifyLead'
+  | 'forgotTitle'
+  | 'forgotLead'
+  | 'resetTitle'
+  | 'resetLead'
+  | 'dashboardKicker'
+  | 'dashboardTitle'
+  | 'dashboardLead'
+  | 'emailLabel'
+  | 'passwordLabel'
+  | 'confirmPasswordLabel'
+  | 'submitRegister'
+  | 'submitLogin'
+  | 'submitForgot'
+  | 'submitReset'
+  | 'submitVerify'
+  | 'pendingRegister'
+  | 'pendingLogin'
+  | 'pendingForgot'
+  | 'pendingReset'
+  | 'pendingVerify'
+  | 'successRegisterTitle'
+  | 'successRegisterText'
+  | 'successForgotText'
+  | 'successResetText'
+  | 'successVerifyText'
+  | 'errorVerifyText'
+  | 'missingTokenError'
+  | 'errorGeneric'
+  | 'errorPasswordMismatch'
+  | 'errorPasswordRequirements'
+  | 'loginLink'
+  | 'registerLink'
+  | 'forgotPasswordLink'
+  | 'backToLogin'
+  | 'retryRegister'
+  | 'dashboardEmailLabel'
+  | 'dashboardRoleLabel'
+  | 'dashboardLogout'
+  | 'dashboardLogoutPending'
+  | 'dashboardWelcome'
+  | 'roleApplicant'
+  | 'roleCommittee'
+  | 'roleJudge'
+  | 'roleSuperAdmin'
+  | 'apiErrorBadRequest'
+  | 'apiErrorConflict'
+  | 'apiErrorEmailDeliveryFailed'
+  | 'apiErrorUnauthorized'
+  | 'apiErrorEmailNotVerified'
+  | 'apiErrorRequestFailed'
 
 export type Translation = {
   lang: string
@@ -105,6 +162,63 @@ export const translations: Record<LanguageCode, Translation> = {
     popularTitle: '人气奖',
     popularText: '3名 / 颁发证书与限定周边',
     footer: 'ASIA IP CONTEST in TOKYO 2026. All rights reserved.',
+    authKicker: '账户',
+    registerTitle: '创建账户',
+    registerLead: '使用邮箱和密码创建参赛账户。提交后请前往邮箱完成验证。',
+    loginTitle: '登录',
+    loginLead: '登录后可以管理投稿、付款和账户信息。',
+    verifyTitle: '验证邮箱',
+    verifyLead: '请点击按钮完成邮箱验证。',
+    forgotTitle: '忘记密码',
+    forgotLead: '输入账户邮箱，我们会发送重置密码的链接。',
+    resetTitle: '重置密码',
+    resetLead: '设置新的账户密码。',
+    dashboardKicker: '参赛者',
+    dashboardTitle: '控制台',
+    dashboardLead: '你已登录 ASIA IP CONTEST 账户。',
+    emailLabel: '邮箱',
+    passwordLabel: '密码',
+    confirmPasswordLabel: '确认密码',
+    submitRegister: '创建账户',
+    submitLogin: '登录',
+    submitForgot: '发送重置链接',
+    submitReset: '更新密码',
+    submitVerify: '验证邮箱',
+    pendingRegister: '正在创建...',
+    pendingLogin: '正在登录...',
+    pendingForgot: '正在发送...',
+    pendingReset: '正在更新...',
+    pendingVerify: '正在确认...',
+    successRegisterTitle: '请检查邮箱',
+    successRegisterText: '验证链接已发送。完成邮箱验证后即可登录。',
+    successForgotText: '如果该邮箱已注册并完成验证，我们会发送重置密码的链接。',
+    successResetText: '密码已更新。你现在可以使用新密码登录。',
+    successVerifyText: '邮箱验证完成。你现在可以登录。',
+    errorVerifyText: '无法验证该链接，请确认链接是否完整或是否已过期。',
+    missingTokenError: '链接缺少验证信息，请从邮件中重新打开。',
+    errorGeneric: '请求未完成，请稍后再试。',
+    errorPasswordMismatch: '两次输入的密码不一致。',
+    errorPasswordRequirements: '密码至少需要 10 个字符。',
+    loginLink: '前往登录',
+    registerLink: '创建账户',
+    forgotPasswordLink: '忘记密码？',
+    backToLogin: '返回登录',
+    retryRegister: '重新填写',
+    dashboardEmailLabel: '邮箱',
+    dashboardRoleLabel: '角色',
+    dashboardLogout: '退出登录',
+    dashboardLogoutPending: '正在退出...',
+    dashboardWelcome: '账户状态',
+    roleApplicant: '参赛者',
+    roleCommittee: '委员会',
+    roleJudge: '评委',
+    roleSuperAdmin: '超级管理员',
+    apiErrorBadRequest: '输入内容无效，请检查后重试。',
+    apiErrorConflict: '该邮箱已注册。',
+    apiErrorEmailDeliveryFailed: '验证邮件暂时无法发送，请稍后重试。',
+    apiErrorUnauthorized: '邮箱或密码不正确。',
+    apiErrorEmailNotVerified: '请先完成邮箱验证后再登录。',
+    apiErrorRequestFailed: '请求失败，请稍后再试。',
   },
   ja: {
     lang: 'ja',
@@ -156,6 +270,63 @@ export const translations: Record<LanguageCode, Translation> = {
     popularTitle: '人気賞',
     popularText: '3名 / 証書と限定グッズを授与',
     footer: 'ASIA IP CONTEST in TOKYO 2026. All rights reserved.',
+    authKicker: 'アカウント',
+    registerTitle: 'アカウント作成',
+    registerLead: 'メールアドレスとパスワードで応募用アカウントを作成します。送信後、メール認証を完了してください。',
+    loginTitle: 'ログイン',
+    loginLead: 'ログインすると、応募作品・支払い・アカウント情報を管理できます。',
+    verifyTitle: 'メール認証',
+    verifyLead: 'ボタンを押してメール認証を完了してください。',
+    forgotTitle: 'パスワードを忘れた場合',
+    forgotLead: 'アカウントのメールアドレスを入力してください。パスワード再設定リンクを送信します。',
+    resetTitle: 'パスワード再設定',
+    resetLead: '新しいアカウントパスワードを設定します。',
+    dashboardKicker: '応募者',
+    dashboardTitle: 'ダッシュボード',
+    dashboardLead: 'ASIA IP CONTEST アカウントにログインしています。',
+    emailLabel: 'メールアドレス',
+    passwordLabel: 'パスワード',
+    confirmPasswordLabel: 'パスワード確認',
+    submitRegister: 'アカウントを作成',
+    submitLogin: 'ログイン',
+    submitForgot: '再設定リンクを送信',
+    submitReset: 'パスワードを更新',
+    submitVerify: 'メール認証',
+    pendingRegister: '作成中...',
+    pendingLogin: 'ログイン中...',
+    pendingForgot: '送信中...',
+    pendingReset: '更新中...',
+    pendingVerify: '確認中...',
+    successRegisterTitle: 'メールをご確認ください',
+    successRegisterText: '認証リンクを送信しました。メール認証が完了するとログインできます。',
+    successForgotText: 'このメールアドレスが登録済みで認証済みの場合、再設定リンクを送信します。',
+    successResetText: 'パスワードを更新しました。新しいパスワードでログインできます。',
+    successVerifyText: 'メール認証が完了しました。ログインできます。',
+    errorVerifyText: 'このリンクを認証できません。リンクが完全か、期限切れでないかをご確認ください。',
+    missingTokenError: 'リンクに必要な情報がありません。メールからもう一度開いてください。',
+    errorGeneric: 'リクエストを完了できませんでした。時間をおいて再度お試しください。',
+    errorPasswordMismatch: '入力したパスワードが一致しません。',
+    errorPasswordRequirements: 'パスワードは10文字以上で入力してください。',
+    loginLink: 'ログインへ',
+    registerLink: 'アカウント作成',
+    forgotPasswordLink: 'パスワードを忘れた場合',
+    backToLogin: 'ログインに戻る',
+    retryRegister: '入力し直す',
+    dashboardEmailLabel: 'メールアドレス',
+    dashboardRoleLabel: 'ロール',
+    dashboardLogout: 'ログアウト',
+    dashboardLogoutPending: 'ログアウト中...',
+    dashboardWelcome: 'アカウント状態',
+    roleApplicant: '応募者',
+    roleCommittee: '委員会',
+    roleJudge: '審査員',
+    roleSuperAdmin: 'スーパー管理者',
+    apiErrorBadRequest: '入力内容が正しくありません。確認して再度お試しください。',
+    apiErrorConflict: 'このメールアドレスはすでに登録されています。',
+    apiErrorEmailDeliveryFailed: '認証メールを送信できませんでした。時間をおいて再度お試しください。',
+    apiErrorUnauthorized: 'メールアドレスまたはパスワードが正しくありません。',
+    apiErrorEmailNotVerified: 'ログインする前にメール認証を完了してください。',
+    apiErrorRequestFailed: 'リクエストに失敗しました。時間をおいて再度お試しください。',
   },
   en: {
     lang: 'en',
@@ -207,5 +378,62 @@ export const translations: Record<LanguageCode, Translation> = {
     popularTitle: 'Popular Award',
     popularText: '3 winners / Certificate and limited merchandise',
     footer: 'ASIA IP CONTEST in TOKYO 2026. All rights reserved.',
+    authKicker: 'Account',
+    registerTitle: 'Create Account',
+    registerLead: 'Create your applicant account with an email address and password. Please verify your email after submitting.',
+    loginTitle: 'Login',
+    loginLead: 'Log in to manage submissions, payments, and account details.',
+    verifyTitle: 'Verify Email',
+    verifyLead: 'Click the button to verify your email.',
+    forgotTitle: 'Forgot Password',
+    forgotLead: 'Enter your account email and we will send a password reset link.',
+    resetTitle: 'Reset Password',
+    resetLead: 'Set a new account password.',
+    dashboardKicker: 'Applicant',
+    dashboardTitle: 'Dashboard',
+    dashboardLead: 'You are signed in to your ASIA IP CONTEST account.',
+    emailLabel: 'Email',
+    passwordLabel: 'Password',
+    confirmPasswordLabel: 'Confirm Password',
+    submitRegister: 'Create Account',
+    submitLogin: 'Login',
+    submitForgot: 'Send Reset Link',
+    submitReset: 'Update Password',
+    submitVerify: 'Verify Email',
+    pendingRegister: 'Creating...',
+    pendingLogin: 'Logging in...',
+    pendingForgot: 'Sending...',
+    pendingReset: 'Updating...',
+    pendingVerify: 'Verifying...',
+    successRegisterTitle: 'Check Your Email',
+    successRegisterText: 'We sent a verification link. You can log in after verifying your email.',
+    successForgotText: 'If that email is registered and verified, we will send a password reset link.',
+    successResetText: 'Your password has been updated. You can now log in with the new password.',
+    successVerifyText: 'Your email is verified. You can now log in.',
+    errorVerifyText: 'We could not verify this link. Please check that the link is complete and has not expired.',
+    missingTokenError: 'This link is missing verification details. Please reopen it from your email.',
+    errorGeneric: 'The request could not be completed. Please try again later.',
+    errorPasswordMismatch: 'The passwords do not match.',
+    errorPasswordRequirements: 'Password must be at least 10 characters.',
+    loginLink: 'Go to Login',
+    registerLink: 'Create Account',
+    forgotPasswordLink: 'Forgot password?',
+    backToLogin: 'Back to Login',
+    retryRegister: 'Edit Details',
+    dashboardEmailLabel: 'Email',
+    dashboardRoleLabel: 'Role',
+    dashboardLogout: 'Log Out',
+    dashboardLogoutPending: 'Logging out...',
+    dashboardWelcome: 'Account Status',
+    roleApplicant: 'Applicant',
+    roleCommittee: 'Committee',
+    roleJudge: 'Judge',
+    roleSuperAdmin: 'Super Admin',
+    apiErrorBadRequest: 'The information is invalid. Please check and try again.',
+    apiErrorConflict: 'This email is already registered.',
+    apiErrorEmailDeliveryFailed: 'Verification email could not be sent. Please try again later.',
+    apiErrorUnauthorized: 'Email or password is incorrect.',
+    apiErrorEmailNotVerified: 'Please verify your email before logging in.',
+    apiErrorRequestFailed: 'The request failed. Please try again later.',
   },
 }

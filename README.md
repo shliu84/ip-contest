@@ -44,6 +44,15 @@ npm run build
 
 The build checks the Vue app, typechecks Cloudflare Functions with `tsconfig.functions.json`, and then creates the Vite production build.
 
+Run the Workers/D1 test suite:
+
+```bash
+npm test
+npm run test:typecheck
+```
+
+On Windows, the Cloudflare Vitest pool currently fails when the real project path contains non-ASCII characters. If that happens, copy the project to an ASCII-only temporary path and run `npm ci && npm test` there.
+
 Preview the production build locally:
 
 ```bash
@@ -70,23 +79,26 @@ In `.dev.vars`, replace:
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
 - `APP_BASE_URL`
 
 ## D1 Schema
 
-Apply the schema to the local D1 database first:
+Use D1 migrations for local and remote databases. Apply migrations locally first:
 
 ```bash
-npx wrangler d1 execute asia-ip-contest-2026 --local --file schema.sql
+npx wrangler d1 migrations apply asia-ip-contest-2026 --local
 ```
 
-After confirming the local schema, apply it to the remote Cloudflare D1 database:
+After confirming local migrations and tests, apply the same migrations to the remote Cloudflare D1 database:
 
 ```bash
-npx wrangler d1 execute asia-ip-contest-2026 --file schema.sql
+npx wrangler d1 migrations apply asia-ip-contest-2026 --remote
 ```
 
-The remote command mutates the Cloudflare-bound database configured in `wrangler.toml`.
+The remote command mutates the Cloudflare-bound database configured in `wrangler.toml`. Confirm the target account, project, and database before running it.
+
+`schema.sql` is kept as a complete reference schema for fresh installs and review. Prefer the `migrations/` directory for operational changes.
 
 ## Production Configuration
 
@@ -94,6 +106,8 @@ Before deploying production, confirm:
 
 - `wrangler.toml` points to the production D1 database and R2 bucket.
 - Cloudflare Pages has the same D1 and R2 bindings as `wrangler.toml`.
-- Cloudflare Pages environment variables contain production values for `SESSION_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`, and `APP_BASE_URL`.
+- Cloudflare Pages environment variables contain production values for `SESSION_SECRET`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, and `APP_BASE_URL`.
 - Stripe webhook delivery is configured for the deployed `/api/stripe/webhook` endpoint.
 - Resend is configured with the verified sending domain for production email.
+
+Stripe remains part of the submission/payment phase. The authentication phase does not call Stripe.
