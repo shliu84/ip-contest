@@ -5,6 +5,46 @@ import { hashPassword } from '../functions/_lib/password'
 import { createSession } from '../functions/_lib/session'
 import { pagesContext } from './helpers/pages-context'
 
+type SubmissionResponseBody = {
+  submission: {
+    id: string
+    submissionNo: string
+    status: string
+    division: string
+    feeAmount: number
+    currency: string
+    profile: {
+      lastName: string
+      firstName: string
+      certificateLanguage: string
+    }
+    work: {
+      characterName: string
+      usagePermission: boolean
+      termsAccepted: boolean
+    }
+    files: unknown[]
+    fileCount?: unknown
+  }
+}
+
+type SubmissionListItem = {
+  id: string
+  submissionNo: string
+  status: string
+  division: string
+  feeAmount: number
+  currency: string
+  createdAt: string
+  updatedAt: string
+  characterName: string
+  fileCount: number
+}
+
+type SubmissionListResponseBody = {
+  submissions: SubmissionListItem[]
+}
+
 async function insertUser(role: 'applicant' | 'committee' = 'applicant') {
   const user = {
     id: crypto.randomUUID(),
@@ -50,6 +90,10 @@ async function listSubmissions(cookie?: string) {
   )))
 }
 
+async function jsonBody<T>(response: Response): Promise<T> {
+  return await response.json() as T
+}
+
 describe('/api/submissions', () => {
   it('requires an applicant session for listing and creating submissions', async () => {
     const noSessionList = await listSubmissions()
@@ -74,7 +118,7 @@ describe('/api/submissions', () => {
     const response = await createSubmission(cookie, { division: 'corporate' })
 
     expect(response.status).toBe(201)
-    const body = await response.json()
+    const body = await jsonBody<SubmissionResponseBody>(response)
     expect(body.submission).toMatchObject({
       status: 'draft',
       division: 'corporate',
@@ -93,6 +137,7 @@ describe('/api/submissions', () => {
       files: [],
     })
     expect(body.submission.submissionNo).toMatch(/^AIPC2026-[0-9A-F]{8}$/)
+    expect(body.submission).not.toHaveProperty('fileCount')
   })
 
   it('lists only the current applicant submissions ordered newest first', async () => {
@@ -105,8 +150,8 @@ describe('/api/submissions', () => {
     await createSubmission(secondCookie, { division: 'ai' })
     const secondCreate = await createSubmission(firstCookie, { division: '3d' })
 
-    const firstBody = await firstCreate.json()
-    const secondBody = await secondCreate.json()
+    const firstBody = await jsonBody<SubmissionResponseBody>(firstCreate)
+    const secondBody = await jsonBody<SubmissionResponseBody>(secondCreate)
     await env.DB.prepare(
       `UPDATE submissions
        SET created_at = ?
@@ -125,8 +170,24 @@ describe('/api/submissions', () => {
     const response = await listSubmissions(firstCookie)
 
     expect(response.status).toBe(200)
-    const body = await response.json()
+    const body = await jsonBody<SubmissionListResponseBody>(response)
     expect(body.submissions).toHaveLength(2)
-    expect(body.submissions.map((item: { division: string }) => item.division)).toEqual(['3d', '2d'])
+    expect(body.submissions.map((item) => item.division)).toEqual(['3d', '2d'])
+    expect(body.submissions[0]).toMatchObject({
+      characterName: '',
+      fileCount: 0,
+    })
+    expect(Object.keys(body.submissions[0]).sort()).toEqual([
+      'id',
+      'submissionNo',
+      'status',
+      'division',
+      'feeAmount',
+      'currency',
+      'createdAt',
+      'updatedAt',
+      'characterName',
+      'fileCount',
+    ].sort())
   })
 })
