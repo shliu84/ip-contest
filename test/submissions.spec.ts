@@ -186,8 +186,12 @@ async function submitSubmission(submissionId: string, cookie: string | undefined
   )))
 }
 
-async function mockConfirmPayment(cookie: string | undefined, body: unknown) {
-  return await onRequestPostMockConfirm(pagesContext(new Request(
+async function mockConfirmPayment(
+  cookie: string | undefined,
+  body: unknown,
+  mockPaymentsEnabled = true,
+) {
+  const context = pagesContext(new Request(
     'https://contest.example.com/api/payments/mock-confirm',
     {
       method: 'POST',
@@ -197,7 +201,12 @@ async function mockConfirmPayment(cookie: string | undefined, body: unknown) {
       },
       body: JSON.stringify(body),
     },
-  )))
+  ))
+  context.env = {
+    ...context.env,
+    MOCK_PAYMENTS_ENABLED: mockPaymentsEnabled ? 'true' : 'false',
+  }
+  return await onRequestPostMockConfirm(context)
 }
 
 async function jsonBody<T>(response: Response): Promise<T> {
@@ -1087,6 +1096,69 @@ describe('/api/submissions', () => {
       .resolves.toMatchObject({ status: 409 })
   })
 
+  it('rejects submit if readiness changes before payment_pending is written', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    const originalPrepare = env.DB.prepare.bind(env.DB)
+    const prepareSpy = vi.spyOn(env.DB, 'prepare')
+
+    prepareSpy.mockImplementation((query) => {
+      const statement = originalPrepare(query)
+      if (
+        typeof query === 'string'
+        && query.includes("SET status = 'payment_pending'")
+      ) {
+        const originalBind = statement.bind.bind(statement)
+        return {
+          ...statement,
+          bind(...values: unknown[]) {
+            const bound = originalBind(...values)
+            const originalRun = bound.run.bind(bound)
+            return {
+              ...bound,
+              async run() {
+                await env.DB.prepare(
+                  `DELETE FROM submission_files
+                   WHERE submission_id = ?`,
+                )
+                  .bind(submissionId)
+                  .run()
+                return await originalRun()
+              },
+            }
+          },
+        } as D1PreparedStatement
+      }
+      return statement
+    })
+
+    try {
+      const response = await submitSubmission(submissionId, cookie)
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(400)
+      expect(body.error.code).toBe('bad_request')
+    } finally {
+      prepareSpy.mockRestore()
+    }
+
+    const submissionResponse = await getSubmission(submissionId, cookie)
+    const submissionBody = await jsonBody<SubmissionResponseBody>(submissionResponse)
+    expect(submissionBody.submission.status).toBe('draft')
+    expect(submissionBody.submission.files).toHaveLength(0)
+  })
+
+  it('requires applicant role for submit and mock confirmation', async () => {
+    const committee = await insertUser('committee')
+    const committeeCookie = await sessionCookie(committee.id)
+
+    await expect(submitSubmission(crypto.randomUUID(), committeeCookie))
+      .resolves.toMatchObject({ status: 403 })
+    await expect(mockConfirmPayment(committeeCookie, { submissionId: crypto.randomUUID() }))
+      .resolves.toMatchObject({ status: 403 })
+  })
+
   it('mock-confirms a payment pending submission as submitted', async () => {
     const user = await insertUser()
     const cookie = await sessionCookie(user.id)
@@ -1127,5 +1199,18 @@ describe('/api/submissions', () => {
       .resolves.toMatchObject({ status: 200 })
     await expect(mockConfirmPayment(ownerCookie, { submissionId }))
       .resolves.toMatchObject({ status: 409 })
+  })
+
+  it('keeps mock confirmation disabled unless explicitly enabled', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    await submitSubmission(submissionId, cookie)
+
+    const response = await mockConfirmPayment(cookie, { submissionId }, false)
+    const body = await jsonBody<{ error: { code: string } }>(response)
+
+    expect(response.status).toBe(403)
+    expect(body.error.code).toBe('forbidden')
   })
 })

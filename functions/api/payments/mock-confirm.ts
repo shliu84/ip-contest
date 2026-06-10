@@ -18,6 +18,10 @@ const NO_STORE_HEADERS = {
 
 export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
   return handleApi(async () => {
+    if (context.env.MOCK_PAYMENTS_ENABLED !== 'true') {
+      throw new ApiRequestError('forbidden', 'Mock payments are disabled', 403)
+    }
+
     const user = await requireApplicant(context.env.DB, context.request)
     const body = parseMockConfirmBody(await readJson<unknown>(context.request))
     const submission = await loadSubmission(context.env.DB, body.submissionId, user.id)

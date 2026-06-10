@@ -28,11 +28,41 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
       `UPDATE submissions
        SET status = 'payment_pending',
            updated_at = ?
-       WHERE id = ? AND user_id = ? AND status = 'draft'`,
+       WHERE id = ? AND user_id = ? AND status = 'draft'
+         AND EXISTS (
+           SELECT 1
+           FROM submission_profiles p
+           WHERE p.submission_id = submissions.id
+             AND TRIM(p.last_name) <> ''
+             AND TRIM(p.first_name) <> ''
+             AND TRIM(p.email) <> ''
+             AND TRIM(p.country_region) <> ''
+         )
+         AND EXISTS (
+           SELECT 1
+           FROM submission_works w
+           WHERE w.submission_id = submissions.id
+             AND TRIM(w.character_name) <> ''
+             AND TRIM(w.theme_and_setting) <> ''
+             AND TRIM(w.payer_name) <> ''
+             AND w.usage_permission = 1
+             AND w.terms_accepted = 1
+         )
+         AND EXISTS (
+           SELECT 1
+           FROM submission_files f
+           WHERE f.submission_id = submissions.id
+         )`,
     )
       .bind(nowIso, submissionId, user.id)
       .run()
     if (changedRows(result) === 0) {
+      const currentSubmission = await loadSubmission(context.env.DB, submissionId, user.id)
+      if (!currentSubmission) {
+        throw new ApiRequestError('not_found', 'Submission not found', 404)
+      }
+      assertDraft(currentSubmission.status)
+      assertReadyForPayment(currentSubmission)
       throw new ApiRequestError('invalid_submission', 'Only draft submissions can be changed', 409)
     }
 

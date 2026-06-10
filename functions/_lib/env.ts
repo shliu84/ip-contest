@@ -7,4 +7,5 @@ export type AppEnv = {
   RESEND_API_KEY: string
   RESEND_FROM_EMAIL: string
   APP_BASE_URL: string
+  MOCK_PAYMENTS_ENABLED?: string
 }
