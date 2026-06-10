@@ -501,14 +501,15 @@
 
 .event-page-nav {
   --event-nav-progress: 0;
-  background: rgba(255, 255, 255, 0.68);
-  border: 1px solid rgba(237, 21, 102, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.66));
+  border: 1px solid rgba(30, 30, 34, 0.08);
   border-radius: 18px;
+  box-shadow: 0 20px 44px rgba(30, 30, 34, 0.06);
   display: grid;
-  gap: 6px;
+  gap: 4px;
   margin-top: 82px;
   overflow: hidden;
-  padding: 18px;
+  padding: 20px 18px 18px;
   position: sticky;
   top: 148px;
   z-index: 2;
@@ -519,7 +520,7 @@
   content: '';
   left: 22px;
   position: absolute;
-  top: 58px;
+  top: 106px;
   width: 1px;
 }
 
@@ -530,18 +531,18 @@
 
 .event-page-nav::after {
   background: var(--primary);
-  height: calc(100% - 76px);
+  height: calc(100% - 124px);
   transform: scaleY(var(--event-nav-progress));
   transform-origin: top;
   transition: transform 0.16s ease-out;
 }
 
 .event-page-nav-title {
-  border-bottom: 1px solid rgba(30, 30, 34, 0.08);
+  border-bottom: 1px solid rgba(237, 21, 102, 0.14);
   display: grid;
-  gap: 6px;
-  margin-bottom: 10px;
-  padding-bottom: 14px;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 18px;
 }
 
 .event-page-nav-title span {
@@ -552,11 +553,13 @@
   line-height: 1;
 }
 
-.event-page-nav-title strong {
+.event-page-nav-title h1 {
   color: var(--text-main);
-  font-size: 1rem;
+  font-size: 1.18rem;
   font-weight: 800;
-  line-height: 1.35;
+  letter-spacing: 0.02em;
+  line-height: 1.28;
+  margin: 0;
 }
 
 .event-page-nav-link {

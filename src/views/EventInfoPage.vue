@@ -8,7 +8,7 @@
       >
         <div class="event-page-nav-title">
           <span>{{ copy.nav.titleEyebrow }}</span>
-          <strong>{{ copy.nav.title }}</strong>
+          <h1>{{ copy.nav.title }}</h1>
         </div>
         <a
           v-for="item in copy.nav.items"
@@ -175,8 +175,6 @@
         :active-href="activeHref"
         :items="copy.nav.items"
         :label="copy.nav.label"
-        :title="copy.nav.title"
-        :title-eyebrow="copy.nav.titleEyebrow"
       />
     </div>
   </main>
