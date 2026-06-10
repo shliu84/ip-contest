@@ -141,6 +141,14 @@ export type TranslationKey =
   | 'paymentBackToEditor'
   | 'paymentAlreadySubmitted'
   | 'paymentUnavailable'
+  | 'paymentSuccessTitle'
+  | 'paymentSuccessLead'
+  | 'paymentSuccessMissing'
+  | 'paymentSubmittedAt'
+  | 'paymentPaidAt'
+  | 'paymentCancelTitle'
+  | 'paymentCancelLead'
+  | 'paymentReturnToPayment'
   | 'submissionBackToDashboard'
   | 'submissionDetailsTitle'
   | 'submissionDivisionLabel'
@@ -360,6 +368,14 @@ export const translations: Record<LanguageCode, Translation> = {
     paymentBackToEditor: '返回投稿编辑',
     paymentAlreadySubmitted: '该投稿已完成提交。',
     paymentUnavailable: '当前状态无法付款。',
+    paymentSuccessTitle: '投稿已完成',
+    paymentSuccessLead: '付款已确认，投稿已正式提交。',
+    paymentSuccessMissing: '无法确认投稿信息。',
+    paymentSubmittedAt: '提交时间',
+    paymentPaidAt: '付款时间',
+    paymentCancelTitle: '付款已取消',
+    paymentCancelLead: '投稿仍保留在待付款状态。你可以返回付款页继续。',
+    paymentReturnToPayment: '返回付款页',
     submissionBackToDashboard: '返回控制台',
     submissionDetailsTitle: '投稿信息',
     submissionDivisionLabel: '赛道',
@@ -573,6 +589,14 @@ export const translations: Record<LanguageCode, Translation> = {
     paymentBackToEditor: '応募作品編集に戻る',
     paymentAlreadySubmitted: 'この応募作品は提出済みです。',
     paymentUnavailable: '現在のステータスでは支払いできません。',
+    paymentSuccessTitle: '応募が完了しました',
+    paymentSuccessLead: '支払いが確認され、応募作品が正式に提出されました。',
+    paymentSuccessMissing: '応募情報を確認できませんでした。',
+    paymentSubmittedAt: '提出日時',
+    paymentPaidAt: '支払い日時',
+    paymentCancelTitle: '支払いがキャンセルされました',
+    paymentCancelLead: '応募作品は支払い待ちの状態で保存されています。支払いページに戻って続行できます。',
+    paymentReturnToPayment: '支払いページに戻る',
     submissionBackToDashboard: 'ダッシュボードに戻る',
     submissionDetailsTitle: '応募情報',
     submissionDivisionLabel: '部門',
@@ -786,6 +810,14 @@ export const translations: Record<LanguageCode, Translation> = {
     paymentBackToEditor: 'Back to Submission Editor',
     paymentAlreadySubmitted: 'This submission has already been submitted.',
     paymentUnavailable: 'Payment is unavailable for the current status.',
+    paymentSuccessTitle: 'Submission Complete',
+    paymentSuccessLead: 'Payment has been confirmed and the submission has been officially submitted.',
+    paymentSuccessMissing: 'Submission information could not be confirmed.',
+    paymentSubmittedAt: 'Submitted',
+    paymentPaidAt: 'Paid',
+    paymentCancelTitle: 'Payment Canceled',
+    paymentCancelLead: 'The submission remains in payment pending status. You can return to the payment page to continue.',
+    paymentReturnToPayment: 'Return to Payment',
     submissionBackToDashboard: 'Back to Dashboard',
     submissionDetailsTitle: 'Submission Details',
     submissionDivisionLabel: 'Division',
