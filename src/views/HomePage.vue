@@ -22,7 +22,6 @@
     <TracksSection :t="t" />
     <BenefitsSection :current-language="currentLanguage" />
     <JudgesSection :current-language="currentLanguage" :t="t" />
-    <PrizesSection :t="t" />
   </main>
 </template>
 
@@ -33,7 +32,6 @@ import BenefitsSection from '../components/BenefitsSection.vue'
 import HeroSection from '../components/HeroSection.vue'
 import JudgesSection from '../components/JudgesSection.vue'
 import NewsSection from '../components/NewsSection.vue'
-import PrizesSection from '../components/PrizesSection.vue'
 import TimelineSection from '../components/TimelineSection.vue'
 import TracksSection from '../components/TracksSection.vue'
 import type { LanguageCode, TranslationKey } from '../i18n/translations'
@@ -51,7 +49,6 @@ const sectionDots = [
   { href: '#tracks', label: 'Categories' },
   { href: '#benefits', label: 'Benefits' },
   { href: '#judges', label: 'Judges' },
-  { href: '#prizes', label: 'Prizes' },
 ]
 
 const activeSectionHref = ref('#hero')

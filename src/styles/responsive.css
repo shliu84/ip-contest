@@ -1,4 +1,8 @@
 @media (max-width: 992px) {
+  body {
+    padding-bottom: 74px;
+  }
+
   header {
     align-items: center;
     flex-wrap: wrap;
@@ -37,11 +41,12 @@
   .header-entry-links {
     order: 2;
     display: flex;
-    flex: 1 0 100%;
+    flex: 1 0 auto;
     gap: 8px;
-    margin-inline: -14px;
+    margin-left: auto;
+    margin-inline: 0;
     overflow-x: auto;
-    padding: 0 14px 2px;
+    padding: 0;
     scrollbar-width: none;
   }
 
@@ -68,12 +73,20 @@
   }
 
   nav {
-    order: 3;
-    flex: 1 0 100%;
-    margin-inline: -14px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(237, 21, 102, 0.12);
+    border-radius: 20px 20px 0 0;
+    border-bottom: 0;
+    bottom: 0;
+    box-shadow: 0 -12px 34px rgba(237, 21, 102, 0.08);
+    left: 0;
+    margin-inline: 0;
     overflow-x: auto;
-    padding: 1px 14px 3px;
+    padding: 8px 10px 10px;
+    position: fixed;
+    right: 0;
     scrollbar-width: none;
+    z-index: 120;
   }
 
   nav::-webkit-scrollbar {
@@ -81,20 +94,42 @@
   }
 
   nav ul {
-    gap: 8px;
-    width: max-content;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: 100%;
   }
 
   nav a {
-    padding: 7px 11px;
-    border: 1px solid rgba(237, 21, 102, 0.12);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.7);
-    white-space: nowrap;
+    align-items: center;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
+    padding: 7px 4px;
+    white-space: normal;
   }
 
   nav a::after {
     display: none;
+  }
+
+  .nav-eyebrow {
+    display: none;
+  }
+
+  .nav-label,
+  .nav-link-en .nav-label {
+    font-size: 11px;
+    letter-spacing: 0;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  nav a.router-link-exact-active {
+    background: rgba(237, 21, 102, 0.08);
   }
 
   .hero {
@@ -109,12 +144,20 @@
     display: none;
   }
 
+  .back-to-top {
+    bottom: 88px;
+    font-size: 1rem;
+    height: 40px;
+    right: 18px;
+    width: 40px;
+  }
+
   .subpage-hero {
-    padding-top: 175px;
+    padding-top: 150px;
   }
 
   .subpage-hero h1 {
-    font-size: 2.3rem;
+    font-size: 1.75rem;
   }
 
   .foreword-card {
@@ -131,10 +174,6 @@
 
   .foreword-body {
     grid-column: auto;
-  }
-
-  .purpose-grid {
-    grid-template-columns: 1fr;
   }
 
   .purpose-row {
@@ -154,6 +193,7 @@
 
   .event-page-layout {
     display: block;
+    padding-top: 150px;
   }
 
   .event-page-nav {
@@ -161,6 +201,7 @@
     gap: 8px;
     margin-bottom: 10px;
     margin-inline: -14px;
+    margin-top: 0;
     overflow-x: auto;
     padding: 10px 14px 12px;
     position: static;
@@ -283,7 +324,7 @@
   }
 
   .tracks-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .benefits-layout {
@@ -303,20 +344,16 @@
   }
 
   .prize-layout {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .prize-card {
-    width: 100%;
-  }
-
-  .prize-card.gold {
-    transform: scale(1);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 640px) {
+  .tracks-grid,
+  .prize-layout {
+    grid-template-columns: 1fr;
+  }
+
   .event-judge-detail-card {
     gap: 14px;
     grid-template-columns: 96px 1fr;

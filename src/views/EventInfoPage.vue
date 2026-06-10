@@ -1,10 +1,5 @@
 <template>
   <main>
-    <section class="subpage-hero container">
-      <div class="subpage-kicker">EVENT INFO</div>
-      <h1>{{ copy.title }}</h1>
-      <p>{{ copy.lead }}</p>
-    </section>
     <div class="event-page-layout container">
       <aside
         class="event-page-nav"
@@ -256,12 +251,11 @@ const pageCopy = {
     schedule: {
       title: '赛事日程',
       items: [
-        { period: 'Entry', title: '全球作品征集期', body: '具体日期将在确定后公布。' },
-        { period: 'Online', title: '线上展示', body: '投稿作品将在官方网站线上会场依次公开。' },
-        { period: 'Vote', title: '大众人气票选', body: '参赛者和观众可以从多元视角关注作品的 IP 潜力。' },
-        { period: 'Review', title: '专业评委复审', body: '专业评委将对作品进行综合评审。' },
-        { period: 'Exhibition', title: '线下会场展示', body: '优秀作品将在东京六本木会场进行特别展示。' },
-        { period: 'Award', title: '颁奖典礼与公布', body: '结果发表和相关活动信息将另行公布。' },
+        { period: 'Entry', title: '全球作品征集期', body: '募集期间：2026年7月1日 - 2026年10月7日。' },
+        { period: 'Online', title: '线上展示', body: '2026年10月起，投稿作品将在官方网站线上会场依次公开。' },
+        { period: 'Review', title: '专业评委复审', body: '2026年10月 - 2026年11月，专业评委将对作品进行综合评审。' },
+        { period: 'Exhibition', title: '线下会场展示', body: '2026年11月，优秀作品将在东京六本木会场进行特别展示。' },
+        { period: 'Award', title: '颁奖典礼与公布', body: '2026年11月，公布结果并举办相关活动。' },
       ],
     },
     participation: {
@@ -360,12 +354,11 @@ const pageCopy = {
     schedule: {
       title: 'スケジュール',
       items: [
-        { period: 'Entry', title: 'グローバル作品募集期間', body: '具体的な日程は決定次第公開します。' },
-        { period: 'Online', title: 'オンライン展示', body: '応募作品は公式ページのオンライン会場で順次公開予定です。' },
-        { period: 'Vote', title: '一般人気投票', body: '参加者と来場者が多様な視点からIPの可能性に触れる機会をつくります。' },
-        { period: 'Review', title: '専門審査員による審査', body: '専門審査員が作品を総合的に審査します。' },
-        { period: 'Exhibition', title: 'リアル会場展示', body: '上位作品は東京・六本木の会場で特別展示予定です。' },
-        { period: 'Award', title: '授賞式・結果発表', body: '結果発表と関連イベントの詳細は追って公開します。' },
+        { period: 'Entry', title: 'グローバル作品募集期間', body: '募集期間：2026年7月1日 - 2026年10月7日。' },
+        { period: 'Online', title: 'オンライン展示', body: '2026年10月より、応募作品は公式ページのオンライン会場で順次公開予定です。' },
+        { period: 'Review', title: '専門審査員による審査', body: '2026年10月〜2026年11月に、専門審査員が作品を総合的に審査します。' },
+        { period: 'Exhibition', title: 'リアル会場展示', body: '2026年11月、上位作品は東京・六本木の会場で特別展示予定です。' },
+        { period: 'Award', title: '授賞式・結果発表', body: '2026年11月、結果発表と関連イベントを予定しています。' },
       ],
     },
     participation: {
@@ -464,12 +457,11 @@ const pageCopy = {
     schedule: {
       title: 'Schedule',
       items: [
-        { period: 'Entry', title: 'Global submission period', body: 'Detailed dates will be announced once confirmed.' },
-        { period: 'Online', title: 'Online exhibition', body: 'Submitted works will be published progressively in the online venue on the official website.' },
-        { period: 'Vote', title: 'Public popularity vote', body: 'Participants and visitors can explore the IP potential of works from diverse perspectives.' },
-        { period: 'Review', title: 'Professional jury review', body: 'Professional judges will conduct a comprehensive review of submitted works.' },
-        { period: 'Exhibition', title: 'Physical venue exhibition', body: 'Top works are planned for special exhibition at a venue in Roppongi, Tokyo.' },
-        { period: 'Award', title: 'Award ceremony and results', body: 'Details on results announcements and related events will be released later.' },
+        { period: 'Entry', title: 'Global submission period', body: 'Submission period: July 1, 2026 - October 7, 2026.' },
+        { period: 'Online', title: 'Online exhibition', body: 'From October 2026, submitted works will be published progressively in the online venue on the official website.' },
+        { period: 'Review', title: 'Professional jury review', body: 'From October to November 2026, professional judges will conduct a comprehensive review of submitted works.' },
+        { period: 'Exhibition', title: 'Physical venue exhibition', body: 'In November 2026, top works are planned for special exhibition at a venue in Roppongi, Tokyo.' },
+        { period: 'Award', title: 'Award ceremony and results', body: 'In November 2026, results announcements and related events are planned.' },
       ],
     },
     participation: {

@@ -26,9 +26,10 @@ defineProps<{
 }>()
 
 const timelineItems: Array<{ date: string; key: TranslationKey; isMuted?: boolean }> = [
-  { date: '06.01 - 08.31', key: 'timeline1' },
-  { date: '09.01 - 09.15', key: 'timeline2', isMuted: true },
-  { date: '09.16 - 09.30', key: 'timeline3', isMuted: true },
-  { date: '10.15', key: 'timeline4', isMuted: true },
+  { date: '07.01 - 10.07', key: 'timeline1' },
+  { date: '2026.10~', key: 'timeline2', isMuted: true },
+  { date: '2026.10~11', key: 'timeline3', isMuted: true },
+  { date: '2026.11', key: 'timeline5', isMuted: true },
+  { date: '2026.11', key: 'timeline4', isMuted: true },
 ]
 </script>

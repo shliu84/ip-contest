@@ -1,112 +1,129 @@
 <template>
   <main>
-    <section class="subpage-hero container">
-      <div class="subpage-kicker">ABOUT US</div>
-      <h1>{{ copy.title }}</h1>
-      <p>{{ copy.lead }}</p>
-    </section>
-    <section class="foreword-section section-padding container">
-      <article class="glass-card foreword-card">
-        <div class="foreword-heading">
-          <span>Foreword</span>
-          <h2>{{ copy.foreword.title }}</h2>
-        </div>
-        <div class="foreword-signature">
-          <div class="foreword-photo-placeholder" aria-hidden="true">
-            <span>PHOTO</span>
-          </div>
-          <h3>{{ copy.foreword.name }}</h3>
-          <p>{{ copy.foreword.role }}</p>
-        </div>
-        <div class="foreword-body">
-          <p
-            v-for="paragraph in copy.foreword.opening"
-            :key="paragraph"
-          >
-            {{ paragraph }}
-          </p>
-          <ul class="foreword-list">
-            <li
-              v-for="item in copy.foreword.focusItems"
-              :key="item.title"
-            >
-              <strong>{{ item.title }}</strong>
-              <span>{{ item.text }}</span>
-            </li>
-          </ul>
-          <p
-            v-for="paragraph in copy.foreword.closing"
-            :key="paragraph"
-          >
-            {{ paragraph }}
-          </p>
-        </div>
-      </article>
-    </section>
-    <section class="purpose-section section-padding container">
-      <div class="sec-title">
-        <span>Purpose</span>
-        <h2>{{ copy.purpose.title }}</h2>
-      </div>
-      <div class="purpose-grid">
-        <article
-          v-for="item in copy.purpose.items"
-          :key="item.title"
-          class="glass-card purpose-card"
+    <div class="event-page-layout container">
+      <aside
+        class="event-page-nav"
+        :aria-label="copy.nav.label"
+        :style="navProgressStyle"
+      >
+        <div class="event-page-nav-title">ON THIS PAGE</div>
+        <a
+          v-for="item in copy.nav.items"
+          :key="item.href"
+          class="event-page-nav-link"
+          :class="{ active: activeHref === item.href }"
+          :href="item.href"
+          @click="activeHref = item.href"
         >
-          <h3>{{ item.title }}</h3>
-          <div class="purpose-row">
-            <div class="purpose-illustration-placeholder" aria-hidden="true"></div>
-            <div class="purpose-content">
-              <p>{{ item.body }}</p>
-              <p v-if="item.note" class="purpose-note">{{ item.note }}</p>
+          {{ item.label }}
+        </a>
+      </aside>
+
+      <div class="event-page-content">
+        <section id="about-foreword" class="foreword-section section-padding container">
+          <article class="glass-card foreword-card">
+            <div class="foreword-heading">
+              <span>Foreword</span>
+              <h2>{{ copy.foreword.title }}</h2>
             </div>
+            <div class="foreword-signature">
+              <div class="foreword-photo-placeholder" aria-hidden="true">
+                <span>PHOTO</span>
+              </div>
+              <h3>{{ copy.foreword.name }}</h3>
+              <p>{{ copy.foreword.role }}</p>
+            </div>
+            <div class="foreword-body">
+              <p
+                v-for="paragraph in copy.foreword.opening"
+                :key="paragraph"
+              >
+                {{ paragraph }}
+              </p>
+              <ul class="foreword-list">
+                <li
+                  v-for="item in copy.foreword.focusItems"
+                  :key="item.title"
+                >
+                  <strong>{{ item.title }}</strong>
+                  <span>{{ item.text }}</span>
+                </li>
+              </ul>
+              <p
+                v-for="paragraph in copy.foreword.closing"
+                :key="paragraph"
+              >
+                {{ paragraph }}
+              </p>
+            </div>
+          </article>
+        </section>
+        <section id="about-purpose" class="purpose-section section-padding container">
+          <div class="sec-title">
+            <span>Purpose</span>
+            <h2>{{ copy.purpose.title }}</h2>
           </div>
-        </article>
-      </div>
-    </section>
-    <section class="organizer-section section-padding container">
-      <div class="sec-title">
-        <span>Organizer</span>
-        <h2>{{ copy.organizer.title }}</h2>
-      </div>
-      <article class="glass-card organizer-card featured">
-        <div class="organization-image-placeholder" aria-hidden="true"></div>
-        <div>
-          <h3>{{ copy.organizer.name }}</h3>
-          <p
-            v-for="paragraph in copy.organizer.body"
-            :key="paragraph"
-          >
-            {{ paragraph }}
-          </p>
-        </div>
-      </article>
-    </section>
-    <section class="organizer-section section-padding container">
-      <div class="sec-title">
-        <span>Co-organizer</span>
-        <h2>{{ copy.coOrganizer.title }}</h2>
-      </div>
-      <div class="co-organizer-grid">
-        <article
-          v-for="organization in copy.coOrganizer.organizations"
-          :key="organization.name"
-          class="glass-card organizer-card"
-        >
-          <div class="organization-image-placeholder" aria-hidden="true"></div>
-          <div>
-            <h3>{{ organization.name }}</h3>
-            <p>{{ organization.body }}</p>
+          <div class="purpose-grid">
+            <article
+              v-for="item in copy.purpose.items"
+              :key="item.title"
+              class="glass-card purpose-card"
+            >
+              <h3>{{ item.title }}</h3>
+              <div class="purpose-row">
+                <div class="purpose-illustration-placeholder" aria-hidden="true"></div>
+                <div class="purpose-content">
+                  <p>{{ item.body }}</p>
+                  <p v-if="item.note" class="purpose-note">{{ item.note }}</p>
+                </div>
+              </div>
+            </article>
           </div>
-        </article>
+        </section>
+        <section id="about-organizer" class="organizer-section section-padding container">
+          <div class="sec-title">
+            <span>Organizer</span>
+            <h2>{{ copy.organizer.title }}</h2>
+          </div>
+          <article class="glass-card organizer-card featured">
+            <div class="organization-image-placeholder" aria-hidden="true"></div>
+            <div>
+              <h3>{{ copy.organizer.name }}</h3>
+              <p
+                v-for="paragraph in copy.organizer.body"
+                :key="paragraph"
+              >
+                {{ paragraph }}
+              </p>
+            </div>
+          </article>
+        </section>
+        <section id="about-co-organizer" class="organizer-section section-padding container">
+          <div class="sec-title">
+            <span>Co-organizer</span>
+            <h2>{{ copy.coOrganizer.title }}</h2>
+          </div>
+          <div class="co-organizer-grid">
+            <article
+              v-for="organization in copy.coOrganizer.organizations"
+              :key="organization.name"
+              class="glass-card organizer-card"
+            >
+              <div class="organization-image-placeholder" aria-hidden="true"></div>
+              <div>
+                <h3>{{ organization.name }}</h3>
+                <p>{{ organization.body }}</p>
+              </div>
+            </article>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import type { LanguageCode, TranslationKey } from '../i18n/translations'
 
 const props = defineProps<{
@@ -114,10 +131,50 @@ const props = defineProps<{
   t: (key: TranslationKey) => string
 }>()
 
+const activeHref = ref('#about-foreword')
+const navProgress = ref(0)
+const navProgressStyle = computed(() => ({ '--event-nav-progress': String(navProgress.value) }))
+const observedSectionIds = ['about-foreword', 'about-purpose', 'about-organizer', 'about-co-organizer']
+
+const updateNavState = () => {
+  const anchorLine = window.innerHeight * 0.36
+  let currentId = observedSectionIds[0]
+  let currentIndex = 0
+  for (const [index, id] of observedSectionIds.entries()) {
+    const element = document.getElementById(id)
+    if (element && element.getBoundingClientRect().top <= anchorLine) {
+      currentId = id
+      currentIndex = index
+    }
+  }
+  activeHref.value = `#${currentId}`
+  navProgress.value = currentIndex / Math.max(observedSectionIds.length - 1, 1)
+}
+
+onMounted(() => {
+  updateNavState()
+  window.addEventListener('scroll', updateNavState, { passive: true })
+  window.addEventListener('resize', updateNavState)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', updateNavState)
+  window.removeEventListener('resize', updateNavState)
+})
+
 const pageCopy = {
   zh: {
     title: '关于大赛',
     lead: '了解 ASIA IP CONTEST 如何连接亚洲创作者、企业与角色 IP 市场。',
+    nav: {
+      label: '页面内导航',
+      items: [
+        { label: '致辞', href: '#about-foreword' },
+        { label: '大赛目的', href: '#about-purpose' },
+        { label: '主办方', href: '#about-organizer' },
+        { label: '共同主办方', href: '#about-co-organizer' },
+      ],
+    },
     foreword: {
       title: '致辞',
       name: '关口 贡',
@@ -192,6 +249,15 @@ const pageCopy = {
   ja: {
     title: 'について',
     lead: 'ASIA IP CONTESTが、アジアのクリエイターと企業、そしてキャラクターIP市場をつなぐ理由。',
+    nav: {
+      label: 'ページ内ナビゲーション',
+      items: [
+        { label: 'ご挨拶', href: '#about-foreword' },
+        { label: '目的', href: '#about-purpose' },
+        { label: '主催紹介', href: '#about-organizer' },
+        { label: '共催紹介', href: '#about-co-organizer' },
+      ],
+    },
     foreword: {
       title: 'ご挨拶',
       name: '関口 貢',
@@ -266,6 +332,15 @@ const pageCopy = {
   en: {
     title: 'About Us',
     lead: 'Learn how ASIA IP CONTEST connects Asian creators, companies, and the character IP market.',
+    nav: {
+      label: 'On this page',
+      items: [
+        { label: 'Foreword', href: '#about-foreword' },
+        { label: 'Purpose', href: '#about-purpose' },
+        { label: 'Organizer', href: '#about-organizer' },
+        { label: 'Co-organizers', href: '#about-co-organizer' },
+      ],
+    },
     foreword: {
       title: 'Foreword',
       name: 'Mitsugu Sekiguchi',
@@ -340,6 +415,10 @@ const pageCopy = {
 } satisfies Record<LanguageCode, {
   title: string
   lead: string
+  nav: {
+    label: string
+    items: Array<{ label: string; href: string }>
+  }
   foreword: {
     title: string
     name: string

@@ -29,5 +29,6 @@ const tracks: Array<{ icon: string; titleKey: TranslationKey; textKey: Translati
   { icon: '✦', titleKey: 'track1Title', textKey: 'track1Text' },
   { icon: '⟡', titleKey: 'track2Title', textKey: 'track2Text' },
   { icon: '✧', titleKey: 'track3Title', textKey: 'track3Text' },
+  { icon: '◇', titleKey: 'track4Title', textKey: 'track4Text' },
 ]
 </script>

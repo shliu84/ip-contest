@@ -13,8 +13,12 @@
             v-for="item in navItems"
             :key="item.to"
           >
-            <RouterLink class="nav-link" :to="item.to">
-              <span class="nav-eyebrow">{{ item.eyebrow }}</span>
+            <RouterLink
+              class="nav-link"
+              :class="{ 'nav-link-en': currentLanguage === 'en' }"
+              :to="item.to"
+            >
+              <span v-if="currentLanguage !== 'en'" class="nav-eyebrow">{{ item.eyebrow }}</span>
               <span class="nav-label">{{ t(item.labelKey) }}</span>
             </RouterLink>
           </li>

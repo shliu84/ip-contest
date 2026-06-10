@@ -84,6 +84,12 @@ nav a {
   line-height: 1.15;
 }
 
+.nav-link-en .nav-label {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
 nav a:hover,
 nav a.router-link-exact-active {
   color: var(--primary);

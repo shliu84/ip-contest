@@ -15,11 +15,13 @@
   </RouterView>
 
   <SiteFooter :t="t" />
+  <BackToTopButton />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
+import BackToTopButton from './components/BackToTopButton.vue'
 import SiteFooter from './components/SiteFooter.vue'
 import SiteHeader from './components/SiteHeader.vue'
 import { useLanguage } from './composables/useLanguage'

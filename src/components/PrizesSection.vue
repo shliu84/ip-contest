@@ -32,8 +32,9 @@ const prizes: Array<{
   textKey: TranslationKey
   isGold?: boolean
 }> = [
-  { amount: '50,000', titleKey: 'silverTitle', textKey: 'silverText' },
-  { amount: '150,000', titleKey: 'goldTitle', textKey: 'goldText', isGold: true },
-  { amount: '20,000', titleKey: 'popularTitle', textKey: 'popularText' },
+  { amount: '100,000', titleKey: 'silverTitle', textKey: 'silverText' },
+  { amount: '300,000', titleKey: 'goldTitle', textKey: 'goldText', isGold: true },
+  { amount: 'VOTE', titleKey: 'popularTitle', textKey: 'popularText' },
+  { amount: 'OMAKE', titleKey: 'omakeTitle', textKey: 'omakeText' },
 ]
 </script>

@@ -6,14 +6,14 @@
     </div>
     <div class="news-list">
       <article class="glass-card news-item">
-        <div class="news-date">2026.06.01</div>
+        <div class="news-date">2026.07.01</div>
         <div>
           <h3>{{ t('news1Title') }}</h3>
           <p>{{ t('news1Text') }}</p>
         </div>
       </article>
       <article class="glass-card news-item">
-        <div class="news-date">2026.06.01</div>
+        <div class="news-date">2026.07.01</div>
         <div>
           <h3>{{ t('news2Title') }}</h3>
           <p>{{ t('news2Text') }}</p>
