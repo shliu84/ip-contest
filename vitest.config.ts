@@ -1,13 +1,8 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import {
-  buildPagesASSETSBinding,
   cloudflareTest,
   readD1Migrations,
 } from '@cloudflare/vitest-pool-workers'
 import { defineConfig } from 'vitest/config'
-
-const rootDir = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   plugins: [
@@ -17,10 +12,10 @@ export default defineConfig({
         d1Databases: ['DB'],
         r2Buckets: ['SUBMISSION_BUCKET'],
         serviceBindings: {
-          ASSETS: await buildPagesASSETSBinding(path.join(rootDir, 'public')),
+          ASSETS: () => Promise.resolve(new Response('Not found', { status: 404 })),
         },
         bindings: {
-          TEST_MIGRATIONS: await readD1Migrations(path.join(rootDir, 'migrations')),
+          TEST_MIGRATIONS: await readD1Migrations('migrations'),
           SESSION_SECRET: 'test-session-secret',
           RESEND_API_KEY: 're_test',
           RESEND_FROM_EMAIL: 'contest@example.com',
