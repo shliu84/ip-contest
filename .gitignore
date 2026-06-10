@@ -17,6 +17,12 @@ dist-ssr
 wrangler.toml
 .wrangler/
 
+# Local agent and Superpowers state
+.codex/
+.superpowers/
+.worktrees/
+worktrees/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
