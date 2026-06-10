@@ -1201,6 +1201,57 @@ describe('/api/submissions', () => {
       .resolves.toMatchObject({ status: 409 })
   })
 
+  it('rejects mock confirmation if status changes before submitted is written', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    await submitSubmission(submissionId, cookie)
+
+    const originalPrepare = env.DB.prepare.bind(env.DB)
+    const prepareSpy = vi.spyOn(env.DB, 'prepare')
+
+    prepareSpy.mockImplementation((query) => {
+      const statement = originalPrepare(query)
+      if (
+        typeof query === 'string'
+        && query.includes("SET status = 'submitted'")
+      ) {
+        const originalBind = statement.bind.bind(statement)
+        return {
+          ...statement,
+          bind(...values: unknown[]) {
+            const bound = originalBind(...values)
+            const originalRun = bound.run.bind(bound)
+            return {
+              ...bound,
+              async run() {
+                await originalPrepare(
+                  `UPDATE submissions
+                   SET status = 'submitted'
+                   WHERE id = ?`,
+                )
+                  .bind(submissionId)
+                  .run()
+                return await originalRun()
+              },
+            }
+          },
+        } as D1PreparedStatement
+      }
+      return statement
+    })
+
+    try {
+      const response = await mockConfirmPayment(cookie, { submissionId })
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(409)
+      expect(body.error.code).toBe('invalid_submission')
+    } finally {
+      prepareSpy.mockRestore()
+    }
+  })
+
   it('keeps mock confirmation disabled unless explicitly enabled', async () => {
     const user = await insertUser()
     const cookie = await sessionCookie(user.id)
