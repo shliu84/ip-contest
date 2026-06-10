@@ -1,4 +1,7 @@
 import type {
+  AdminSubmissionListFilters,
+  AdminSubmissionListResponse,
+  AdminSubmissionResponse,
   ApiOkResponse,
   CreateSubmissionRequest,
   ForgotPasswordRequest,
@@ -9,6 +12,7 @@ import type {
   ResetPasswordRequest,
   SubmissionListResponse,
   SubmissionResponse,
+  UpdateAdminSubmissionStatusRequest,
   UpdateSubmissionRequest,
   UploadSubmissionFileRequest,
 } from '../types/api'
@@ -181,4 +185,39 @@ export function mockConfirmPayment(body: MockConfirmPaymentRequest) {
     method: 'POST',
     body: JSON.stringify(body),
   })
+}
+
+export function listAdminSubmissions(filters: AdminSubmissionListFilters = {}) {
+  const search = new URLSearchParams()
+  if (filters.status) {
+    search.set('status', filters.status)
+  }
+  if (filters.division) {
+    search.set('division', filters.division)
+  }
+  if (filters.q?.trim()) {
+    search.set('q', filters.q.trim())
+  }
+
+  const query = search.toString()
+  return apiFetch<AdminSubmissionListResponse>(
+    `/api/admin/submissions${query ? `?${query}` : ''}`,
+  )
+}
+
+export function getAdminSubmission(id: string) {
+  return apiFetch<AdminSubmissionResponse>(`/api/admin/submissions/${encodeURIComponent(id)}`)
+}
+
+export function updateAdminSubmissionStatus(
+  id: string,
+  body: UpdateAdminSubmissionStatusRequest,
+) {
+  return apiFetch<AdminSubmissionResponse>(
+    `/api/admin/submissions/${encodeURIComponent(id)}/status`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(body),
+    },
+  )
 }
