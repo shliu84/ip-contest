@@ -395,7 +395,7 @@
   }
 
   .subpage-hero h1 {
-    font-size: 1.75rem;
+    font-size: 1.55rem;
   }
 
   .foreword-card {
@@ -453,25 +453,26 @@
     padding: 24px;
   }
 
-  .about-page-layout .sec-title {
+  .event-page-layout .sec-title {
     margin-bottom: 26px;
     text-align: left;
   }
 
-  .about-page-layout .sec-title span {
-    letter-spacing: 0.22em;
+  .event-page-layout .sec-title span {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
   }
 
-  .about-page-layout .sec-title span::before,
-  .about-page-layout .sec-title span::after {
+  .event-page-layout .sec-title span::before,
+  .event-page-layout .sec-title span::after {
     display: none;
   }
 
-  .about-page-layout .sec-title h2 {
-    font-size: 1.48rem;
+  .event-page-layout .sec-title h2 {
+    font-size: 1.42rem;
     font-style: normal;
-    letter-spacing: 0.04em;
-    line-height: 1.35;
+    letter-spacing: 0.03em;
+    line-height: 1.32;
   }
 
   .about-page-layout .foreword-card {
@@ -494,13 +495,13 @@
 
   .about-page-layout .foreword-heading span {
     font-size: 0.7rem;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.16em;
     margin-bottom: 10px;
   }
 
   .about-page-layout .foreword-heading h2 {
-    font-size: 1.48rem;
-    letter-spacing: 0.04em;
+    font-size: 1.42rem;
+    letter-spacing: 0.03em;
   }
 
   .about-page-layout .foreword-signature {
@@ -674,14 +675,6 @@
     padding-top: 22px;
   }
 
-  .event-info-page-layout .sec-title {
-    margin-bottom: 28px;
-  }
-
-  .event-info-page-layout .sec-title h2 {
-    font-size: 1.55rem;
-  }
-
   .event-info-page-layout .glass-card {
     border-radius: 8px;
     padding: 22px;
@@ -727,25 +720,6 @@
 
   .guidelines-page-layout .event-page-content > .section-padding:first-child {
     padding-top: 10px;
-  }
-
-  .guidelines-page-layout .sec-title {
-    margin-bottom: 22px;
-    text-align: left;
-  }
-
-  .guidelines-page-layout .sec-title span {
-    color: var(--primary);
-    font-size: 0.68rem;
-    font-style: normal;
-    letter-spacing: 0.16em;
-  }
-
-  .guidelines-page-layout .sec-title h2 {
-    font-size: 1.42rem;
-    font-style: normal;
-    letter-spacing: 0.02em;
-    line-height: 1.28;
   }
 
   .guideline-file-card,
