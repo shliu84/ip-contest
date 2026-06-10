@@ -21,6 +21,15 @@
 
       <div class="event-page-content">
         <section id="event-overview" class="event-info-section section-padding container">
+          <dl class="event-summary-strip" :aria-label="copy.overview.name">
+            <div
+              v-for="item in copy.summary"
+              :key="item.label"
+            >
+              <dt>{{ item.label }}</dt>
+              <dd>{{ item.value }}</dd>
+            </div>
+          </dl>
           <div class="event-info-grid">
             <article class="glass-card event-overview-card">
               <div class="event-info-label">{{ copy.overview.eyebrow }}</div>
@@ -240,6 +249,12 @@ const pageCopy = {
         { label: '参加费', value: '个人部门：JPY 10,000 / 法人部门：JPY 100,000' },
       ],
     },
+    summary: [
+      { label: 'VENUE', value: 'Tokyo' },
+      { label: 'ENTRY START', value: '2026.07.01' },
+      { label: 'DEADLINE', value: '2026.10.07' },
+      { label: 'AWARD', value: '2026.11' },
+    ],
     categories: {
       eyebrow: 'Categories',
       title: '募集部门',
@@ -343,6 +358,12 @@ const pageCopy = {
         { label: '参加費', value: '個人部門：JPY 10,000 / 法人部門：JPY 100,000' },
       ],
     },
+    summary: [
+      { label: 'VENUE', value: 'Tokyo' },
+      { label: 'ENTRY START', value: '2026.07.01' },
+      { label: 'DEADLINE', value: '2026.10.07' },
+      { label: 'AWARD', value: '2026.11' },
+    ],
     categories: {
       eyebrow: 'Categories',
       title: '募集部門',
@@ -446,6 +467,12 @@ const pageCopy = {
         { label: 'Entry fee', value: 'Individual categories: JPY 10,000 / Corporate category: JPY 100,000' },
       ],
     },
+    summary: [
+      { label: 'VENUE', value: 'Tokyo' },
+      { label: 'ENTRY START', value: '2026.07.01' },
+      { label: 'DEADLINE', value: '2026.10.07' },
+      { label: 'AWARD', value: '2026.11' },
+    ],
     categories: {
       eyebrow: 'Categories',
       title: 'Categories',
@@ -538,6 +565,7 @@ const pageCopy = {
     name: string
     items: Array<{ label: string; value: string }>
   }
+  summary: Array<{ label: string; value: string }>
   categories: {
     eyebrow: string
     title: string

@@ -482,6 +482,16 @@
     padding-bottom: 16px;
   }
 
+  .about-page-layout .foreword-side {
+    gap: 16px;
+  }
+
+  .about-page-layout .foreword-signature,
+  .about-page-layout .foreword-body {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .about-page-layout .foreword-heading span {
     font-size: 0.7rem;
     letter-spacing: 0.22em;
@@ -533,9 +543,8 @@
 
   .about-page-layout .foreword-list {
     background: transparent;
-    border-left-width: 2px;
     margin: 2px 0;
-    padding: 12px 0 12px 14px;
+    padding: 0 0 0 1.2em;
   }
 
   .about-page-layout .foreword-list li {
@@ -551,6 +560,13 @@
 
   .about-page-layout .purpose-card {
     gap: 14px;
+    grid-template-columns: 1fr;
+  }
+
+  .about-page-layout .purpose-card::before,
+  .about-page-layout .purpose-card h3,
+  .about-page-layout .purpose-row {
+    grid-column: auto;
   }
 
   .about-page-layout .purpose-card h3,
@@ -669,6 +685,27 @@
   .event-info-page-layout .glass-card {
     border-radius: 8px;
     padding: 22px;
+  }
+
+  .event-summary-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+  }
+
+  .event-summary-strip div {
+    padding: 13px 14px;
+  }
+
+  .event-summary-strip div + div {
+    border-left: 0;
+  }
+
+  .event-summary-strip div:nth-child(even) {
+    border-left: 1px solid rgba(30, 30, 34, 0.08);
+  }
+
+  .event-summary-strip div:nth-child(n + 3) {
+    border-top: 1px solid rgba(30, 30, 34, 0.08);
   }
 
   .event-info-grid,
@@ -932,6 +969,10 @@
     gap: 6px;
   }
 
+  .event-info-page-layout #event-participation .event-info-grid {
+    grid-template-columns: 1fr;
+  }
+
   .event-schedule-timeline {
     gap: 0;
   }
@@ -965,6 +1006,10 @@
 
   .event-judge-detail-card {
     grid-template-columns: 110px 1fr;
+  }
+
+  .event-judge-detail-content {
+    padding-left: 18px;
   }
 
   .event-judge-index {
@@ -1159,6 +1204,11 @@
     gap: 14px;
     grid-template-columns: 88px 1fr;
     padding: 20px;
+  }
+
+  .event-judge-detail-content {
+    border-left: 0;
+    padding-left: 0;
   }
 
   .event-judge-profile-side h3 {

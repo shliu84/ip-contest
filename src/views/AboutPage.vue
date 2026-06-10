@@ -22,16 +22,18 @@
       <div class="event-page-content">
         <section id="about-foreword" class="foreword-section section-padding container">
           <article class="glass-card foreword-card">
-            <div class="foreword-heading">
-              <span>Foreword</span>
-              <h2>{{ copy.foreword.title }}</h2>
-            </div>
-            <div class="foreword-signature">
-              <div class="foreword-photo-placeholder" aria-hidden="true">
-                <span>PHOTO</span>
+            <div class="foreword-side">
+              <div class="foreword-heading">
+                <span>Foreword</span>
+                <h2>{{ copy.foreword.title }}</h2>
               </div>
-              <h3>{{ copy.foreword.name }}</h3>
-              <p>{{ copy.foreword.role }}</p>
+              <div class="foreword-signature">
+                <div class="foreword-photo-placeholder" aria-hidden="true">
+                  <span>PHOTO</span>
+                </div>
+                <h3>{{ copy.foreword.name }}</h3>
+                <p>{{ copy.foreword.role }}</p>
+              </div>
             </div>
             <div class="foreword-body">
               <p
