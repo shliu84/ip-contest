@@ -2,13 +2,13 @@ header {
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 15px 5%;
+  padding: 13px 4.5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(237, 21, 102, 0.05);
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(237, 21, 102, 0.09);
   z-index: 100;
   transition: all 0.3s ease;
 }
@@ -55,7 +55,7 @@ header {
 nav ul {
   list-style: none;
   display: flex;
-  gap: clamp(16px, 2vw, 28px);
+  gap: clamp(14px, 1.55vw, 24px);
 }
 
 nav a {
@@ -123,7 +123,7 @@ nav a.router-link-exact-active::after {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: clamp(16px, 2vw, 24px);
+  gap: clamp(12px, 1.45vw, 20px);
   min-width: 0;
 }
 
@@ -134,14 +134,14 @@ nav a.router-link-exact-active::after {
 }
 
 .header-entry-link {
-  border: 1px solid rgba(237, 21, 102, 0.14);
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.68);
-  color: var(--text-main);
-  font-size: 13px;
+  background: transparent;
+  color: var(--text-sub);
+  font-size: 12px;
   font-weight: 800;
   line-height: 1;
-  padding: 9px 14px;
+  padding: 9px 8px;
   text-decoration: none;
   transition: all 0.2s;
   white-space: nowrap;
@@ -156,6 +156,8 @@ nav a.router-link-exact-active::after {
   background: var(--primary);
   border-color: var(--primary);
   color: #fff;
+  font-size: 13px;
+  padding: 10px 16px;
 }
 
 .header-entry-link-primary:hover {
@@ -165,11 +167,11 @@ nav a.router-link-exact-active::after {
 
 .lang-switcher {
   display: flex;
-  gap: 6px;
-  padding: 4px;
+  gap: 3px;
+  padding: 3px;
   border: 1px solid rgba(237, 21, 102, 0.14);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(8px);
 }
 
@@ -179,11 +181,11 @@ nav a.router-link-exact-active::after {
   background: transparent;
   color: var(--text-sub);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 1px;
-  min-width: 38px;
-  padding: 7px 10px;
+  min-width: 34px;
+  padding: 7px 8px;
   transition: all 0.2s;
 }
 

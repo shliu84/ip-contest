@@ -16,6 +16,14 @@ export type TranslationKey =
   | 'heroTitle'
   | 'heroSubtitle'
   | 'heroLead'
+  | 'heroMetaVenueLabel'
+  | 'heroMetaVenueValue'
+  | 'heroMetaEntryLabel'
+  | 'heroMetaEntryValue'
+  | 'heroMetaDeadlineLabel'
+  | 'heroMetaDeadlineValue'
+  | 'heroMetaCategoriesLabel'
+  | 'heroMetaCategoriesValue'
   | 'ctaEntry'
   | 'headerEntry'
   | 'headerLogin'
@@ -254,6 +262,14 @@ export const translations: Record<LanguageCode, Translation> = {
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
     heroSubtitle: '~Art Festa~',
     heroLead: '支持以专业创作为目标的亚洲创作者勇敢挑战',
+    heroMetaVenueLabel: 'VENUE',
+    heroMetaVenueValue: 'Tokyo',
+    heroMetaEntryLabel: 'ENTRY START',
+    heroMetaEntryValue: '2026.07.01',
+    heroMetaDeadlineLabel: 'DEADLINE',
+    heroMetaDeadlineValue: '2026.10.07',
+    heroMetaCategoriesLabel: 'CATEGORIES',
+    heroMetaCategoriesValue: '2D / 3DCG / AI / Corporate',
     ctaEntry: '立即投稿',
     headerEntry: '投稿',
     headerLogin: '登录',
@@ -486,6 +502,14 @@ export const translations: Record<LanguageCode, Translation> = {
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
     heroSubtitle: '~Art Festa~',
     heroLead: 'プロを目指すアジアのクリエイターたちの挑戦を応援する',
+    heroMetaVenueLabel: 'VENUE',
+    heroMetaVenueValue: 'Tokyo',
+    heroMetaEntryLabel: 'ENTRY START',
+    heroMetaEntryValue: '2026.07.01',
+    heroMetaDeadlineLabel: 'DEADLINE',
+    heroMetaDeadlineValue: '2026.10.07',
+    heroMetaCategoriesLabel: 'CATEGORIES',
+    heroMetaCategoriesValue: '2D / 3DCG / AI / Corporate',
     ctaEntry: '今すぐ応募',
     headerEntry: '応募',
     headerLogin: 'ログイン',
@@ -718,6 +742,14 @@ export const translations: Record<LanguageCode, Translation> = {
     heroTitle: 'ASIA IP CONTEST<br>in TOKYO 2026',
     heroSubtitle: '~Art Festa~',
     heroLead: 'Supporting Asian creators who are challenging themselves to become professionals',
+    heroMetaVenueLabel: 'VENUE',
+    heroMetaVenueValue: 'Tokyo',
+    heroMetaEntryLabel: 'ENTRY START',
+    heroMetaEntryValue: '2026.07.01',
+    heroMetaDeadlineLabel: 'DEADLINE',
+    heroMetaDeadlineValue: '2026.10.07',
+    heroMetaCategoriesLabel: 'CATEGORIES',
+    heroMetaCategoriesValue: '2D / 3DCG / AI / Corporate',
     ctaEntry: 'Submit Now',
     headerEntry: 'Submit',
     headerLogin: 'Login',

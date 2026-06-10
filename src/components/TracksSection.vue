@@ -26,9 +26,9 @@ defineProps<{
 }>()
 
 const tracks: Array<{ icon: string; titleKey: TranslationKey; textKey: TranslationKey }> = [
-  { icon: '✦', titleKey: 'track1Title', textKey: 'track1Text' },
-  { icon: '⟡', titleKey: 'track2Title', textKey: 'track2Text' },
-  { icon: '✧', titleKey: 'track3Title', textKey: 'track3Text' },
-  { icon: '◇', titleKey: 'track4Title', textKey: 'track4Text' },
+  { icon: '2D', titleKey: 'track1Title', textKey: 'track1Text' },
+  { icon: '3DCG', titleKey: 'track2Title', textKey: 'track2Text' },
+  { icon: 'AI', titleKey: 'track3Title', textKey: 'track3Text' },
+  { icon: 'CORP', titleKey: 'track4Title', textKey: 'track4Text' },
 ]
 </script>

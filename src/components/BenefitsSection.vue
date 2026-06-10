@@ -13,32 +13,34 @@
         :class="{ featured: benefit.featured }"
       >
         <div class="benefit-image-placeholder" aria-hidden="true"></div>
-        <p v-if="benefit.group" class="benefit-group">{{ benefit.group }}</p>
-        <h3>{{ benefit.title }}</h3>
-        <p
-          v-for="text in benefit.body"
-          :key="text"
-        >
-          {{ text }}
-        </p>
-        <ul v-if="benefit.items" class="benefit-list">
-          <li
-            v-for="item in benefit.items"
-            :key="item"
+        <div class="benefit-copy">
+          <p v-if="benefit.group" class="benefit-group">{{ benefit.group }}</p>
+          <h3>{{ benefit.title }}</h3>
+          <p
+            v-for="text in benefit.body"
+            :key="text"
           >
-            {{ item }}
-          </li>
-        </ul>
-        <a
-          v-if="benefit.link"
-          class="benefit-link"
-          :href="benefit.link.href"
-          target="_blank"
-          rel="noreferrer"
-        >
-          {{ benefit.link.label }}
-        </a>
-        <p v-if="benefit.note" class="benefit-note">{{ benefit.note }}</p>
+            {{ text }}
+          </p>
+          <ul v-if="benefit.items" class="benefit-list">
+            <li
+              v-for="item in benefit.items"
+              :key="item"
+            >
+              {{ item }}
+            </li>
+          </ul>
+          <a
+            v-if="benefit.link"
+            class="benefit-link"
+            :href="benefit.link.href"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {{ benefit.link.label }}
+          </a>
+          <p v-if="benefit.note" class="benefit-note">{{ benefit.note }}</p>
+        </div>
       </article>
     </div>
   </section>
