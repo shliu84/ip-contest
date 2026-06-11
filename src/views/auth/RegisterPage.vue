@@ -77,6 +77,7 @@
           <div class="form-field">
             <label for="register-country-region">{{ t('countryRegionLabel') }}</label>
             <select id="register-country-region" v-model="countryRegion" required :disabled="isPending">
+              <option value="" disabled>{{ t('selectPlaceholder') }}</option>
               <option v-for="option in countryRegionOptions" :key="option.value" :value="option.value">
                 {{ t(option.labelKey) }}
               </option>
@@ -86,6 +87,7 @@
           <div class="form-field">
             <label for="register-phone-country-code">{{ t('phoneCountryCodeLabel') }}</label>
             <select id="register-phone-country-code" v-model="phoneCountryCode" required :disabled="isPending">
+              <option value="" disabled>{{ t('selectPlaceholder') }}</option>
               <option v-for="code in phoneCountryCodeOptions" :key="code" :value="code">{{ code }}</option>
             </select>
           </div>
@@ -126,8 +128,8 @@ const password = ref('')
 const confirmPassword = ref('')
 const lastName = ref('')
 const firstName = ref('')
-const countryRegion = ref('JP')
-const phoneCountryCode = ref('+81')
+const countryRegion = ref('')
+const phoneCountryCode = ref('')
 const phoneNumber = ref('')
 const errorMessage = ref('')
 const isPending = ref(false)
@@ -139,10 +141,16 @@ const countryRegionOptions = [
   { value: 'TW', labelKey: 'countryRegionTaiwan' },
   { value: 'HK', labelKey: 'countryRegionHongKong' },
   { value: 'KR', labelKey: 'countryRegionKorea' },
+  { value: 'SG', labelKey: 'countryRegionSingapore' },
+  { value: 'TH', labelKey: 'countryRegionThailand' },
+  { value: 'ID', labelKey: 'countryRegionIndonesia' },
+  { value: 'MY', labelKey: 'countryRegionMalaysia' },
+  { value: 'PH', labelKey: 'countryRegionPhilippines' },
+  { value: 'VN', labelKey: 'countryRegionVietnam' },
   { value: 'OTHER', labelKey: 'countryRegionOther' },
 ] as const
 
-const phoneCountryCodeOptions = ['+81', '+86', '+886', '+852', '+82', 'OTHER'] as const
+const phoneCountryCodeOptions = ['+81', '+86', '+886', '+852', '+82', '+65', '+66', '+62', '+60', '+63', '+84', 'OTHER'] as const
 
 async function submit() {
   errorMessage.value = ''

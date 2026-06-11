@@ -88,6 +88,7 @@ export type TranslationKey =
   | 'countryRegionLabel'
   | 'phoneCountryCodeLabel'
   | 'phoneNumberLabel'
+  | 'selectPlaceholder'
   | 'submitRegister'
   | 'submitLogin'
   | 'submitForgot'
@@ -184,6 +185,12 @@ export type TranslationKey =
   | 'countryRegionTaiwan'
   | 'countryRegionHongKong'
   | 'countryRegionKorea'
+  | 'countryRegionSingapore'
+  | 'countryRegionThailand'
+  | 'countryRegionIndonesia'
+  | 'countryRegionMalaysia'
+  | 'countryRegionPhilippines'
+  | 'countryRegionVietnam'
   | 'countryRegionOther'
   | 'profilePenNameLabel'
   | 'profilePhoneLabel'
@@ -344,6 +351,7 @@ export const translations: Record<LanguageCode, Translation> = {
     countryRegionLabel: '国家 / 地区',
     phoneCountryCodeLabel: '手机区号',
     phoneNumberLabel: '手机号',
+    selectPlaceholder: '请选择',
     submitRegister: '创建账户',
     submitLogin: '登录',
     submitForgot: '发送重置链接',
@@ -440,6 +448,12 @@ export const translations: Record<LanguageCode, Translation> = {
     countryRegionTaiwan: '台湾',
     countryRegionHongKong: '香港',
     countryRegionKorea: '韩国',
+    countryRegionSingapore: '新加坡',
+    countryRegionThailand: '泰国',
+    countryRegionIndonesia: '印尼',
+    countryRegionMalaysia: '马来西亚',
+    countryRegionPhilippines: '菲律宾',
+    countryRegionVietnam: '越南',
     countryRegionOther: '其他',
     profilePenNameLabel: '笔名',
     profilePhoneLabel: '电话号码',
@@ -594,6 +608,7 @@ export const translations: Record<LanguageCode, Translation> = {
     countryRegionLabel: '国 / 地域',
     phoneCountryCodeLabel: '国番号',
     phoneNumberLabel: '電話番号',
+    selectPlaceholder: '選択してください',
     submitRegister: 'アカウントを作成',
     submitLogin: 'ログイン',
     submitForgot: '再設定リンクを送信',
@@ -690,6 +705,12 @@ export const translations: Record<LanguageCode, Translation> = {
     countryRegionTaiwan: '台湾',
     countryRegionHongKong: '香港',
     countryRegionKorea: '韓国',
+    countryRegionSingapore: 'シンガポール',
+    countryRegionThailand: 'タイ',
+    countryRegionIndonesia: 'インドネシア',
+    countryRegionMalaysia: 'マレーシア',
+    countryRegionPhilippines: 'フィリピン',
+    countryRegionVietnam: 'ベトナム',
     countryRegionOther: 'その他',
     profilePenNameLabel: 'ペンネーム',
     profilePhoneLabel: '電話番号',
@@ -844,6 +865,7 @@ export const translations: Record<LanguageCode, Translation> = {
     countryRegionLabel: 'Country / Region',
     phoneCountryCodeLabel: 'Country Code',
     phoneNumberLabel: 'Phone Number',
+    selectPlaceholder: 'Please select',
     submitRegister: 'Create Account',
     submitLogin: 'Login',
     submitForgot: 'Send Reset Link',
@@ -940,6 +962,12 @@ export const translations: Record<LanguageCode, Translation> = {
     countryRegionTaiwan: 'Taiwan',
     countryRegionHongKong: 'Hong Kong',
     countryRegionKorea: 'Korea',
+    countryRegionSingapore: 'Singapore',
+    countryRegionThailand: 'Thailand',
+    countryRegionIndonesia: 'Indonesia',
+    countryRegionMalaysia: 'Malaysia',
+    countryRegionPhilippines: 'Philippines',
+    countryRegionVietnam: 'Vietnam',
     countryRegionOther: 'Other',
     profilePenNameLabel: 'Pen Name',
     profilePhoneLabel: 'Phone',
