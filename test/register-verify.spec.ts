@@ -33,6 +33,7 @@ type UserProfileRow = {
   country_region: string
   phone_country_code: string
   phone_number: string
+  certificate_language: string
 }
 
 afterEach(() => {
@@ -112,10 +113,22 @@ async function firstUser(email: string) {
 async function firstUserProfile(userId: string) {
   return await env.DB.prepare(
     `SELECT user_id, last_name, first_name, country_region, phone_country_code, phone_number
+         , certificate_language
      FROM user_profiles
      WHERE user_id = ?`,
   )
     .bind(userId)
+    .first<UserProfileRow>()
+}
+
+async function firstUserProfileByEmail(email: string) {
+  return await env.DB.prepare(
+    `SELECT user_profiles.user_id, last_name, first_name, country_region, phone_country_code, phone_number, certificate_language
+     FROM user_profiles
+     INNER JOIN users ON users.id = user_profiles.user_id
+     WHERE users.email = ?`,
+  )
+    .bind(email)
     .first<UserProfileRow>()
 }
 
@@ -195,6 +208,7 @@ describe('/api/auth/register', () => {
       country_region: 'JP',
       phone_country_code: '+81',
       phone_number: '9012345678',
+      certificate_language: 'ja',
     })
 
     const token = await firstVerificationToken(user!.id)
@@ -357,6 +371,7 @@ describe('/api/auth/register', () => {
     expect(await env.DB.prepare(
       'SELECT COUNT(*) AS count FROM email_verification_tokens',
     ).first<{ count: number }>()).toEqual({ count: 0 })
+    expect(await firstUserProfileByEmail('rollback@example.com')).toBeNull()
   })
 
   it('rejects registrations without required applicant profile fields', async () => {
