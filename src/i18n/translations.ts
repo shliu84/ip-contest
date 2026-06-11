@@ -237,6 +237,8 @@ export type TranslationKey =
   | 'submissionFilePhysicalA2Image'
   | 'submissionFileProcessScreenshot'
   | 'submissionFileUneditedOriginalAi'
+  | 'submissionTermsDetails'
+  | 'submissionTermsPlaceholder'
   | 'submissionUploadFile'
   | 'submissionUploadPending'
   | 'submissionUploadError'
@@ -524,6 +526,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadError: '无法上传文件，请稍后再试。',
     submissionUploadTypeError: '请上传 JPG、PNG 或 WebP 文件。',
     submissionUploadSizeError: '文件大小不能超过 10MB。',
+    submissionTermsDetails: '查看参赛须知',
+    submissionTermsPlaceholder: '正式参赛须知将于后续公布。提交报名前请确认相关内容。',
     submissionNoFiles: '尚未上传文件。',
     submissionFileNameLabel: '文件名',
     submissionFileSizeLabel: '大小',
@@ -800,6 +804,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadError: 'ファイルをアップロードできませんでした。時間をおいて再度お試しください。',
     submissionUploadTypeError: 'JPG、PNG、WebPのいずれかをアップロードしてください。',
     submissionUploadSizeError: 'ファイルサイズは10MB以下にしてください。',
+    submissionTermsDetails: '応募規約を確認',
+    submissionTermsPlaceholder: '正式な応募規約は後日掲載します。応募前に内容をご確認ください。',
     submissionNoFiles: 'ファイルはまだアップロードされていません。',
     submissionFileNameLabel: 'ファイル名',
     submissionFileSizeLabel: 'サイズ',
@@ -1076,6 +1082,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadError: 'File could not be uploaded. Please try again later.',
     submissionUploadTypeError: 'Upload a JPG, PNG, or WebP file.',
     submissionUploadSizeError: 'File size must be 10MB or less.',
+    submissionTermsDetails: 'View submission terms',
+    submissionTermsPlaceholder: 'Official submission terms will be published later. Please review them before submitting your entry.',
     submissionNoFiles: 'No files uploaded yet.',
     submissionFileNameLabel: 'Filename',
     submissionFileSizeLabel: 'Size',
