@@ -36,6 +36,7 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
              AND TRIM(p.last_name) <> ''
              AND TRIM(p.first_name) <> ''
              AND TRIM(p.email) <> ''
+             AND TRIM(p.phone) <> ''
              AND TRIM(p.country_region) <> ''
          )
          AND EXISTS (
@@ -52,6 +53,19 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
            SELECT 1
            FROM submission_files f
            WHERE f.submission_id = submissions.id
+             AND f.file_type = 'online_a4_image'
+         )
+         AND EXISTS (
+           SELECT 1
+           FROM submission_files f
+           WHERE f.submission_id = submissions.id
+             AND f.file_type = 'physical_a2_image'
+         )
+         AND EXISTS (
+           SELECT 1
+           FROM submission_files f
+           WHERE f.submission_id = submissions.id
+             AND f.file_type = 'process_or_prompt_screenshot'
          )`,
     )
       .bind(nowIso, submissionId, user.id)

@@ -1191,6 +1191,112 @@ describe('/api/submissions', () => {
     expect(body.error.code).toBe('bad_request')
   })
 
+  it('rechecks required file set during status transition race', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    const originalPrepare = env.DB.prepare.bind(env.DB)
+    const prepareSpy = vi.spyOn(env.DB, 'prepare')
+
+    prepareSpy.mockImplementation((query) => {
+      const statement = originalPrepare(query)
+      if (
+        typeof query === 'string'
+        && query.includes("SET status = 'payment_pending'")
+      ) {
+        const originalBind = statement.bind.bind(statement)
+        return {
+          ...statement,
+          bind(...values: unknown[]) {
+            const bound = originalBind(...values)
+            const originalRun = bound.run.bind(bound)
+            return {
+              ...bound,
+              async run() {
+                await env.DB.prepare(
+                  `DELETE FROM submission_files
+                   WHERE submission_id = ?
+                     AND file_type = 'physical_a2_image'`,
+                )
+                  .bind(submissionId)
+                  .run()
+                return await originalRun()
+              },
+            }
+          },
+        } as D1PreparedStatement
+      }
+      return statement
+    })
+
+    try {
+      const response = await submitSubmission(submissionId, cookie)
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(400)
+      expect(body.error.code).toBe('bad_request')
+    } finally {
+      prepareSpy.mockRestore()
+    }
+
+    const submissionResponse = await getSubmission(submissionId, cookie)
+    const submissionBody = await jsonBody<SubmissionResponseBody>(submissionResponse)
+    expect(submissionBody.submission.status).toBe('draft')
+  })
+
+  it('rechecks phone at write time during submission status transition', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    const originalPrepare = env.DB.prepare.bind(env.DB)
+    const prepareSpy = vi.spyOn(env.DB, 'prepare')
+
+    prepareSpy.mockImplementation((query) => {
+      const statement = originalPrepare(query)
+      if (
+        typeof query === 'string'
+        && query.includes("SET status = 'payment_pending'")
+      ) {
+        const originalBind = statement.bind.bind(statement)
+        return {
+          ...statement,
+          bind(...values: unknown[]) {
+            const bound = originalBind(...values)
+            const originalRun = bound.run.bind(bound)
+            return {
+              ...bound,
+              async run() {
+                await env.DB.prepare(
+                  `UPDATE submission_profiles
+                   SET phone = ''
+                   WHERE submission_id = ?`,
+                )
+                  .bind(submissionId)
+                  .run()
+                return await originalRun()
+              },
+            }
+          },
+        } as D1PreparedStatement
+      }
+      return statement
+    })
+
+    try {
+      const response = await submitSubmission(submissionId, cookie)
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(400)
+      expect(body.error.code).toBe('bad_request')
+    } finally {
+      prepareSpy.mockRestore()
+    }
+
+    const submissionResponse = await getSubmission(submissionId, cookie)
+    const submissionBody = await jsonBody<SubmissionResponseBody>(submissionResponse)
+    expect(submissionBody.submission.status).toBe('draft')
+  })
+
   it('requires ownership and draft status when submitting for payment', async () => {
     const owner = await insertUser()
     const other = await insertUser()
