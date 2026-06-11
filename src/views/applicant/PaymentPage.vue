@@ -69,7 +69,7 @@
             :disabled="isConfirming"
             @click="confirmPayment"
           >
-            {{ isConfirming ? t('paymentMockConfirmPending') : t('paymentMockConfirm') }}
+            {{ isConfirming ? t('paymentCheckoutPending') : t('paymentCheckout') }}
           </button>
 
           <RouterLink v-if="submission.status === 'draft'" class="auth-link" :to="`/submissions/${submission.id}`">
@@ -93,9 +93,9 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import type { TranslationKey } from '../../i18n/translations'
-import { ApiClientError, getSubmission, mockConfirmPayment } from '../../services/api'
+import { ApiClientError, createCheckout, getSubmission } from '../../services/api'
 import type { Submission, SubmissionDivision, SubmissionStatus } from '../../types/api'
 
 const props = defineProps<{
@@ -103,7 +103,6 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const router = useRouter()
 
 const submission = ref<Submission | null>(null)
 const isLoading = ref(false)
@@ -164,14 +163,13 @@ async function confirmPayment() {
   confirmError.value = ''
 
   try {
-    const response = await mockConfirmPayment({ submissionId })
+    const response = await createCheckout({ submissionId })
     if (routeSubmissionId.value === submissionId) {
-      submission.value = response.submission
-      await router.push(paymentSuccessPath(submissionId))
+      window.location.assign(response.checkoutUrl)
     }
   } catch (error) {
     if (routeSubmissionId.value === submissionId) {
-      confirmError.value = translatedError(error, 'paymentMockConfirmError')
+      confirmError.value = translatedError(error, 'paymentCheckoutError')
     }
   } finally {
     if (routeSubmissionId.value === submissionId) {

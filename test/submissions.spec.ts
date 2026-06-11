@@ -8,7 +8,9 @@ import {
 import { onRequestPost as onRequestPostUploadUrl } from '../functions/api/submissions/[id]/upload-url'
 import { onRequestDelete as onRequestDeleteFile } from '../functions/api/submissions/[id]/files/[fileId]'
 import { onRequestPost as onRequestPostSubmit } from '../functions/api/submissions/[id]/submit'
+import { onRequestPost as onRequestPostCheckout } from '../functions/api/payments/checkout'
 import { onRequestPost as onRequestPostMockConfirm } from '../functions/api/payments/mock-confirm'
+import { onRequestPost as onRequestPostStripeWebhook } from '../functions/api/stripe/webhook'
 import { hashPassword } from '../functions/_lib/password'
 import { createSession } from '../functions/_lib/session'
 import {
@@ -25,6 +27,8 @@ type SubmissionResponseBody = {
     division: string
     feeAmount: number
     currency: string
+    stripeCheckoutSessionId: string | null
+    stripePaymentIntentId: string | null
     paidAt: string | null
     submittedAt: string | null
     profile: {
@@ -240,8 +244,55 @@ async function mockConfirmPayment(
   return await onRequestPostMockConfirm(context)
 }
 
+async function createCheckout(cookie: string | undefined, body: unknown) {
+  return await onRequestPostCheckout(pagesContext(new Request(
+    'https://contest.example.com/api/payments/checkout',
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        ...(cookie ? { cookie } : {}),
+      },
+      body: JSON.stringify(body),
+    },
+  )))
+}
+
+async function stripeWebhook(body: string, signature: string) {
+  return await onRequestPostStripeWebhook(pagesContext(new Request(
+    'https://contest.example.com/api/stripe/webhook',
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'stripe-signature': signature,
+      },
+      body,
+    },
+  )))
+}
+
 async function jsonBody<T>(response: Response): Promise<T> {
   return await response.json() as T
+}
+
+async function stripeSignature(payload: string, secret: string, timestamp = 1760000000) {
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  )
+  const signature = await crypto.subtle.sign(
+    'HMAC',
+    key,
+    new TextEncoder().encode(`${timestamp}.${payload}`),
+  )
+  const hex = Array.from(new Uint8Array(signature))
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('')
+  return `t=${timestamp},v1=${hex}`
 }
 
 function completeSubmissionUpdate(email: string) {
@@ -1373,6 +1424,107 @@ describe('/api/submissions', () => {
       .resolves.toMatchObject({ status: 403 })
     await expect(mockConfirmPayment(committeeCookie, { submissionId: crypto.randomUUID() }))
       .resolves.toMatchObject({ status: 403 })
+  })
+
+  it('creates a Stripe Checkout Session for a payment pending submission', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    await submitSubmission(submissionId, cookie)
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({
+      id: 'cs_test_123',
+      url: 'https://checkout.stripe.com/c/pay/cs_test_123',
+    }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    }))
+
+    try {
+      const response = await createCheckout(cookie, { submissionId })
+      const body = await jsonBody<{ checkoutUrl: string }>(response)
+
+      expect(response.status).toBe(200)
+      expect(body.checkoutUrl).toBe('https://checkout.stripe.com/c/pay/cs_test_123')
+      expect(fetchSpy).toHaveBeenCalledOnce()
+      const [url, init] = fetchSpy.mock.calls[0]
+      expect(url).toBe('https://api.stripe.com/v1/checkout/sessions')
+      expect(new Headers(init?.headers).get('authorization')).toBe('Bearer sk_test_unused')
+      const form = new URLSearchParams(init?.body as string)
+      expect(form.get('mode')).toBe('payment')
+      expect(form.get('client_reference_id')).toBe(submissionId)
+      expect(form.get('metadata[submission_id]')).toBe(submissionId)
+      expect(form.get('line_items[0][price_data][unit_amount]')).toBe('10000')
+      expect(form.get('line_items[0][price_data][currency]')).toBe('jpy')
+      expect(form.get('success_url')).toBe(`https://contest.example.com/payment/success?submissionId=${encodeURIComponent(submissionId)}`)
+      expect(form.get('cancel_url')).toBe(`https://contest.example.com/payment/cancel?submissionId=${encodeURIComponent(submissionId)}`)
+
+      const submissionResponse = await getSubmission(submissionId, cookie)
+      const submissionBody = await jsonBody<SubmissionResponseBody>(submissionResponse)
+      expect(submissionBody.submission.stripeCheckoutSessionId).toBe('cs_test_123')
+      expect(submissionBody.submission.status).toBe('payment_pending')
+    } finally {
+      fetchSpy.mockRestore()
+    }
+  })
+
+  it('requires ownership and payment_pending status for Stripe Checkout', async () => {
+    const owner = await insertUser()
+    const other = await insertUser()
+    const ownerCookie = await sessionCookie(owner.id)
+    const otherCookie = await sessionCookie(other.id)
+    const submissionId = await createCompleteDraft(ownerCookie, owner.email)
+
+    await expect(createCheckout(ownerCookie, { submissionId }))
+      .resolves.toMatchObject({ status: 409 })
+    await submitSubmission(submissionId, ownerCookie)
+    await expect(createCheckout(otherCookie, { submissionId }))
+      .resolves.toMatchObject({ status: 404 })
+  })
+
+  it('marks a payment pending submission submitted from a signed Stripe webhook', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    await submitSubmission(submissionId, cookie)
+
+    const payload = JSON.stringify({
+      id: 'evt_test_checkout_completed',
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_test_123',
+          payment_intent: 'pi_test_123',
+          metadata: {
+            submission_id: submissionId,
+          },
+        },
+      },
+    })
+    const signature = await stripeSignature(payload, 'whsec_unused')
+
+    const response = await stripeWebhook(payload, signature)
+    const body = await jsonBody<{ ok: true }>(response)
+
+    expect(response.status).toBe(200)
+    expect(body.ok).toBe(true)
+
+    const submissionResponse = await getSubmission(submissionId, cookie)
+    const submissionBody = await jsonBody<SubmissionResponseBody>(submissionResponse)
+    expect(submissionBody.submission.status).toBe('submitted')
+    expect(submissionBody.submission.stripeCheckoutSessionId).toBe('cs_test_123')
+    expect(submissionBody.submission.stripePaymentIntentId).toBe('pi_test_123')
+    expect(submissionBody.submission.paidAt).toMatch(/^2026-|^20/)
+    expect(submissionBody.submission.submittedAt).toMatch(/^2026-|^20/)
+  })
+
+  it('rejects Stripe webhooks with invalid signatures', async () => {
+    const payload = JSON.stringify({ id: 'evt_test_invalid', type: 'checkout.session.completed' })
+
+    const response = await stripeWebhook(payload, 't=1760000000,v1=invalid')
+    const body = await jsonBody<{ error: { code: string } }>(response)
+
+    expect(response.status).toBe(400)
+    expect(body.error.code).toBe('bad_request')
   })
 
   it('mock-confirms a payment pending submission as submitted', async () => {

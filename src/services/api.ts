@@ -4,11 +4,12 @@ import type {
   AdminSubmissionResponse,
   ApplicantProfile,
   ApiOkResponse,
+  CheckoutPaymentRequest,
+  CheckoutPaymentResponse,
   CreateSubmissionRequest,
   ForgotPasswordRequest,
   LoginRequest,
   LoginResponse,
-  MockConfirmPaymentRequest,
   ProfileResponse,
   RegisterRequest,
   ResetPasswordRequest,
@@ -193,8 +194,8 @@ export function submitSubmission(id: string) {
   })
 }
 
-export function mockConfirmPayment(body: MockConfirmPaymentRequest) {
-  return apiFetch<SubmissionResponse>('/api/payments/mock-confirm', {
+export function createCheckout(body: CheckoutPaymentRequest) {
+  return apiFetch<CheckoutPaymentResponse>('/api/payments/checkout', {
     method: 'POST',
     body: JSON.stringify(body),
   })

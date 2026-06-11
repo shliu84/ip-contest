@@ -215,8 +215,12 @@ export type UploadSubmissionFileRequest = {
   dataBase64: string
 }
 
-export type MockConfirmPaymentRequest = {
+export type CheckoutPaymentRequest = {
   submissionId: string
+}
+
+export type CheckoutPaymentResponse = {
+  checkoutUrl: string
 }
 
 export type UpdateAdminSubmissionStatusRequest = {

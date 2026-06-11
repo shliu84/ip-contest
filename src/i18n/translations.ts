@@ -169,9 +169,9 @@ export type TranslationKey =
   | 'paymentLead'
   | 'paymentLoading'
   | 'paymentLoadError'
-  | 'paymentMockConfirm'
-  | 'paymentMockConfirmPending'
-  | 'paymentMockConfirmError'
+  | 'paymentCheckout'
+  | 'paymentCheckoutPending'
+  | 'paymentCheckoutError'
   | 'paymentBackToEditor'
   | 'paymentAlreadySubmitted'
   | 'paymentUnavailable'
@@ -451,12 +451,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProceedError: '无法进入付款，请检查投稿内容后重试。',
     paymentKicker: '付款',
     paymentTitle: '确认付款',
-    paymentLead: '确认投稿金额，并在沙盒环境中模拟付款成功。',
+    paymentLead: '确认投稿金额，并前往 Stripe 沙盒结账页完成支付。',
     paymentLoading: '正在读取投稿...',
     paymentLoadError: '无法读取付款信息，请稍后再试。',
-    paymentMockConfirm: '模拟付款成功',
-    paymentMockConfirmPending: '正在确认...',
-    paymentMockConfirmError: '无法确认付款，请稍后再试。',
+    paymentCheckout: '前往 Stripe 支付',
+    paymentCheckoutPending: '正在跳转...',
+    paymentCheckoutError: '无法开始支付，请稍后再试。',
     paymentBackToEditor: '返回投稿编辑',
     paymentAlreadySubmitted: '该投稿已完成提交。',
     paymentUnavailable: '当前状态无法付款。',
@@ -730,12 +730,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProceedError: '支払いへ進めませんでした。応募内容を確認して再度お試しください。',
     paymentKicker: '支払い',
     paymentTitle: '支払い確認',
-    paymentLead: '応募料を確認し、サンドボックス環境で支払い成功をシミュレートします。',
+    paymentLead: '応募料を確認し、Stripeサンドボックスの決済ページで支払いを完了します。',
     paymentLoading: '応募作品を読み込み中...',
     paymentLoadError: '支払い情報を読み込めませんでした。時間をおいて再度お試しください。',
-    paymentMockConfirm: '支払い成功をシミュレート',
-    paymentMockConfirmPending: '確認中...',
-    paymentMockConfirmError: '支払いを確認できませんでした。時間をおいて再度お試しください。',
+    paymentCheckout: 'Stripeで支払う',
+    paymentCheckoutPending: '移動中...',
+    paymentCheckoutError: '支払いを開始できませんでした。時間をおいて再度お試しください。',
     paymentBackToEditor: '応募作品編集に戻る',
     paymentAlreadySubmitted: 'この応募作品は提出済みです。',
     paymentUnavailable: '現在のステータスでは支払いできません。',
@@ -1009,12 +1009,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProceedError: 'Payment could not be prepared. Please check the submission and try again.',
     paymentKicker: 'Payment',
     paymentTitle: 'Confirm Payment',
-    paymentLead: 'Confirm the submission fee and simulate a successful payment in the sandbox.',
+    paymentLead: 'Confirm the submission fee and continue to Stripe sandbox checkout.',
     paymentLoading: 'Loading submission...',
     paymentLoadError: 'Payment information could not be loaded. Please try again later.',
-    paymentMockConfirm: 'Simulate Payment Success',
-    paymentMockConfirmPending: 'Confirming...',
-    paymentMockConfirmError: 'Payment could not be confirmed. Please try again later.',
+    paymentCheckout: 'Pay with Stripe',
+    paymentCheckoutPending: 'Redirecting...',
+    paymentCheckoutError: 'Payment could not be started. Please try again later.',
     paymentBackToEditor: 'Back to Submission Editor',
     paymentAlreadySubmitted: 'This submission has already been submitted.',
     paymentUnavailable: 'Payment is unavailable for the current status.',
