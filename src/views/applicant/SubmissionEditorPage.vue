@@ -240,7 +240,11 @@
             <article v-for="fileType in visibleFileTypes" :key="fileType" class="submission-file-group">
               <div class="submission-file-group-header">
                 <h4>{{ fileTypeLabel(fileType) }}</h4>
-                <label class="file-upload-control" :class="{ 'is-disabled': uploadDisabled }">
+                <label
+                  v-if="fileType !== 'unedited_original_ai'"
+                  class="file-upload-control"
+                  :class="{ 'is-disabled': uploadDisabled }"
+                >
                   <span>
                     {{ uploadingType === fileType ? t('submissionUploadPending') : t('submissionUploadFile') }}
                   </span>
@@ -343,13 +347,11 @@ const allFileTypes: SubmissionFileType[] = [
   'process_or_prompt_screenshot',
   'unedited_original_ai',
 ]
-
-const visibleFileTypes = computed<SubmissionFileType[]>(() => {
-  if (form.division === 'ai') {
-    return ['online_a4_image', 'physical_a2_image', 'process_or_prompt_screenshot']
-  }
-  return ['online_a4_image', 'physical_a2_image', 'process_or_prompt_screenshot']
-})
+const guidelineFileTypes: SubmissionFileType[] = [
+  'online_a4_image',
+  'physical_a2_image',
+  'process_or_prompt_screenshot',
+]
 
 const divisionHeadingId = 'submission-division-heading'
 const profileHeadingId = 'submission-profile-heading'
@@ -412,6 +414,12 @@ const groupedFiles = computed<Record<SubmissionFileType, SubmissionFile[]>>(() =
 
   return groups
 })
+
+const visibleFileTypes = computed<SubmissionFileType[]>(() => (
+  groupedFiles.value.unedited_original_ai.length > 0
+    ? [...guidelineFileTypes, 'unedited_original_ai']
+    : guidelineFileTypes
+))
 
 watch(
   () => `${String(route.name)}:${routeSubmissionId() ?? ''}`,
