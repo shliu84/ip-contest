@@ -15,6 +15,12 @@ export type SubmissionStatus =
 export const DIVISIONS = ['2d', '3d', 'ai', 'corporate'] as const
 export const MAX_DRAFT_SUBMISSIONS_PER_USER = 20
 export const MAX_FILES_PER_SUBMISSION = 12
+export const REQUIRED_FILE_TYPES_BY_DIVISION: Record<SubmissionDivision, string[]> = {
+  '2d': ['online_a4_image', 'physical_a2_image', 'process_or_prompt_screenshot'],
+  '3d': ['online_a4_image', 'physical_a2_image', 'process_or_prompt_screenshot'],
+  ai: ['online_a4_image', 'physical_a2_image', 'process_or_prompt_screenshot'],
+  corporate: ['online_a4_image', 'physical_a2_image', 'process_or_prompt_screenshot'],
+}
 
 export type SubmissionDetailRow = {
   id: string
@@ -238,15 +244,21 @@ export function assertReadyForPayment(submission: SubmissionModel) {
     || !hasText(submission.profile.firstName)
     || !hasText(submission.profile.email)
     || !hasText(submission.profile.countryRegion)
+    || !hasText(submission.profile.phone)
     || !hasText(submission.work.characterName)
     || !hasText(submission.work.themeAndSetting)
     || !hasText(submission.work.payerName)
     || !submission.work.usagePermission
     || !submission.work.termsAccepted
-    || submission.files.length === 0
+    || missingRequiredFileTypes(submission).length > 0
   ) {
     throw new ApiRequestError('bad_request', 'Submission is incomplete', 400)
   }
+}
+
+export function missingRequiredFileTypes(submission: SubmissionModel) {
+  const uploadedTypes = new Set(submission.files.map((file) => file.fileType))
+  return REQUIRED_FILE_TYPES_BY_DIVISION[submission.division].filter((fileType) => !uploadedTypes.has(fileType))
 }
 
 function hasText(value: string) {

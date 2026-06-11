@@ -252,7 +252,7 @@ function completeSubmissionUpdate(email: string) {
       firstName: 'Aki',
       penName: '',
       email,
-      phone: '',
+      phone: '09012345678',
       countryRegion: 'Japan',
       city: '',
       postalCode: '',
@@ -274,16 +274,25 @@ function completeSubmissionUpdate(email: string) {
   }
 }
 
-async function createCompleteDraft(cookie: string, email: string) {
-  const createResponse = await createSubmission(cookie, { division: '2d' })
-  const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
-  await updateSubmission(createBody.submission.id, cookie, completeSubmissionUpdate(email))
-  await uploadSubmissionFile(createBody.submission.id, cookie, {
-    fileType: 'online_a4_image',
-    filename: 'entry.png',
+async function uploadFileOfType(submissionId: string, cookie: string, fileType: string, filename = `${fileType}.png`) {
+  await uploadSubmissionFile(submissionId, cookie, {
+    fileType,
+    filename,
     contentType: 'image/png',
-    dataBase64: btoa('png-bytes'),
+    dataBase64: btoa(`${fileType}-bytes`),
   })
+}
+
+async function createCompleteDraft(cookie: string, email: string, division = '2d') {
+  const createResponse = await createSubmission(cookie, { division })
+  const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+  await updateSubmission(createBody.submission.id, cookie, {
+    ...completeSubmissionUpdate(email),
+    division,
+  })
+  await uploadFileOfType(createBody.submission.id, cookie, 'online_a4_image')
+  await uploadFileOfType(createBody.submission.id, cookie, 'physical_a2_image')
+  await uploadFileOfType(createBody.submission.id, cookie, 'process_or_prompt_screenshot')
   return createBody.submission.id
 }
 
@@ -1142,6 +1151,31 @@ describe('/api/submissions', () => {
       paidAt: null,
       submittedAt: null,
     })
+  })
+
+  it('requires all guideline files before moving a 2d draft to payment pending', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    await updateSubmission(createBody.submission.id, cookie, completeSubmissionUpdate(user.email))
+    await uploadFileOfType(createBody.submission.id, cookie, 'online_a4_image')
+
+    const response = await submitSubmission(createBody.submission.id, cookie)
+
+    expect(response.status).toBe(400)
+  })
+
+  it('accepts ai drafts with A4, A2, and prompt or process screenshot files', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email, 'ai')
+
+    const response = await submitSubmission(submissionId, cookie)
+
+    expect(response.status).toBe(200)
+    const body = await jsonBody<SubmissionResponseBody>(response)
+    expect(body.submission.status).toBe('payment_pending')
   })
 
   it('rejects incomplete drafts before payment', async () => {
