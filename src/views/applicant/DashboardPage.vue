@@ -42,7 +42,7 @@
           {{ profileSuccess }}
         </p>
 
-        <form v-else-if="!isLoadingProfile" class="auth-form" @submit.prevent="saveProfile">
+        <form v-if="!isLoadingProfile" class="auth-form" @submit.prevent="saveProfile">
           <div class="form-grid">
             <div class="form-field">
               <label for="profile-account-last-name">{{ t('profileLastNameLabel') }}</label>
