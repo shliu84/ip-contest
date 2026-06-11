@@ -179,6 +179,12 @@ nav a.router-link-exact-active::after {
   white-space: nowrap;
 }
 
+.header-user-link {
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .header-entry-link:hover {
   border-color: var(--primary);
   color: var(--primary);

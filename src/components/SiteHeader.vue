@@ -37,7 +37,7 @@
         </svg>
       </button>
       <div class="header-entry-links" role="group" :aria-label="t('headerEntry')">
-        <a class="header-entry-link" href="/login">{{ t('headerLogin') }}</a>
+        <a class="header-entry-link header-user-link" :href="headerLoginHref">{{ headerLoginLabel }}</a>
         <a class="header-entry-link header-entry-link-primary" href="/login?redirect=/dashboard">
           {{ t('headerEntry') }}
         </a>
@@ -168,6 +168,7 @@
 import { computed, reactive, ref } from 'vue'
 import { useHeaderScroll } from '../composables/useHeaderScroll'
 import type { LanguageCode, TranslationKey } from '../i18n/translations'
+import { useSession } from '../stores/session'
 
 const props = defineProps<{
   currentLanguage: LanguageCode
@@ -194,12 +195,16 @@ const isContactOpen = ref(false)
 const contactStatus = ref(false)
 const headerRef = ref<HTMLElement | null>(null)
 const contactTitleId = 'contact-modal-title'
+const session = useSession()
+const currentUser = session.currentUser
 const currentLanguageLabel = computed(() => {
   return languages.find((lang) => lang.code === props.currentLanguage)?.label ?? 'JA'
 })
 const mobileLanguageOptions = computed(() => {
   return languages.filter((lang) => lang.code !== props.currentLanguage)
 })
+const headerLoginLabel = computed(() => currentUser.value?.email ?? props.t('headerLogin'))
+const headerLoginHref = computed(() => currentUser.value ? '/dashboard' : '/login')
 const contactForm = reactive({
   lastName: '',
   firstName: '',
