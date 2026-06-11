@@ -42,7 +42,13 @@
           {{ profileSuccess }}
         </p>
 
-        <form v-if="!isLoadingProfile" class="auth-form" @submit.prevent="saveProfile">
+        <div v-if="profileError && !hasLoadedProfile && !isLoadingProfile" class="form-actions">
+          <button class="btn btn-outline auth-submit" type="button" @click="loadProfile">
+            {{ t('profileRetry') }}
+          </button>
+        </div>
+
+        <form v-if="!isLoadingProfile && hasLoadedProfile" class="auth-form" @submit.prevent="saveProfile">
           <div class="form-grid">
             <div class="form-field">
               <label for="profile-account-last-name">{{ t('profileLastNameLabel') }}</label>
@@ -369,6 +375,7 @@ const isLoadingProfile = ref(false)
 const isSavingProfile = ref(false)
 const profileError = ref('')
 const profileSuccess = ref('')
+const hasLoadedProfile = ref(false)
 
 const roleLabel = computed(() => {
   const keyByRole: Record<UserRole, TranslationKey> = {
@@ -432,6 +439,7 @@ async function loadProfile() {
   try {
     const response = await getProfile()
     profile.value = response.profile
+    hasLoadedProfile.value = true
   } catch (error) {
     profileError.value = translatedError(error, 'profileLoadError')
   } finally {

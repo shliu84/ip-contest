@@ -149,6 +149,7 @@ export type TranslationKey =
   | 'profileLoadError'
   | 'profileSaveError'
   | 'profileLoading'
+  | 'profileRetry'
   | 'prefecturePlaceholder'
   | 'submissionEditorKicker'
   | 'submissionEditorTitle'
@@ -433,6 +434,7 @@ export const translations: Record<LanguageCode, Translation> = {
     profileLoadError: '无法加载账户信息。',
     profileSaveError: '无法保存账户信息。',
     profileLoading: '正在读取账户信息...',
+    profileRetry: '重新读取',
     prefecturePlaceholder: '请选择都道府县/省州',
     submissionEditorKicker: '投稿',
     submissionEditorTitle: '投稿编辑',
@@ -711,6 +713,7 @@ export const translations: Record<LanguageCode, Translation> = {
     profileLoadError: 'アカウント情報を読み込めませんでした。',
     profileSaveError: 'アカウント情報を保存できませんでした。',
     profileLoading: 'アカウント情報を読み込み中...',
+    profileRetry: '再読み込み',
     prefecturePlaceholder: '都道府県を選択',
     submissionEditorKicker: '応募',
     submissionEditorTitle: '応募作品編集',
@@ -989,6 +992,7 @@ export const translations: Record<LanguageCode, Translation> = {
     profileLoadError: 'Unable to load account information.',
     profileSaveError: 'Unable to save account information.',
     profileLoading: 'Loading account information...',
+    profileRetry: 'Reload',
     prefecturePlaceholder: 'Select prefecture / state',
     submissionEditorKicker: 'Submission',
     submissionEditorTitle: 'Submission Editor',
