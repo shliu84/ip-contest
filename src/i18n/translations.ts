@@ -148,6 +148,8 @@ export type TranslationKey =
   | 'profileSaveSuccess'
   | 'profileLoadError'
   | 'profileSaveError'
+  | 'profileLoading'
+  | 'prefecturePlaceholder'
   | 'submissionEditorKicker'
   | 'submissionEditorTitle'
   | 'submissionEditorLead'
@@ -428,6 +430,8 @@ export const translations: Record<LanguageCode, Translation> = {
     profileSaveSuccess: '账户信息已保存。',
     profileLoadError: '无法加载账户信息。',
     profileSaveError: '无法保存账户信息。',
+    profileLoading: '正在读取账户信息...',
+    prefecturePlaceholder: '请选择都道府县/省州',
     submissionEditorKicker: '投稿',
     submissionEditorTitle: '投稿编辑',
     submissionEditorLead: '填写参赛者资料、作品信息，并上传投稿文件。',
@@ -702,6 +706,8 @@ export const translations: Record<LanguageCode, Translation> = {
     profileSaveSuccess: 'アカウント情報を保存しました。',
     profileLoadError: 'アカウント情報を読み込めませんでした。',
     profileSaveError: 'アカウント情報を保存できませんでした。',
+    profileLoading: 'アカウント情報を読み込み中...',
+    prefecturePlaceholder: '都道府県を選択',
     submissionEditorKicker: '応募',
     submissionEditorTitle: '応募作品編集',
     submissionEditorLead: '応募者情報、作品情報、提出ファイルを入力してください。',
@@ -976,6 +982,8 @@ export const translations: Record<LanguageCode, Translation> = {
     profileSaveSuccess: 'Account information saved.',
     profileLoadError: 'Unable to load account information.',
     profileSaveError: 'Unable to save account information.',
+    profileLoading: 'Loading account information...',
+    prefecturePlaceholder: 'Select prefecture / state',
     submissionEditorKicker: 'Submission',
     submissionEditorTitle: 'Submission Editor',
     submissionEditorLead: 'Enter applicant details, work details, and submission files.',

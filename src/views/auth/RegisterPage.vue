@@ -118,6 +118,7 @@ import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ApiClientError, register } from '../../services/api'
 import type { TranslationKey } from '../../i18n/translations'
+import { countryRegionOptions, phoneCountryCodeOptions } from '../../constants/profile-options'
 
 const props = defineProps<{
   t: (key: TranslationKey) => string
@@ -134,23 +135,6 @@ const phoneNumber = ref('')
 const errorMessage = ref('')
 const isPending = ref(false)
 const isSuccess = ref(false)
-
-const countryRegionOptions = [
-  { value: 'JP', labelKey: 'countryRegionJapan' },
-  { value: 'CN', labelKey: 'countryRegionChina' },
-  { value: 'TW', labelKey: 'countryRegionTaiwan' },
-  { value: 'HK', labelKey: 'countryRegionHongKong' },
-  { value: 'KR', labelKey: 'countryRegionKorea' },
-  { value: 'SG', labelKey: 'countryRegionSingapore' },
-  { value: 'TH', labelKey: 'countryRegionThailand' },
-  { value: 'ID', labelKey: 'countryRegionIndonesia' },
-  { value: 'MY', labelKey: 'countryRegionMalaysia' },
-  { value: 'PH', labelKey: 'countryRegionPhilippines' },
-  { value: 'VN', labelKey: 'countryRegionVietnam' },
-  { value: 'OTHER', labelKey: 'countryRegionOther' },
-] as const
-
-const phoneCountryCodeOptions = ['+81', '+86', '+886', '+852', '+82', '+65', '+66', '+62', '+60', '+63', '+84', 'OTHER'] as const
 
 async function submit() {
   errorMessage.value = ''
