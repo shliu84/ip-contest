@@ -102,6 +102,37 @@ async function sessionCookie(userId: string) {
   return session.cookie
 }
 
+async function insertUserProfile(userId: string) {
+  await env.DB.prepare(
+    `INSERT INTO user_profiles (
+       user_id, last_name, first_name, pen_name, country_region,
+       phone_country_code, phone_number, postal_code, prefecture, city,
+       address_line1, address_line2, occupation, school, wechat_id,
+       certificate_language
+     )
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  )
+    .bind(
+      userId,
+      '山田',
+      '明',
+      'Aki',
+      'JP',
+      '+81',
+      '9012345678',
+      '106-0032',
+      'tokyo',
+      '港区',
+      '六本木1-1-1',
+      '101',
+      'student',
+      'Tokyo Art School',
+      'wechat-aki',
+      'ja',
+    )
+    .run()
+}
+
 async function createSubmission(cookie: string | undefined, body: unknown) {
   return await onRequestPost(pagesContext(new Request(
     'https://contest.example.com/api/submissions',
@@ -330,6 +361,51 @@ describe('/api/submissions', () => {
     })
     expect(body.submission.submissionNo).toMatch(/^AIPC2026-[0-9A-F]{8}$/)
     expect(body.submission).not.toHaveProperty('fileCount')
+  })
+
+  it('prefills new draft submission profiles from the applicant account profile', async () => {
+    const user = await insertUser()
+    await insertUserProfile(user.id)
+    const cookie = await sessionCookie(user.id)
+
+    const response = await createSubmission(cookie, { division: '2d' })
+
+    expect(response.status).toBe(201)
+    const body = await jsonBody<SubmissionResponseBody>(response)
+    expect(body.submission.profile).toMatchObject({
+      lastName: '山田',
+      firstName: '明',
+      penName: 'Aki',
+      email: user.email,
+      phone: '+81 9012345678',
+      countryRegion: 'JP',
+      city: '港区',
+      postalCode: '106-0032',
+      prefecture: 'tokyo',
+      occupation: 'student',
+      school: 'Tokyo Art School',
+      address: '六本木1-1-1 101',
+      wechatId: 'wechat-aki',
+      certificateLanguage: 'ja',
+    })
+  })
+
+  it('keeps existing draft profile snapshots when the account profile changes', async () => {
+    const user = await insertUser()
+    await insertUserProfile(user.id)
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+
+    await env.DB.prepare(
+      `UPDATE user_profiles SET last_name = '佐藤' WHERE user_id = ?`,
+    )
+      .bind(user.id)
+      .run()
+
+    const response = await getSubmission(createBody.submission.id, cookie)
+    const body = await jsonBody<SubmissionResponseBody>(response)
+    expect(body.submission.profile.lastName).toBe('山田')
   })
 
   it('limits active drafts per applicant account', async () => {
