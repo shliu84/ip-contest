@@ -70,6 +70,7 @@ export type TranslationKey =
   | 'authKicker'
   | 'registerTitle'
   | 'registerLead'
+  | 'registerApplicantTitle'
   | 'loginTitle'
   | 'loginLead'
   | 'verifyTitle'
@@ -84,6 +85,10 @@ export type TranslationKey =
   | 'emailLabel'
   | 'passwordLabel'
   | 'confirmPasswordLabel'
+  | 'countryRegionLabel'
+  | 'phoneCountryCodeLabel'
+  | 'phoneNumberLabel'
+  | 'selectPlaceholder'
   | 'submitRegister'
   | 'submitLogin'
   | 'submitForgot'
@@ -136,6 +141,16 @@ export type TranslationKey =
   | 'dashboardUntitledSubmission'
   | 'dashboardEditSubmission'
   | 'dashboardViewSubmission'
+  | 'profileSectionTitle'
+  | 'profileSectionLead'
+  | 'profileSave'
+  | 'profileSavePending'
+  | 'profileSaveSuccess'
+  | 'profileLoadError'
+  | 'profileSaveError'
+  | 'profileLoading'
+  | 'profileRetry'
+  | 'prefecturePlaceholder'
   | 'submissionEditorKicker'
   | 'submissionEditorTitle'
   | 'submissionEditorLead'
@@ -175,6 +190,20 @@ export type TranslationKey =
   | 'submissionProfileTitle'
   | 'profileLastNameLabel'
   | 'profileFirstNameLabel'
+  | 'profileLastNameKanaLabel'
+  | 'profileFirstNameKanaLabel'
+  | 'countryRegionJapan'
+  | 'countryRegionChina'
+  | 'countryRegionTaiwan'
+  | 'countryRegionHongKong'
+  | 'countryRegionKorea'
+  | 'countryRegionSingapore'
+  | 'countryRegionThailand'
+  | 'countryRegionIndonesia'
+  | 'countryRegionMalaysia'
+  | 'countryRegionPhilippines'
+  | 'countryRegionVietnam'
+  | 'countryRegionOther'
   | 'profilePenNameLabel'
   | 'profilePhoneLabel'
   | 'profileCountryRegionLabel'
@@ -184,7 +213,15 @@ export type TranslationKey =
   | 'profileOccupationLabel'
   | 'profileSchoolLabel'
   | 'profileAddressLabel'
+  | 'profileAddressLine1Label'
+  | 'profileAddressLine2Label'
   | 'profileWechatLabel'
+  | 'occupationStudent'
+  | 'occupationCompanyEmployee'
+  | 'occupationSelfEmployed'
+  | 'occupationCreator'
+  | 'occupationCompanyRepresentative'
+  | 'occupationOther'
   | 'certificateLanguageLabel'
   | 'certificateLanguageJa'
   | 'certificateLanguageEn'
@@ -201,6 +238,8 @@ export type TranslationKey =
   | 'submissionFilePhysicalA2Image'
   | 'submissionFileProcessScreenshot'
   | 'submissionFileUneditedOriginalAi'
+  | 'submissionTermsDetails'
+  | 'submissionTermsPlaceholder'
   | 'submissionUploadFile'
   | 'submissionUploadPending'
   | 'submissionUploadError'
@@ -316,6 +355,7 @@ export const translations: Record<LanguageCode, Translation> = {
     authKicker: '账户',
     registerTitle: '创建账户',
     registerLead: '使用邮箱和密码创建参赛账户。提交后请前往邮箱完成验证。',
+    registerApplicantTitle: '参赛者信息',
     loginTitle: '登录',
     loginLead: '登录后可以管理投稿、付款和账户信息。',
     verifyTitle: '验证邮箱',
@@ -330,6 +370,10 @@ export const translations: Record<LanguageCode, Translation> = {
     emailLabel: '邮箱',
     passwordLabel: '密码',
     confirmPasswordLabel: '确认密码',
+    countryRegionLabel: '国家 / 地区',
+    phoneCountryCodeLabel: '手机区号',
+    phoneNumberLabel: '手机号',
+    selectPlaceholder: '请选择',
     submitRegister: '创建账户',
     submitLogin: '登录',
     submitForgot: '发送重置链接',
@@ -382,6 +426,16 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardUntitledSubmission: '未命名作品',
     dashboardEditSubmission: '编辑',
     dashboardViewSubmission: '查看',
+    profileSectionTitle: '账户信息',
+    profileSectionLead: '可在此管理未来投稿将自动填写的参赛者信息。',
+    profileSave: '保存账户信息',
+    profileSavePending: '保存中...',
+    profileSaveSuccess: '账户信息已保存。',
+    profileLoadError: '无法加载账户信息。',
+    profileSaveError: '无法保存账户信息。',
+    profileLoading: '正在读取账户信息...',
+    profileRetry: '重新读取',
+    prefecturePlaceholder: '请选择都道府县/省州',
     submissionEditorKicker: '投稿',
     submissionEditorTitle: '投稿编辑',
     submissionEditorLead: '填写参赛者资料、作品信息，并上传投稿文件。',
@@ -421,6 +475,20 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: '参赛者资料',
     profileLastNameLabel: '姓',
     profileFirstNameLabel: '名',
+    profileLastNameKanaLabel: '姓（假名）',
+    profileFirstNameKanaLabel: '名（假名）',
+    countryRegionJapan: '日本',
+    countryRegionChina: '中国',
+    countryRegionTaiwan: '台湾',
+    countryRegionHongKong: '香港',
+    countryRegionKorea: '韩国',
+    countryRegionSingapore: '新加坡',
+    countryRegionThailand: '泰国',
+    countryRegionIndonesia: '印尼',
+    countryRegionMalaysia: '马来西亚',
+    countryRegionPhilippines: '菲律宾',
+    countryRegionVietnam: '越南',
+    countryRegionOther: '其他',
     profilePenNameLabel: '笔名',
     profilePhoneLabel: '电话号码',
     profileCountryRegionLabel: '国家 / 地区',
@@ -430,6 +498,14 @@ export const translations: Record<LanguageCode, Translation> = {
     profileOccupationLabel: '职业',
     profileSchoolLabel: '学校',
     profileAddressLabel: '地址',
+    profileAddressLine1Label: '地址',
+    profileAddressLine2Label: '建筑名 / 门牌号',
+    occupationStudent: '学生',
+    occupationCompanyEmployee: '公司职员',
+    occupationSelfEmployed: '自由职业',
+    occupationCreator: '创作者',
+    occupationCompanyRepresentative: '公司代表',
+    occupationOther: '其他',
     profileWechatLabel: '微信号',
     certificateLanguageLabel: '证书语言',
     certificateLanguageJa: '日语',
@@ -452,6 +528,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadError: '无法上传文件，请稍后再试。',
     submissionUploadTypeError: '请上传 JPG、PNG 或 WebP 文件。',
     submissionUploadSizeError: '文件大小不能超过 10MB。',
+    submissionTermsDetails: '查看参赛须知',
+    submissionTermsPlaceholder: '正式参赛须知将于后续公布。提交报名前请确认相关内容。',
     submissionNoFiles: '尚未上传文件。',
     submissionFileNameLabel: '文件名',
     submissionFileSizeLabel: '大小',
@@ -556,6 +634,7 @@ export const translations: Record<LanguageCode, Translation> = {
     authKicker: 'アカウント',
     registerTitle: 'アカウント作成',
     registerLead: 'メールアドレスとパスワードで応募用アカウントを作成します。送信後、メール認証を完了してください。',
+    registerApplicantTitle: '応募者情報',
     loginTitle: 'ログイン',
     loginLead: 'ログインすると、応募作品・支払い・アカウント情報を管理できます。',
     verifyTitle: 'メール認証',
@@ -570,6 +649,10 @@ export const translations: Record<LanguageCode, Translation> = {
     emailLabel: 'メールアドレス',
     passwordLabel: 'パスワード',
     confirmPasswordLabel: 'パスワード確認',
+    countryRegionLabel: '国 / 地域',
+    phoneCountryCodeLabel: '国番号',
+    phoneNumberLabel: '電話番号',
+    selectPlaceholder: '選択してください',
     submitRegister: 'アカウントを作成',
     submitLogin: 'ログイン',
     submitForgot: '再設定リンクを送信',
@@ -622,6 +705,16 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardUntitledSubmission: '作品名未入力',
     dashboardEditSubmission: '編集',
     dashboardViewSubmission: '表示',
+    profileSectionTitle: 'アカウント情報',
+    profileSectionLead: '新しい応募作品に自動入力される応募者情報を管理できます。',
+    profileSave: 'アカウント情報を保存',
+    profileSavePending: '保存中...',
+    profileSaveSuccess: 'アカウント情報を保存しました。',
+    profileLoadError: 'アカウント情報を読み込めませんでした。',
+    profileSaveError: 'アカウント情報を保存できませんでした。',
+    profileLoading: 'アカウント情報を読み込み中...',
+    profileRetry: '再読み込み',
+    prefecturePlaceholder: '都道府県を選択',
     submissionEditorKicker: '応募',
     submissionEditorTitle: '応募作品編集',
     submissionEditorLead: '応募者情報、作品情報、提出ファイルを入力してください。',
@@ -661,6 +754,20 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: '応募者情報',
     profileLastNameLabel: '姓',
     profileFirstNameLabel: '名',
+    profileLastNameKanaLabel: '姓（カナ）',
+    profileFirstNameKanaLabel: '名（カナ）',
+    countryRegionJapan: '日本',
+    countryRegionChina: '中国',
+    countryRegionTaiwan: '台湾',
+    countryRegionHongKong: '香港',
+    countryRegionKorea: '韓国',
+    countryRegionSingapore: 'シンガポール',
+    countryRegionThailand: 'タイ',
+    countryRegionIndonesia: 'インドネシア',
+    countryRegionMalaysia: 'マレーシア',
+    countryRegionPhilippines: 'フィリピン',
+    countryRegionVietnam: 'ベトナム',
+    countryRegionOther: 'その他',
     profilePenNameLabel: 'ペンネーム',
     profilePhoneLabel: '電話番号',
     profileCountryRegionLabel: '国 / 地域',
@@ -670,6 +777,14 @@ export const translations: Record<LanguageCode, Translation> = {
     profileOccupationLabel: '職業',
     profileSchoolLabel: '学校名',
     profileAddressLabel: '住所',
+    profileAddressLine1Label: '住所',
+    profileAddressLine2Label: '建物名・部屋番号',
+    occupationStudent: '学生',
+    occupationCompanyEmployee: '会社員',
+    occupationSelfEmployed: '自営業',
+    occupationCreator: 'クリエイター',
+    occupationCompanyRepresentative: '法人代表者',
+    occupationOther: 'その他',
     profileWechatLabel: 'WeChat ID',
     certificateLanguageLabel: '証書言語',
     certificateLanguageJa: '日本語',
@@ -692,6 +807,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadError: 'ファイルをアップロードできませんでした。時間をおいて再度お試しください。',
     submissionUploadTypeError: 'JPG、PNG、WebPのいずれかをアップロードしてください。',
     submissionUploadSizeError: 'ファイルサイズは10MB以下にしてください。',
+    submissionTermsDetails: '応募規約を確認',
+    submissionTermsPlaceholder: '正式な応募規約は後日掲載します。応募前に内容をご確認ください。',
     submissionNoFiles: 'ファイルはまだアップロードされていません。',
     submissionFileNameLabel: 'ファイル名',
     submissionFileSizeLabel: 'サイズ',
@@ -796,6 +913,7 @@ export const translations: Record<LanguageCode, Translation> = {
     authKicker: 'Account',
     registerTitle: 'Create Account',
     registerLead: 'Create your applicant account with an email address and password. Please verify your email after submitting.',
+    registerApplicantTitle: 'Applicant Information',
     loginTitle: 'Login',
     loginLead: 'Log in to manage submissions, payments, and account details.',
     verifyTitle: 'Verify Email',
@@ -810,6 +928,10 @@ export const translations: Record<LanguageCode, Translation> = {
     emailLabel: 'Email',
     passwordLabel: 'Password',
     confirmPasswordLabel: 'Confirm Password',
+    countryRegionLabel: 'Country / Region',
+    phoneCountryCodeLabel: 'Country Code',
+    phoneNumberLabel: 'Phone Number',
+    selectPlaceholder: 'Please select',
     submitRegister: 'Create Account',
     submitLogin: 'Login',
     submitForgot: 'Send Reset Link',
@@ -862,6 +984,16 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardUntitledSubmission: 'Untitled work',
     dashboardEditSubmission: 'Edit',
     dashboardViewSubmission: 'View',
+    profileSectionTitle: 'Account Information',
+    profileSectionLead: 'You can manage applicant details that will prefill future submissions.',
+    profileSave: 'Save account information',
+    profileSavePending: 'Saving...',
+    profileSaveSuccess: 'Account information saved.',
+    profileLoadError: 'Unable to load account information.',
+    profileSaveError: 'Unable to save account information.',
+    profileLoading: 'Loading account information...',
+    profileRetry: 'Reload',
+    prefecturePlaceholder: 'Select prefecture / state',
     submissionEditorKicker: 'Submission',
     submissionEditorTitle: 'Submission Editor',
     submissionEditorLead: 'Enter applicant details, work details, and submission files.',
@@ -901,6 +1033,20 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: 'Applicant Profile',
     profileLastNameLabel: 'Last Name',
     profileFirstNameLabel: 'First Name',
+    profileLastNameKanaLabel: 'Last Name (Kana)',
+    profileFirstNameKanaLabel: 'First Name (Kana)',
+    countryRegionJapan: 'Japan',
+    countryRegionChina: 'China',
+    countryRegionTaiwan: 'Taiwan',
+    countryRegionHongKong: 'Hong Kong',
+    countryRegionKorea: 'Korea',
+    countryRegionSingapore: 'Singapore',
+    countryRegionThailand: 'Thailand',
+    countryRegionIndonesia: 'Indonesia',
+    countryRegionMalaysia: 'Malaysia',
+    countryRegionPhilippines: 'Philippines',
+    countryRegionVietnam: 'Vietnam',
+    countryRegionOther: 'Other',
     profilePenNameLabel: 'Pen Name',
     profilePhoneLabel: 'Phone',
     profileCountryRegionLabel: 'Country / Region',
@@ -910,6 +1056,14 @@ export const translations: Record<LanguageCode, Translation> = {
     profileOccupationLabel: 'Occupation',
     profileSchoolLabel: 'School',
     profileAddressLabel: 'Address',
+    profileAddressLine1Label: 'Address',
+    profileAddressLine2Label: 'Building name / room number',
+    occupationStudent: 'Student',
+    occupationCompanyEmployee: 'Company Employee',
+    occupationSelfEmployed: 'Self-Employed',
+    occupationCreator: 'Creator',
+    occupationCompanyRepresentative: 'Company Representative',
+    occupationOther: 'Other',
     profileWechatLabel: 'WeChat ID',
     certificateLanguageLabel: 'Certificate Language',
     certificateLanguageJa: 'Japanese',
@@ -932,6 +1086,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionUploadError: 'File could not be uploaded. Please try again later.',
     submissionUploadTypeError: 'Upload a JPG, PNG, or WebP file.',
     submissionUploadSizeError: 'File size must be 10MB or less.',
+    submissionTermsDetails: 'View submission terms',
+    submissionTermsPlaceholder: 'Official submission terms will be published later. Please review them before submitting your entry.',
     submissionNoFiles: 'No files uploaded yet.',
     submissionFileNameLabel: 'Filename',
     submissionFileSizeLabel: 'Size',

@@ -26,6 +26,16 @@ type VerificationTokenRow = {
   used_at: string | null
 }
 
+type UserProfileRow = {
+  user_id: string
+  last_name: string
+  first_name: string
+  country_region: string
+  phone_country_code: string
+  phone_number: string
+  certificate_language: string
+}
+
 afterEach(() => {
   vi.unstubAllGlobals()
   vi.useRealTimers()
@@ -35,6 +45,18 @@ function stubResend(status = 200) {
   const fetchMock = vi.fn(async () => new Response('{}', { status }))
   vi.stubGlobal('fetch', fetchMock)
   return fetchMock
+}
+
+function registrationBody(email = 'new.applicant@example.com') {
+  return {
+    email,
+    password: 'correct horse battery staple',
+    lastName: '山田',
+    firstName: '明',
+    countryRegion: 'JP',
+    phoneCountryCode: '+81',
+    phoneNumber: '9012345678',
+  }
 }
 
 async function register(body: unknown) {
@@ -88,6 +110,28 @@ async function firstUser(email: string) {
     .first<UserRow>()
 }
 
+async function firstUserProfile(userId: string) {
+  return await env.DB.prepare(
+    `SELECT user_id, last_name, first_name, country_region, phone_country_code, phone_number
+         , certificate_language
+     FROM user_profiles
+     WHERE user_id = ?`,
+  )
+    .bind(userId)
+    .first<UserProfileRow>()
+}
+
+async function firstUserProfileByEmail(email: string) {
+  return await env.DB.prepare(
+    `SELECT user_profiles.user_id, last_name, first_name, country_region, phone_country_code, phone_number, certificate_language
+     FROM user_profiles
+     INNER JOIN users ON users.id = user_profiles.user_id
+     WHERE users.email = ?`,
+  )
+    .bind(email)
+    .first<UserProfileRow>()
+}
+
 async function firstVerificationToken(userId: string) {
   return await env.DB.prepare(
     `SELECT id, user_id, token_hash, expires_at, used_at
@@ -127,8 +171,7 @@ function hrefFromHtml(html: string) {
 async function registerAndToken(email = 'verify@example.com') {
   const fetchMock = stubResend()
   const response = await register({
-    email,
-    password: 'correct horse battery staple',
+    ...registrationBody(email),
   })
   expect(response.status).toBe(201)
   return {
@@ -143,10 +186,7 @@ describe('/api/auth/register', () => {
     vi.setSystemTime(new Date('2026-06-10T00:00:00.000Z'))
     stubResend()
 
-    const response = await register({
-      email: '  New.Applicant@Example.COM ',
-      password: 'correct horse battery staple',
-    })
+    const response = await register(registrationBody('  New.Applicant@Example.COM '))
 
     expect(response.status).toBe(201)
     await expect(response.json()).resolves.toEqual({ ok: true })
@@ -160,6 +200,16 @@ describe('/api/auth/register', () => {
       'correct horse battery staple',
       user?.password_hash ?? '',
     )).toBe(true)
+    const profile = await firstUserProfile(user!.id)
+    expect(profile).toMatchObject({
+      user_id: user!.id,
+      last_name: '山田',
+      first_name: '明',
+      country_region: 'JP',
+      phone_country_code: '+81',
+      phone_number: '9012345678',
+      certificate_language: 'ja',
+    })
 
     const token = await firstVerificationToken(user!.id)
     expect(token?.expires_at).toBe('2026-06-11T00:00:00.000Z')
@@ -171,10 +221,7 @@ describe('/api/auth/register', () => {
   it('sends a Resend email with the verification URL and raw token while persisting only the hash', async () => {
     const fetchMock = stubResend()
 
-    const response = await register({
-      email: 'mail-target@example.com',
-      password: 'correct horse battery staple',
-    })
+    const response = await register(registrationBody('mail-target@example.com'))
 
     expect(response.status).toBe(201)
     const payload = resendPayload(fetchMock)
@@ -210,15 +257,9 @@ describe('/api/auth/register', () => {
 
   it('rejects duplicate email registrations with conflict', async () => {
     stubResend()
-    expect((await register({
-      email: 'duplicate@example.com',
-      password: 'correct horse battery staple',
-    })).status).toBe(201)
+    expect((await register(registrationBody('duplicate@example.com'))).status).toBe(201)
 
-    const response = await register({
-      email: ' Duplicate@Example.COM ',
-      password: 'correct horse battery staple',
-    })
+    const response = await register(registrationBody(' Duplicate@Example.COM '))
 
     expect(response.status).toBe(409)
     await expect(response.json()).resolves.toEqual({
@@ -243,10 +284,7 @@ describe('/api/auth/register', () => {
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          email: 'race@example.com',
-          password: 'correct horse battery staple',
-        }),
+        body: JSON.stringify(registrationBody('race@example.com')),
       },
     ))
     const realDb = context.env.DB
@@ -281,10 +319,10 @@ describe('/api/auth/register', () => {
   it('builds and escapes the verification URL from a configured base URL', async () => {
     const fetchMock = stubResend()
 
-    const response = await registerWithBaseUrl({
-      email: 'url-safe@example.com',
-      password: 'correct horse battery staple',
-    }, 'https://contest.example.com/app/?next=" onclick="alert(1)')
+    const response = await registerWithBaseUrl(
+      registrationBody('url-safe@example.com'),
+      'https://contest.example.com/app/?next=" onclick="alert(1)',
+    )
 
     expect(response.status).toBe(201)
     const html = resendPayload(fetchMock).body.html
@@ -293,10 +331,7 @@ describe('/api/auth/register', () => {
     expect(html).not.toContain('onclick')
     expect(html).not.toContain('alert(1)')
 
-    const defaultResponse = await register({
-      email: 'default-url@example.com',
-      password: 'correct horse battery staple',
-    })
+    const defaultResponse = await register(registrationBody('default-url@example.com'))
     expect(defaultResponse.status).toBe(201)
     expect(resendPayload(fetchMock, 1).body.html).toContain(
       'https://contest.example.com/verify-email?token=',
@@ -323,10 +358,7 @@ describe('/api/auth/register', () => {
   it('returns 502 and removes the just-created user and token when email delivery fails', async () => {
     stubResend(500)
 
-    const response = await register({
-      email: 'rollback@example.com',
-      password: 'correct horse battery staple',
-    })
+    const response = await register(registrationBody('rollback@example.com'))
 
     expect(response.status).toBe(502)
     await expect(response.json()).resolves.toEqual({
@@ -339,6 +371,19 @@ describe('/api/auth/register', () => {
     expect(await env.DB.prepare(
       'SELECT COUNT(*) AS count FROM email_verification_tokens',
     ).first<{ count: number }>()).toEqual({ count: 0 })
+    expect(await firstUserProfileByEmail('rollback@example.com')).toBeNull()
+  })
+
+  it('rejects registrations without required applicant profile fields', async () => {
+    stubResend()
+
+    const response = await register({
+      email: 'missing-profile@example.com',
+      password: 'correct horse battery staple',
+    })
+
+    expect(response.status).toBe(400)
+    expect(fetch).not.toHaveBeenCalled()
   })
 })
 

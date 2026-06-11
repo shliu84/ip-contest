@@ -102,6 +102,37 @@ async function sessionCookie(userId: string) {
   return session.cookie
 }
 
+async function insertUserProfile(userId: string) {
+  await env.DB.prepare(
+    `INSERT INTO user_profiles (
+       user_id, last_name, first_name, pen_name, country_region,
+       phone_country_code, phone_number, postal_code, prefecture, city,
+       address_line1, address_line2, occupation, school, wechat_id,
+       certificate_language
+     )
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  )
+    .bind(
+      userId,
+      '山田',
+      '明',
+      'Aki',
+      'JP',
+      '+81',
+      '9012345678',
+      '106-0032',
+      'tokyo',
+      '港区',
+      '六本木1-1-1',
+      '101',
+      'student',
+      'Tokyo Art School',
+      'wechat-aki',
+      'ja',
+    )
+    .run()
+}
+
 async function createSubmission(cookie: string | undefined, body: unknown) {
   return await onRequestPost(pagesContext(new Request(
     'https://contest.example.com/api/submissions',
@@ -221,7 +252,7 @@ function completeSubmissionUpdate(email: string) {
       firstName: 'Aki',
       penName: '',
       email,
-      phone: '',
+      phone: '09012345678',
       countryRegion: 'Japan',
       city: '',
       postalCode: '',
@@ -243,16 +274,25 @@ function completeSubmissionUpdate(email: string) {
   }
 }
 
-async function createCompleteDraft(cookie: string, email: string) {
-  const createResponse = await createSubmission(cookie, { division: '2d' })
-  const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
-  await updateSubmission(createBody.submission.id, cookie, completeSubmissionUpdate(email))
-  await uploadSubmissionFile(createBody.submission.id, cookie, {
-    fileType: 'online_a4_image',
-    filename: 'entry.png',
+async function uploadFileOfType(submissionId: string, cookie: string, fileType: string, filename = `${fileType}.png`) {
+  await uploadSubmissionFile(submissionId, cookie, {
+    fileType,
+    filename,
     contentType: 'image/png',
-    dataBase64: btoa('png-bytes'),
+    dataBase64: btoa(`${fileType}-bytes`),
   })
+}
+
+async function createCompleteDraft(cookie: string, email: string, division = '2d') {
+  const createResponse = await createSubmission(cookie, { division })
+  const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+  await updateSubmission(createBody.submission.id, cookie, {
+    ...completeSubmissionUpdate(email),
+    division,
+  })
+  await uploadFileOfType(createBody.submission.id, cookie, 'online_a4_image')
+  await uploadFileOfType(createBody.submission.id, cookie, 'physical_a2_image')
+  await uploadFileOfType(createBody.submission.id, cookie, 'process_or_prompt_screenshot')
   return createBody.submission.id
 }
 
@@ -330,6 +370,51 @@ describe('/api/submissions', () => {
     })
     expect(body.submission.submissionNo).toMatch(/^AIPC2026-[0-9A-F]{8}$/)
     expect(body.submission).not.toHaveProperty('fileCount')
+  })
+
+  it('prefills new draft submission profiles from the applicant account profile', async () => {
+    const user = await insertUser()
+    await insertUserProfile(user.id)
+    const cookie = await sessionCookie(user.id)
+
+    const response = await createSubmission(cookie, { division: '2d' })
+
+    expect(response.status).toBe(201)
+    const body = await jsonBody<SubmissionResponseBody>(response)
+    expect(body.submission.profile).toMatchObject({
+      lastName: '山田',
+      firstName: '明',
+      penName: 'Aki',
+      email: user.email,
+      phone: '+81 9012345678',
+      countryRegion: 'JP',
+      city: '港区',
+      postalCode: '106-0032',
+      prefecture: 'tokyo',
+      occupation: 'student',
+      school: 'Tokyo Art School',
+      address: '六本木1-1-1 101',
+      wechatId: 'wechat-aki',
+      certificateLanguage: 'ja',
+    })
+  })
+
+  it('keeps existing draft profile snapshots when the account profile changes', async () => {
+    const user = await insertUser()
+    await insertUserProfile(user.id)
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+
+    await env.DB.prepare(
+      `UPDATE user_profiles SET last_name = '佐藤' WHERE user_id = ?`,
+    )
+      .bind(user.id)
+      .run()
+
+    const response = await getSubmission(createBody.submission.id, cookie)
+    const body = await jsonBody<SubmissionResponseBody>(response)
+    expect(body.submission.profile.lastName).toBe('山田')
   })
 
   it('limits active drafts per applicant account', async () => {
@@ -1068,6 +1153,31 @@ describe('/api/submissions', () => {
     })
   })
 
+  it('requires all guideline files before moving a 2d draft to payment pending', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const createResponse = await createSubmission(cookie, { division: '2d' })
+    const createBody = await jsonBody<SubmissionResponseBody>(createResponse)
+    await updateSubmission(createBody.submission.id, cookie, completeSubmissionUpdate(user.email))
+    await uploadFileOfType(createBody.submission.id, cookie, 'online_a4_image')
+
+    const response = await submitSubmission(createBody.submission.id, cookie)
+
+    expect(response.status).toBe(400)
+  })
+
+  it('accepts ai drafts with A4, A2, and prompt or process screenshot files', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email, 'ai')
+
+    const response = await submitSubmission(submissionId, cookie)
+
+    expect(response.status).toBe(200)
+    const body = await jsonBody<SubmissionResponseBody>(response)
+    expect(body.submission.status).toBe('payment_pending')
+  })
+
   it('rejects incomplete drafts before payment', async () => {
     const user = await insertUser()
     const cookie = await sessionCookie(user.id)
@@ -1079,6 +1189,112 @@ describe('/api/submissions', () => {
 
     expect(response.status).toBe(400)
     expect(body.error.code).toBe('bad_request')
+  })
+
+  it('rechecks required file set during status transition race', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    const originalPrepare = env.DB.prepare.bind(env.DB)
+    const prepareSpy = vi.spyOn(env.DB, 'prepare')
+
+    prepareSpy.mockImplementation((query) => {
+      const statement = originalPrepare(query)
+      if (
+        typeof query === 'string'
+        && query.includes("SET status = 'payment_pending'")
+      ) {
+        const originalBind = statement.bind.bind(statement)
+        return {
+          ...statement,
+          bind(...values: unknown[]) {
+            const bound = originalBind(...values)
+            const originalRun = bound.run.bind(bound)
+            return {
+              ...bound,
+              async run() {
+                await env.DB.prepare(
+                  `DELETE FROM submission_files
+                   WHERE submission_id = ?
+                     AND file_type = 'physical_a2_image'`,
+                )
+                  .bind(submissionId)
+                  .run()
+                return await originalRun()
+              },
+            }
+          },
+        } as D1PreparedStatement
+      }
+      return statement
+    })
+
+    try {
+      const response = await submitSubmission(submissionId, cookie)
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(400)
+      expect(body.error.code).toBe('bad_request')
+    } finally {
+      prepareSpy.mockRestore()
+    }
+
+    const submissionResponse = await getSubmission(submissionId, cookie)
+    const submissionBody = await jsonBody<SubmissionResponseBody>(submissionResponse)
+    expect(submissionBody.submission.status).toBe('draft')
+  })
+
+  it('rechecks phone at write time during submission status transition', async () => {
+    const user = await insertUser()
+    const cookie = await sessionCookie(user.id)
+    const submissionId = await createCompleteDraft(cookie, user.email)
+    const originalPrepare = env.DB.prepare.bind(env.DB)
+    const prepareSpy = vi.spyOn(env.DB, 'prepare')
+
+    prepareSpy.mockImplementation((query) => {
+      const statement = originalPrepare(query)
+      if (
+        typeof query === 'string'
+        && query.includes("SET status = 'payment_pending'")
+      ) {
+        const originalBind = statement.bind.bind(statement)
+        return {
+          ...statement,
+          bind(...values: unknown[]) {
+            const bound = originalBind(...values)
+            const originalRun = bound.run.bind(bound)
+            return {
+              ...bound,
+              async run() {
+                await env.DB.prepare(
+                  `UPDATE submission_profiles
+                   SET phone = ''
+                   WHERE submission_id = ?`,
+                )
+                  .bind(submissionId)
+                  .run()
+                return await originalRun()
+              },
+            }
+          },
+        } as D1PreparedStatement
+      }
+      return statement
+    })
+
+    try {
+      const response = await submitSubmission(submissionId, cookie)
+      const body = await jsonBody<{ error: { code: string } }>(response)
+
+      expect(response.status).toBe(400)
+      expect(body.error.code).toBe('bad_request')
+    } finally {
+      prepareSpy.mockRestore()
+    }
+
+    const submissionResponse = await getSubmission(submissionId, cookie)
+    const submissionBody = await jsonBody<SubmissionResponseBody>(submissionResponse)
+    expect(submissionBody.submission.status).toBe('draft')
   })
 
   it('requires ownership and draft status when submitting for payment', async () => {

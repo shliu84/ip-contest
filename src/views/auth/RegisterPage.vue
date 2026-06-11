@@ -59,6 +59,45 @@
           >
         </div>
 
+        <div class="dashboard-section-heading">
+          <h3>{{ t('registerApplicantTitle') }}</h3>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="register-last-name">{{ t('profileLastNameLabel') }}</label>
+            <input id="register-last-name" v-model="lastName" autocomplete="family-name" type="text" required :disabled="isPending">
+          </div>
+
+          <div class="form-field">
+            <label for="register-first-name">{{ t('profileFirstNameLabel') }}</label>
+            <input id="register-first-name" v-model="firstName" autocomplete="given-name" type="text" required :disabled="isPending">
+          </div>
+
+          <div class="form-field">
+            <label for="register-country-region">{{ t('countryRegionLabel') }}</label>
+            <select id="register-country-region" v-model="countryRegion" required :disabled="isPending">
+              <option value="" disabled>{{ t('selectPlaceholder') }}</option>
+              <option v-for="option in countryRegionOptions" :key="option.value" :value="option.value">
+                {{ t(option.labelKey) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="register-phone-country-code">{{ t('phoneCountryCodeLabel') }}</label>
+            <select id="register-phone-country-code" v-model="phoneCountryCode" required :disabled="isPending">
+              <option value="" disabled>{{ t('selectPlaceholder') }}</option>
+              <option v-for="code in phoneCountryCodeOptions" :key="code" :value="code">{{ code }}</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="register-phone-number">{{ t('phoneNumberLabel') }}</label>
+            <input id="register-phone-number" v-model="phoneNumber" autocomplete="tel-national" type="tel" required :disabled="isPending">
+          </div>
+        </div>
+
         <p v-if="errorMessage" class="form-error" role="alert" aria-live="polite">
           {{ errorMessage }}
         </p>
@@ -79,6 +118,7 @@ import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ApiClientError, register } from '../../services/api'
 import type { TranslationKey } from '../../i18n/translations'
+import { countryRegionOptions, phoneCountryCodeOptions } from '../../constants/profile-options'
 
 const props = defineProps<{
   t: (key: TranslationKey) => string
@@ -87,6 +127,11 @@ const props = defineProps<{
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+const lastName = ref('')
+const firstName = ref('')
+const countryRegion = ref('')
+const phoneCountryCode = ref('')
+const phoneNumber = ref('')
 const errorMessage = ref('')
 const isPending = ref(false)
 const isSuccess = ref(false)
@@ -109,6 +154,11 @@ async function submit() {
     await register({
       email: email.value,
       password: password.value,
+      lastName: lastName.value,
+      firstName: firstName.value,
+      countryRegion: countryRegion.value,
+      phoneCountryCode: phoneCountryCode.value,
+      phoneNumber: phoneNumber.value,
     })
     isSuccess.value = true
     password.value = ''

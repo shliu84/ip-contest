@@ -27,6 +27,11 @@ export type LoginResponse = {
 export type RegisterRequest = {
   email: string
   password: string
+  lastName: string
+  firstName: string
+  countryRegion: string
+  phoneCountryCode: string
+  phoneNumber: string
 }
 
 export type ForgotPasswordRequest = {
@@ -74,6 +79,30 @@ export type SubmissionProfile = {
   address: string
   wechatId: string
   certificateLanguage: CertificateLanguage
+}
+
+export type ApplicantProfile = {
+  lastName: string
+  firstName: string
+  lastNameKana: string
+  firstNameKana: string
+  penName: string
+  countryRegion: string
+  phoneCountryCode: string
+  phoneNumber: string
+  postalCode: string
+  prefecture: string
+  city: string
+  addressLine1: string
+  addressLine2: string
+  occupation: string
+  school: string
+  wechatId: string
+  certificateLanguage: CertificateLanguage
+}
+
+export type ProfileResponse = {
+  profile: ApplicantProfile
 }
 
 export type SubmissionWork = {

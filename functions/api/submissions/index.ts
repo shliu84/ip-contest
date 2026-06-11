@@ -2,6 +2,11 @@ import type { AppEnv } from '../../_lib/env'
 import { requireApplicant } from '../../_lib/authz'
 import { ApiRequestError, handleApi, json, readJson } from '../../_lib/http'
 import {
+  loadApplicantProfile,
+  profileAddress,
+  profilePhone,
+} from '../../_lib/profile'
+import {
   assertRecord,
   changedRows,
   createSubmissionNo,
@@ -60,6 +65,8 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
       throw new ApiRequestError('quota_exceeded', 'Draft submission limit reached', 409)
     }
 
+    const profile = await loadApplicantProfile(context.env.DB, user.id)
+
     const submissionId = crypto.randomUUID()
     const nowIso = new Date().toISOString()
     const results = await context.env.DB.batch([
@@ -93,14 +100,48 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
         MAX_DRAFT_SUBMISSIONS_PER_USER,
       ),
       context.env.DB.prepare(
-        `INSERT INTO submission_profiles (submission_id, email)
-         SELECT ?, ?
+        `INSERT INTO submission_profiles (
+           submission_id,
+           last_name,
+           first_name,
+           pen_name,
+           email,
+           phone,
+           country_region,
+           city,
+           postal_code,
+           prefecture,
+           occupation,
+           school,
+           address,
+           wechat_id,
+           certificate_language
+         )
+         SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
          WHERE EXISTS (
            SELECT 1
            FROM submissions
            WHERE id = ? AND user_id = ?
          )`,
-      ).bind(submissionId, user.email, submissionId, user.id),
+      ).bind(
+        submissionId,
+        profile.lastName,
+        profile.firstName,
+        profile.penName,
+        user.email,
+        profilePhone(profile),
+        profile.countryRegion,
+        profile.city,
+        profile.postalCode,
+        profile.prefecture,
+        profile.occupation,
+        profile.school,
+        profileAddress(profile),
+        profile.wechatId,
+        profile.certificateLanguage,
+        submissionId,
+        user.id,
+      ),
       context.env.DB.prepare(
         `INSERT INTO submission_works (submission_id)
          SELECT ?
