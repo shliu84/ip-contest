@@ -4,6 +4,7 @@ import { sendEmail } from '../../_lib/email'
 import { ApiRequestError, handleApi, json, readJson } from '../../_lib/http'
 import { hashPassword } from '../../_lib/password'
 import { createToken, hashToken } from '../../_lib/tokens'
+import { parseApplicantProfile } from '../../_lib/profile'
 import {
   normalizeEmail,
   validateEmail,
@@ -13,6 +14,11 @@ import {
 type RegisterBody = {
   email?: unknown
   password?: unknown
+  lastName?: unknown
+  firstName?: unknown
+  countryRegion?: unknown
+  phoneCountryCode?: unknown
+  phoneNumber?: unknown
 }
 
 export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
@@ -32,6 +38,7 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
     if (!validatePassword(body.password)) {
       throw new ApiRequestError('bad_request', 'Invalid password', 400)
     }
+    const profile = parseApplicantProfile(body, 'registration')
 
     const existingUser = await context.env.DB.prepare(
       'SELECT id FROM users WHERE email = ?',
@@ -58,6 +65,29 @@ export const onRequestPost: PagesFunction<AppEnv> = async (context) => {
           `INSERT INTO users (id, email, password_hash, role, created_at, updated_at)
            VALUES (?, ?, ?, 'applicant', ?, ?)`,
         ).bind(userId, email, passwordHash, nowIso, nowIso),
+        context.env.DB.prepare(
+          `INSERT INTO user_profiles (
+             user_id,
+             last_name,
+             first_name,
+             country_region,
+             phone_country_code,
+             phone_number,
+             certificate_language,
+             created_at,
+             updated_at
+           )
+           VALUES (?, ?, ?, ?, ?, ?, 'ja', ?, ?)`,
+        ).bind(
+          userId,
+          profile.lastName,
+          profile.firstName,
+          profile.countryRegion,
+          profile.phoneCountryCode,
+          profile.phoneNumber,
+          nowIso,
+          nowIso,
+        ),
         context.env.DB.prepare(
           `INSERT INTO email_verification_tokens (id, user_id, token_hash, expires_at, created_at)
            VALUES (?, ?, ?, ?, ?)`,
