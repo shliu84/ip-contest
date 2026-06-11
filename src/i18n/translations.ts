@@ -70,6 +70,7 @@ export type TranslationKey =
   | 'authKicker'
   | 'registerTitle'
   | 'registerLead'
+  | 'registerApplicantTitle'
   | 'loginTitle'
   | 'loginLead'
   | 'verifyTitle'
@@ -84,6 +85,9 @@ export type TranslationKey =
   | 'emailLabel'
   | 'passwordLabel'
   | 'confirmPasswordLabel'
+  | 'countryRegionLabel'
+  | 'phoneCountryCodeLabel'
+  | 'phoneNumberLabel'
   | 'submitRegister'
   | 'submitLogin'
   | 'submitForgot'
@@ -175,6 +179,12 @@ export type TranslationKey =
   | 'submissionProfileTitle'
   | 'profileLastNameLabel'
   | 'profileFirstNameLabel'
+  | 'countryRegionJapan'
+  | 'countryRegionChina'
+  | 'countryRegionTaiwan'
+  | 'countryRegionHongKong'
+  | 'countryRegionKorea'
+  | 'countryRegionOther'
   | 'profilePenNameLabel'
   | 'profilePhoneLabel'
   | 'profileCountryRegionLabel'
@@ -316,6 +326,7 @@ export const translations: Record<LanguageCode, Translation> = {
     authKicker: '账户',
     registerTitle: '创建账户',
     registerLead: '使用邮箱和密码创建参赛账户。提交后请前往邮箱完成验证。',
+    registerApplicantTitle: '参赛者信息',
     loginTitle: '登录',
     loginLead: '登录后可以管理投稿、付款和账户信息。',
     verifyTitle: '验证邮箱',
@@ -330,6 +341,9 @@ export const translations: Record<LanguageCode, Translation> = {
     emailLabel: '邮箱',
     passwordLabel: '密码',
     confirmPasswordLabel: '确认密码',
+    countryRegionLabel: '国家 / 地区',
+    phoneCountryCodeLabel: '手机区号',
+    phoneNumberLabel: '手机号',
     submitRegister: '创建账户',
     submitLogin: '登录',
     submitForgot: '发送重置链接',
@@ -421,6 +435,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: '参赛者资料',
     profileLastNameLabel: '姓',
     profileFirstNameLabel: '名',
+    countryRegionJapan: '日本',
+    countryRegionChina: '中国',
+    countryRegionTaiwan: '台湾',
+    countryRegionHongKong: '香港',
+    countryRegionKorea: '韩国',
+    countryRegionOther: '其他',
     profilePenNameLabel: '笔名',
     profilePhoneLabel: '电话号码',
     profileCountryRegionLabel: '国家 / 地区',
@@ -556,6 +576,7 @@ export const translations: Record<LanguageCode, Translation> = {
     authKicker: 'アカウント',
     registerTitle: 'アカウント作成',
     registerLead: 'メールアドレスとパスワードで応募用アカウントを作成します。送信後、メール認証を完了してください。',
+    registerApplicantTitle: '応募者情報',
     loginTitle: 'ログイン',
     loginLead: 'ログインすると、応募作品・支払い・アカウント情報を管理できます。',
     verifyTitle: 'メール認証',
@@ -570,6 +591,9 @@ export const translations: Record<LanguageCode, Translation> = {
     emailLabel: 'メールアドレス',
     passwordLabel: 'パスワード',
     confirmPasswordLabel: 'パスワード確認',
+    countryRegionLabel: '国 / 地域',
+    phoneCountryCodeLabel: '国番号',
+    phoneNumberLabel: '電話番号',
     submitRegister: 'アカウントを作成',
     submitLogin: 'ログイン',
     submitForgot: '再設定リンクを送信',
@@ -661,6 +685,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: '応募者情報',
     profileLastNameLabel: '姓',
     profileFirstNameLabel: '名',
+    countryRegionJapan: '日本',
+    countryRegionChina: '中国',
+    countryRegionTaiwan: '台湾',
+    countryRegionHongKong: '香港',
+    countryRegionKorea: '韓国',
+    countryRegionOther: 'その他',
     profilePenNameLabel: 'ペンネーム',
     profilePhoneLabel: '電話番号',
     profileCountryRegionLabel: '国 / 地域',
@@ -796,6 +826,7 @@ export const translations: Record<LanguageCode, Translation> = {
     authKicker: 'Account',
     registerTitle: 'Create Account',
     registerLead: 'Create your applicant account with an email address and password. Please verify your email after submitting.',
+    registerApplicantTitle: 'Applicant Information',
     loginTitle: 'Login',
     loginLead: 'Log in to manage submissions, payments, and account details.',
     verifyTitle: 'Verify Email',
@@ -810,6 +841,9 @@ export const translations: Record<LanguageCode, Translation> = {
     emailLabel: 'Email',
     passwordLabel: 'Password',
     confirmPasswordLabel: 'Confirm Password',
+    countryRegionLabel: 'Country / Region',
+    phoneCountryCodeLabel: 'Country Code',
+    phoneNumberLabel: 'Phone Number',
     submitRegister: 'Create Account',
     submitLogin: 'Login',
     submitForgot: 'Send Reset Link',
@@ -901,6 +935,12 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: 'Applicant Profile',
     profileLastNameLabel: 'Last Name',
     profileFirstNameLabel: 'First Name',
+    countryRegionJapan: 'Japan',
+    countryRegionChina: 'China',
+    countryRegionTaiwan: 'Taiwan',
+    countryRegionHongKong: 'Hong Kong',
+    countryRegionKorea: 'Korea',
+    countryRegionOther: 'Other',
     profilePenNameLabel: 'Pen Name',
     profilePhoneLabel: 'Phone',
     profileCountryRegionLabel: 'Country / Region',

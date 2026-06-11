@@ -2,12 +2,14 @@ import type {
   AdminSubmissionListFilters,
   AdminSubmissionListResponse,
   AdminSubmissionResponse,
+  ApplicantProfile,
   ApiOkResponse,
   CreateSubmissionRequest,
   ForgotPasswordRequest,
   LoginRequest,
   LoginResponse,
   MockConfirmPaymentRequest,
+  ProfileResponse,
   RegisterRequest,
   ResetPasswordRequest,
   SubmissionListResponse,
@@ -100,6 +102,17 @@ export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise
 export function register(body: RegisterRequest) {
   return apiFetch<ApiOkResponse>('/api/auth/register', {
     method: 'POST',
+    body: JSON.stringify(body),
+  })
+}
+
+export function getProfile() {
+  return apiFetch<ProfileResponse>('/api/profile')
+}
+
+export function updateProfile(body: ApplicantProfile) {
+  return apiFetch<ProfileResponse>('/api/profile', {
+    method: 'PATCH',
     body: JSON.stringify(body),
   })
 }

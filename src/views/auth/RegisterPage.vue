@@ -59,6 +59,43 @@
           >
         </div>
 
+        <div class="dashboard-section-heading">
+          <h3>{{ t('registerApplicantTitle') }}</h3>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="register-last-name">{{ t('profileLastNameLabel') }}</label>
+            <input id="register-last-name" v-model="lastName" autocomplete="family-name" type="text" required :disabled="isPending">
+          </div>
+
+          <div class="form-field">
+            <label for="register-first-name">{{ t('profileFirstNameLabel') }}</label>
+            <input id="register-first-name" v-model="firstName" autocomplete="given-name" type="text" required :disabled="isPending">
+          </div>
+
+          <div class="form-field">
+            <label for="register-country-region">{{ t('countryRegionLabel') }}</label>
+            <select id="register-country-region" v-model="countryRegion" required :disabled="isPending">
+              <option v-for="option in countryRegionOptions" :key="option.value" :value="option.value">
+                {{ t(option.labelKey) }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="register-phone-country-code">{{ t('phoneCountryCodeLabel') }}</label>
+            <select id="register-phone-country-code" v-model="phoneCountryCode" required :disabled="isPending">
+              <option v-for="code in phoneCountryCodeOptions" :key="code" :value="code">{{ code }}</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="register-phone-number">{{ t('phoneNumberLabel') }}</label>
+            <input id="register-phone-number" v-model="phoneNumber" autocomplete="tel-national" type="tel" required :disabled="isPending">
+          </div>
+        </div>
+
         <p v-if="errorMessage" class="form-error" role="alert" aria-live="polite">
           {{ errorMessage }}
         </p>
@@ -87,9 +124,25 @@ const props = defineProps<{
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+const lastName = ref('')
+const firstName = ref('')
+const countryRegion = ref('JP')
+const phoneCountryCode = ref('+81')
+const phoneNumber = ref('')
 const errorMessage = ref('')
 const isPending = ref(false)
 const isSuccess = ref(false)
+
+const countryRegionOptions = [
+  { value: 'JP', labelKey: 'countryRegionJapan' },
+  { value: 'CN', labelKey: 'countryRegionChina' },
+  { value: 'TW', labelKey: 'countryRegionTaiwan' },
+  { value: 'HK', labelKey: 'countryRegionHongKong' },
+  { value: 'KR', labelKey: 'countryRegionKorea' },
+  { value: 'OTHER', labelKey: 'countryRegionOther' },
+] as const
+
+const phoneCountryCodeOptions = ['+81', '+86', '+886', '+852', '+82', 'OTHER'] as const
 
 async function submit() {
   errorMessage.value = ''
@@ -109,6 +162,11 @@ async function submit() {
     await register({
       email: email.value,
       password: password.value,
+      lastName: lastName.value,
+      firstName: firstName.value,
+      countryRegion: countryRegion.value,
+      phoneCountryCode: phoneCountryCode.value,
+      phoneNumber: phoneNumber.value,
     })
     isSuccess.value = true
     password.value = ''
