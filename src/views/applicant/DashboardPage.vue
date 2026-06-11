@@ -24,6 +24,214 @@
         {{ dashboardError }}
       </p>
 
+      <section v-if="isApplicant" class="dashboard-submissions" :aria-label="t('profileSectionTitle')">
+        <div class="dashboard-section-heading">
+          <h3>{{ t('profileSectionTitle') }}</h3>
+          <p>{{ t('profileSectionLead') }}</p>
+        </div>
+
+        <p v-if="isLoadingProfile" class="form-success" role="status" aria-live="polite">
+          {{ t('submissionEditorLoading') }}
+        </p>
+
+        <p v-if="profileError" class="form-error" role="alert" aria-live="polite">
+          {{ profileError }}
+        </p>
+
+        <p v-if="profileSuccess" class="form-success" role="status" aria-live="polite">
+          {{ profileSuccess }}
+        </p>
+
+        <form v-else-if="!isLoadingProfile" class="auth-form" @submit.prevent="saveProfile">
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="profile-account-last-name">{{ t('profileLastNameLabel') }}</label>
+              <input
+                id="profile-account-last-name"
+                v-model="profile.lastName"
+                type="text"
+                required
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-first-name">{{ t('profileFirstNameLabel') }}</label>
+              <input
+                id="profile-account-first-name"
+                v-model="profile.firstName"
+                type="text"
+                required
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-last-name-kana">{{ t('profileLastNameKanaLabel') }}</label>
+              <input
+                id="profile-account-last-name-kana"
+                v-model="profile.lastNameKana"
+                type="text"
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-first-name-kana">{{ t('profileFirstNameKanaLabel') }}</label>
+              <input
+                id="profile-account-first-name-kana"
+                v-model="profile.firstNameKana"
+                type="text"
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-pen-name">{{ t('profilePenNameLabel') }}</label>
+              <input
+                id="profile-account-pen-name"
+                v-model="profile.penName"
+                type="text"
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-country-region">{{ t('countryRegionLabel') }}</label>
+              <select
+                id="profile-account-country-region"
+                v-model="profile.countryRegion"
+                required
+                :disabled="isSavingProfile"
+              >
+                <option value="" disabled>{{ t('selectPlaceholder') }}</option>
+                <option v-for="option in countryRegionOptions" :key="option.value" :value="option.value">
+                  {{ t(option.labelKey) }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-phone-code">{{ t('phoneCountryCodeLabel') }}</label>
+              <select
+                id="profile-account-phone-code"
+                v-model="profile.phoneCountryCode"
+                required
+                :disabled="isSavingProfile"
+              >
+                <option value="" disabled>{{ t('selectPlaceholder') }}</option>
+                <option v-for="code in phoneCountryCodeOptions" :key="code" :value="code">
+                  {{ code }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-phone-number">{{ t('phoneNumberLabel') }}</label>
+              <input
+                id="profile-account-phone-number"
+                v-model="profile.phoneNumber"
+                type="tel"
+                required
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-postal-code">{{ t('profilePostalCodeLabel') }}</label>
+              <input
+                id="profile-account-postal-code"
+                v-model="profile.postalCode"
+                type="text"
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-prefecture">{{ t('profilePrefectureLabel') }}</label>
+              <select id="profile-account-prefecture" v-model="profile.prefecture" :disabled="isSavingProfile">
+                <option v-for="option in prefectureOptions" :key="option.value || 'empty'" :value="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-city">{{ t('profileCityLabel') }}</label>
+              <input id="profile-account-city" v-model="profile.city" type="text" :disabled="isSavingProfile">
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-address-line1">{{ t('profileAddressLine1Label') }}</label>
+              <input
+                id="profile-account-address-line1"
+                v-model="profile.addressLine1"
+                type="text"
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-address-line2">{{ t('profileAddressLine2Label') }}</label>
+              <input
+                id="profile-account-address-line2"
+                v-model="profile.addressLine2"
+                type="text"
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-occupation">{{ t('profileOccupationLabel') }}</label>
+              <select id="profile-account-occupation" v-model="profile.occupation" :disabled="isSavingProfile">
+                <option value="" disabled>{{ t('selectPlaceholder') }}</option>
+                <option value="student">{{ t('occupationStudent') }}</option>
+                <option value="company_employee">{{ t('occupationCompanyEmployee') }}</option>
+                <option value="self_employed">{{ t('occupationSelfEmployed') }}</option>
+                <option value="creator">{{ t('occupationCreator') }}</option>
+                <option value="company_representative">{{ t('occupationCompanyRepresentative') }}</option>
+                <option value="other">{{ t('occupationOther') }}</option>
+              </select>
+            </div>
+
+            <div v-if="profile.occupation === 'student'" class="form-field">
+              <label for="profile-account-school">{{ t('profileSchoolLabel') }}</label>
+              <input
+                id="profile-account-school"
+                v-model="profile.school"
+                type="text"
+                required
+                :disabled="isSavingProfile"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-wechat">{{ t('profileWechatLabel') }}</label>
+              <input id="profile-account-wechat" v-model="profile.wechatId" type="text" :disabled="isSavingProfile">
+            </div>
+
+            <div class="form-field">
+              <label for="profile-account-certificate-language">{{ t('certificateLanguageLabel') }}</label>
+              <select
+                id="profile-account-certificate-language"
+                v-model="profile.certificateLanguage"
+                :disabled="isSavingProfile"
+              >
+                <option value="ja">{{ t('certificateLanguageJa') }}</option>
+                <option value="en">{{ t('certificateLanguageEn') }}</option>
+                <option value="zh">{{ t('certificateLanguageZh') }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary auth-submit" type="submit" :disabled="isSavingProfile">
+              {{ isSavingProfile ? t('profileSavePending') : t('profileSave') }}
+            </button>
+          </div>
+        </form>
+      </section>
+
       <div class="form-actions">
         <button
           v-if="isApplicant"
@@ -122,9 +330,21 @@
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import type { TranslationKey } from '../../i18n/translations'
-import { ApiClientError, createSubmission, listSubmissions } from '../../services/api'
+import {
+  ApiClientError,
+  createSubmission,
+  getProfile,
+  listSubmissions,
+  updateProfile,
+} from '../../services/api'
 import { useSession } from '../../stores/session'
-import type { SubmissionDivision, SubmissionListItem, SubmissionStatus, UserRole } from '../../types/api'
+import type {
+  ApplicantProfile,
+  SubmissionDivision,
+  SubmissionListItem,
+  SubmissionStatus,
+  UserRole,
+} from '../../types/api'
 import { submissionActionPath } from './dashboard-routing'
 
 const props = defineProps<{
@@ -136,10 +356,84 @@ const session = useSession()
 const currentUser = session.currentUser
 const dashboardError = ref('')
 const submissionError = ref('')
+const profile = ref<ApplicantProfile>(emptyProfile())
 const submissions = ref<SubmissionListItem[]>([])
 const isCreatingDraft = ref(false)
 const isLoadingSubmissions = ref(false)
 const isLoggingOut = ref(false)
+const isLoadingProfile = ref(false)
+const isSavingProfile = ref(false)
+const profileError = ref('')
+const profileSuccess = ref('')
+
+const countryRegionOptions = [
+  { value: 'JP', labelKey: 'countryRegionJapan' },
+  { value: 'CN', labelKey: 'countryRegionChina' },
+  { value: 'TW', labelKey: 'countryRegionTaiwan' },
+  { value: 'HK', labelKey: 'countryRegionHongKong' },
+  { value: 'KR', labelKey: 'countryRegionKorea' },
+  { value: 'SG', labelKey: 'countryRegionSingapore' },
+  { value: 'TH', labelKey: 'countryRegionThailand' },
+  { value: 'ID', labelKey: 'countryRegionIndonesia' },
+  { value: 'MY', labelKey: 'countryRegionMalaysia' },
+  { value: 'PH', labelKey: 'countryRegionPhilippines' },
+  { value: 'VN', labelKey: 'countryRegionVietnam' },
+  { value: 'OTHER', labelKey: 'countryRegionOther' },
+] as const
+
+const phoneCountryCodeOptions = ['+81', '+86', '+886', '+852', '+82', '+65', '+66', '+62', '+60', '+63', '+84', 'OTHER'] as const
+
+const prefectureOptions = [
+  { value: '', label: '' },
+  { value: 'outside_japan', label: 'Outside Japan' },
+  { value: 'hokkaido', label: '北海道' },
+  { value: 'aomori', label: '青森県' },
+  { value: 'iwate', label: '岩手県' },
+  { value: 'miyagi', label: '宮城県' },
+  { value: 'akita', label: '秋田県' },
+  { value: 'yamagata', label: '山形県' },
+  { value: 'fukushima', label: '福島県' },
+  { value: 'ibaraki', label: '茨城県' },
+  { value: 'tochigi', label: '栃木県' },
+  { value: 'gunma', label: '群馬県' },
+  { value: 'saitama', label: '埼玉県' },
+  { value: 'chiba', label: '千葉県' },
+  { value: 'tokyo', label: '東京都' },
+  { value: 'kanagawa', label: '神奈川県' },
+  { value: 'niigata', label: '新潟県' },
+  { value: 'toyama', label: '富山県' },
+  { value: 'ishikawa', label: '石川県' },
+  { value: 'fukui', label: '福井県' },
+  { value: 'yamanashi', label: '山梨県' },
+  { value: 'nagano', label: '長野県' },
+  { value: 'gifu', label: '岐阜県' },
+  { value: 'shizuoka', label: '静岡県' },
+  { value: 'aichi', label: '愛知県' },
+  { value: 'mie', label: '三重県' },
+  { value: 'shiga', label: '滋賀県' },
+  { value: 'kyoto', label: '京都府' },
+  { value: 'osaka', label: '大阪府' },
+  { value: 'hyogo', label: '兵庫県' },
+  { value: 'nara', label: '奈良県' },
+  { value: 'wakayama', label: '和歌山県' },
+  { value: 'tottori', label: '鳥取県' },
+  { value: 'shimane', label: '島根県' },
+  { value: 'okayama', label: '岡山県' },
+  { value: 'hiroshima', label: '広島県' },
+  { value: 'yamaguchi', label: '山口県' },
+  { value: 'tokushima', label: '徳島県' },
+  { value: 'kagawa', label: '香川県' },
+  { value: 'ehime', label: '愛媛県' },
+  { value: 'kochi', label: '高知県' },
+  { value: 'fukuoka', label: '福岡県' },
+  { value: 'saga', label: '佐賀県' },
+  { value: 'nagasaki', label: '長崎県' },
+  { value: 'kumamoto', label: '熊本県' },
+  { value: 'oita', label: '大分県' },
+  { value: 'miyazaki', label: '宮崎県' },
+  { value: 'kagoshima', label: '鹿児島県' },
+  { value: 'okinawa', label: '沖縄県' },
+] as const
 
 const roleLabel = computed(() => {
   const keyByRole: Record<UserRole, TranslationKey> = {
@@ -156,9 +450,32 @@ const isApplicant = computed(() => currentUser.value?.role === 'applicant')
 
 onMounted(() => {
   if (isApplicant.value) {
+    void loadProfile()
     void loadSubmissions()
   }
 })
+
+function emptyProfile(): ApplicantProfile {
+  return {
+    lastName: '',
+    firstName: '',
+    lastNameKana: '',
+    firstNameKana: '',
+    penName: '',
+    countryRegion: '',
+    phoneCountryCode: '',
+    phoneNumber: '',
+    postalCode: '',
+    prefecture: '',
+    city: '',
+    addressLine1: '',
+    addressLine2: '',
+    occupation: '',
+    school: '',
+    wechatId: '',
+    certificateLanguage: 'ja',
+  }
+}
 
 async function loadSubmissions() {
   submissionError.value = ''
@@ -171,6 +488,34 @@ async function loadSubmissions() {
     submissionError.value = translatedError(error, 'dashboardLoadError')
   } finally {
     isLoadingSubmissions.value = false
+  }
+}
+
+async function loadProfile() {
+  profileError.value = ''
+  isLoadingProfile.value = true
+  try {
+    const response = await getProfile()
+    profile.value = response.profile
+  } catch (error) {
+    profileError.value = translatedError(error, 'profileLoadError')
+  } finally {
+    isLoadingProfile.value = false
+  }
+}
+
+async function saveProfile() {
+  profileError.value = ''
+  profileSuccess.value = ''
+  isSavingProfile.value = true
+  try {
+    const response = await updateProfile(profile.value)
+    profile.value = response.profile
+    profileSuccess.value = props.t('profileSaveSuccess')
+  } catch (error) {
+    profileError.value = translatedError(error, 'profileSaveError')
+  } finally {
+    isSavingProfile.value = false
   }
 }
 

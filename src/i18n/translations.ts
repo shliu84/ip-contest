@@ -141,6 +141,13 @@ export type TranslationKey =
   | 'dashboardUntitledSubmission'
   | 'dashboardEditSubmission'
   | 'dashboardViewSubmission'
+  | 'profileSectionTitle'
+  | 'profileSectionLead'
+  | 'profileSave'
+  | 'profileSavePending'
+  | 'profileSaveSuccess'
+  | 'profileLoadError'
+  | 'profileSaveError'
   | 'submissionEditorKicker'
   | 'submissionEditorTitle'
   | 'submissionEditorLead'
@@ -180,6 +187,8 @@ export type TranslationKey =
   | 'submissionProfileTitle'
   | 'profileLastNameLabel'
   | 'profileFirstNameLabel'
+  | 'profileLastNameKanaLabel'
+  | 'profileFirstNameKanaLabel'
   | 'countryRegionJapan'
   | 'countryRegionChina'
   | 'countryRegionTaiwan'
@@ -201,7 +210,15 @@ export type TranslationKey =
   | 'profileOccupationLabel'
   | 'profileSchoolLabel'
   | 'profileAddressLabel'
+  | 'profileAddressLine1Label'
+  | 'profileAddressLine2Label'
   | 'profileWechatLabel'
+  | 'occupationStudent'
+  | 'occupationCompanyEmployee'
+  | 'occupationSelfEmployed'
+  | 'occupationCreator'
+  | 'occupationCompanyRepresentative'
+  | 'occupationOther'
   | 'certificateLanguageLabel'
   | 'certificateLanguageJa'
   | 'certificateLanguageEn'
@@ -404,6 +421,13 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardUntitledSubmission: '未命名作品',
     dashboardEditSubmission: '编辑',
     dashboardViewSubmission: '查看',
+    profileSectionTitle: '账户信息',
+    profileSectionLead: '可在此管理未来投稿将自动填写的参赛者信息。',
+    profileSave: '保存账户信息',
+    profileSavePending: '保存中...',
+    profileSaveSuccess: '账户信息已保存。',
+    profileLoadError: '无法加载账户信息。',
+    profileSaveError: '无法保存账户信息。',
     submissionEditorKicker: '投稿',
     submissionEditorTitle: '投稿编辑',
     submissionEditorLead: '填写参赛者资料、作品信息，并上传投稿文件。',
@@ -443,6 +467,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: '参赛者资料',
     profileLastNameLabel: '姓',
     profileFirstNameLabel: '名',
+    profileLastNameKanaLabel: '姓（假名）',
+    profileFirstNameKanaLabel: '名（假名）',
     countryRegionJapan: '日本',
     countryRegionChina: '中国',
     countryRegionTaiwan: '台湾',
@@ -464,6 +490,14 @@ export const translations: Record<LanguageCode, Translation> = {
     profileOccupationLabel: '职业',
     profileSchoolLabel: '学校',
     profileAddressLabel: '地址',
+    profileAddressLine1Label: '地址',
+    profileAddressLine2Label: '建筑名 / 门牌号',
+    occupationStudent: '学生',
+    occupationCompanyEmployee: '公司职员',
+    occupationSelfEmployed: '自由职业',
+    occupationCreator: '创作者',
+    occupationCompanyRepresentative: '公司代表',
+    occupationOther: '其他',
     profileWechatLabel: '微信号',
     certificateLanguageLabel: '证书语言',
     certificateLanguageJa: '日语',
@@ -661,6 +695,13 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardUntitledSubmission: '作品名未入力',
     dashboardEditSubmission: '編集',
     dashboardViewSubmission: '表示',
+    profileSectionTitle: 'アカウント情報',
+    profileSectionLead: '新しい応募作品に自動入力される応募者情報を管理できます。',
+    profileSave: 'アカウント情報を保存',
+    profileSavePending: '保存中...',
+    profileSaveSuccess: 'アカウント情報を保存しました。',
+    profileLoadError: 'アカウント情報を読み込めませんでした。',
+    profileSaveError: 'アカウント情報を保存できませんでした。',
     submissionEditorKicker: '応募',
     submissionEditorTitle: '応募作品編集',
     submissionEditorLead: '応募者情報、作品情報、提出ファイルを入力してください。',
@@ -700,6 +741,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: '応募者情報',
     profileLastNameLabel: '姓',
     profileFirstNameLabel: '名',
+    profileLastNameKanaLabel: '姓（カナ）',
+    profileFirstNameKanaLabel: '名（カナ）',
     countryRegionJapan: '日本',
     countryRegionChina: '中国',
     countryRegionTaiwan: '台湾',
@@ -721,6 +764,14 @@ export const translations: Record<LanguageCode, Translation> = {
     profileOccupationLabel: '職業',
     profileSchoolLabel: '学校名',
     profileAddressLabel: '住所',
+    profileAddressLine1Label: '住所',
+    profileAddressLine2Label: '建物名・部屋番号',
+    occupationStudent: '学生',
+    occupationCompanyEmployee: '会社員',
+    occupationSelfEmployed: '自営業',
+    occupationCreator: 'クリエイター',
+    occupationCompanyRepresentative: '法人代表者',
+    occupationOther: 'その他',
     profileWechatLabel: 'WeChat ID',
     certificateLanguageLabel: '証書言語',
     certificateLanguageJa: '日本語',
@@ -918,6 +969,13 @@ export const translations: Record<LanguageCode, Translation> = {
     dashboardUntitledSubmission: 'Untitled work',
     dashboardEditSubmission: 'Edit',
     dashboardViewSubmission: 'View',
+    profileSectionTitle: 'Account Information',
+    profileSectionLead: 'You can manage applicant details that will prefill future submissions.',
+    profileSave: 'Save account information',
+    profileSavePending: 'Saving...',
+    profileSaveSuccess: 'Account information saved.',
+    profileLoadError: 'Unable to load account information.',
+    profileSaveError: 'Unable to save account information.',
     submissionEditorKicker: 'Submission',
     submissionEditorTitle: 'Submission Editor',
     submissionEditorLead: 'Enter applicant details, work details, and submission files.',
@@ -957,6 +1015,8 @@ export const translations: Record<LanguageCode, Translation> = {
     submissionProfileTitle: 'Applicant Profile',
     profileLastNameLabel: 'Last Name',
     profileFirstNameLabel: 'First Name',
+    profileLastNameKanaLabel: 'Last Name (Kana)',
+    profileFirstNameKanaLabel: 'First Name (Kana)',
     countryRegionJapan: 'Japan',
     countryRegionChina: 'China',
     countryRegionTaiwan: 'Taiwan',
@@ -978,6 +1038,14 @@ export const translations: Record<LanguageCode, Translation> = {
     profileOccupationLabel: 'Occupation',
     profileSchoolLabel: 'School',
     profileAddressLabel: 'Address',
+    profileAddressLine1Label: 'Address',
+    profileAddressLine2Label: 'Building name / room number',
+    occupationStudent: 'Student',
+    occupationCompanyEmployee: 'Company Employee',
+    occupationSelfEmployed: 'Self-Employed',
+    occupationCreator: 'Creator',
+    occupationCompanyRepresentative: 'Company Representative',
+    occupationOther: 'Other',
     profileWechatLabel: 'WeChat ID',
     certificateLanguageLabel: 'Certificate Language',
     certificateLanguageJa: 'Japanese',
